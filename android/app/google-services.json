@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "440658090006",
+    "firebase_url": "https://propertyreturns-master.firebaseio.com",
+    "project_id": "propertyreturns-master",
+    "storage_bucket": "propertyreturns-master.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440658090006:android:2e33d73e84842758c47d37",
+        "android_client_info": {
+          "package_name": "nz.co.propertyreturns.property_returns"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "440658090006-rdo8jcbba2p94m6klffg579kmm6lmf2i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQxfxh1fOJP73lfF64NaR_KIMfXygGPxI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "440658090006-rdo8jcbba2p94m6klffg579kmm6lmf2i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
