@@ -5,7 +5,6 @@ import 'package:property_returns/services/auth.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
-
   Register({this.toggleView});
 
   @override
@@ -65,7 +64,7 @@ class _RegisterState extends State<Register> {
                           textInputDecoration.copyWith(hintText: 'Password'),
                       obscureText: true,
                       validator: (val) => val.length < 6
-                          ? 'Must have six or more charactures'
+                          ? 'Must have six or more characters'
                           : null,
                       onChanged: (val) {
                         // in course the Net Ninja used Set State here
@@ -78,20 +77,19 @@ class _RegisterState extends State<Register> {
                     RaisedButton(
                       child: Text(
                         'Register',
-                        style: TextStyle(color: Colors.white),
                       ),
-                      color: Colors.pink[400],
                       onPressed: () async {
-                        setState(() => loading = true);
                         if (_formKey.currentState.validate()) {
+                          setState(() => loading = true);
                           dynamic result = await _auth
                               .registerWithEmailAndPassword(email, password);
-
                           if (result == null) {
                             loading = false;
                             setState(
                                 () => error = 'Please supply a valid email');
                           }
+                          print('Register: $email');
+                          print('Register: $password');
                         }
                       },
                     ),

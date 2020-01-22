@@ -15,8 +15,11 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+
+  // text field state
   String email = '';
   String password = '';
+
   String error = '';
   bool loading = false;
 
@@ -78,9 +81,7 @@ class _SignInState extends State<SignIn> {
                     RaisedButton(
                       child: Text(
                         'Sign in',
-                        style: TextStyle(color: Colors.white),
                       ),
-                      color: Colors.pink[400],
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           setState(() => loading = true);

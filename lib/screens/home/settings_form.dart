@@ -34,12 +34,13 @@ class _SettingsFormState extends State<SettingsForm> {
                 children: <Widget>[
                   Text(
                     'Update your settings',
-                    style: TextStyle(fontSize: 18),
+                    style: heading,
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextFormField(
+                    keyboardType: TextInputType.text,
                     initialValue: userData.userName,
                     decoration:
                         textInputDecoration.copyWith(hintText: 'your name'),
@@ -50,12 +51,11 @@ class _SettingsFormState extends State<SettingsForm> {
                   SizedBox(
                     height: 20,
                   ),
-                  Text('Lease Notification days '),
+                  Text(
+                    'Lease Notification days ',
+                    style: fieldHeading,
+                  ),
                   Slider(
-                    inactiveColor: Colors.brown[_currentLeaseNotificationDays ??
-                        userData.leaseNotificationDays],
-                    activeColor: Colors.brown[_currentLeaseNotificationDays ??
-                        userData.leaseNotificationDays],
                     divisions: 10,
                     min: 0,
                     max: 100,
@@ -70,12 +70,11 @@ class _SettingsFormState extends State<SettingsForm> {
                   SizedBox(
                     height: 20,
                   ),
-                  Text('Task Notification days '),
+                  Text(
+                    'Task Notification days',
+                    style: fieldHeading,
+                  ),
                   Slider(
-                    inactiveColor: Colors.brown[_currentTaskNotificationDays ??
-                        userData.leaseNotificationDays],
-                    activeColor: Colors.brown[_currentTaskNotificationDays ??
-                        userData.taskNotificationDays],
                     divisions: 10,
                     min: 0,
                     max: 100,
@@ -88,10 +87,8 @@ class _SettingsFormState extends State<SettingsForm> {
                         () => _currentTaskNotificationDays = newVal.round()),
                   ),
                   RaisedButton(
-                      color: Colors.pink,
                       child: Text(
                         'Update',
-                        style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {

@@ -1,6 +1,8 @@
 class User {
   final String userUid;
-  User({this.userUid});
+  final String userEmail;
+
+  User({this.userUid, this.userEmail});
 }
 
 class UserData {
@@ -8,6 +10,7 @@ class UserData {
   final String userName;
   final int leaseNotificationDays;
   final int taskNotificationDays;
+
   UserData(
       {this.userUid,
       this.userName,
