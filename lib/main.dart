@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:property_returns/screens/home/settings_form.dart';
+import 'package:property_returns/screens/tasks/add_task.dart';
+import 'package:property_returns/screens/tasks/edit_task.dart';
 import 'package:property_returns/screens/tasks/task_list.dart';
 import 'package:property_returns/screens/wrapper.dart';
 import 'package:provider/provider.dart';
@@ -46,7 +49,10 @@ class MyApp extends StatelessWidget {
         theme: themeData,
         home: Wrapper(),
         routes: {
+          SettingsForm.id: (context) => SettingsForm(),
           TaskList.id: (context) => TaskList(),
+          AddTask.id: (context) => AddTask(),
+          EditTask.id: (context) => EditTask(),
 //          'lease_events': (context) => LeaseEvents(),
 //          'properties': (context) => Properties(),
 //          'tenants': (context) => Tenants(),

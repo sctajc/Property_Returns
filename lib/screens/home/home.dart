@@ -18,19 +18,6 @@ class Home extends StatelessWidget {
     final user = Provider.of<User>(context);
     final userData = Provider.of<UserData>(context);
 
-    // display settings
-    void _showSettingsPanel() {
-      showModalBottomSheet(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20),
-              topLeft: Radius.circular(20),
-            ),
-          ),
-          context: context,
-          builder: (context) => SettingsForm());
-    }
-
     // display log out & settings buttons
     var appBar = AppBar(
       elevation: 0,
@@ -42,7 +29,8 @@ class Home extends StatelessWidget {
             icon: Icon(Icons.person),
             label: Text('Log out')),
         FlatButton.icon(
-            onPressed: () => _showSettingsPanel(),
+//            onPressed: () => _showSettingsPanel(),
+            onPressed: () => Navigator.pushNamed(context, SettingsForm.id),
             icon: Icon(Icons.settings),
             label: Text('settings'))
       ],
@@ -116,7 +104,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Task'),
+              child: Text('Tasks'),
             ),
           ),
           GestureDetector(
@@ -130,7 +118,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Lease Events'),
+              child: Text('Lease events'),
             ),
           ),
           Divider(
@@ -147,7 +135,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('My Properties'),
+              child: Text('Properties'),
             ),
           ),
           GestureDetector(
@@ -220,7 +208,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Tasks completed'),
+              child: Text('Tasks archived'),
             ),
           ),
           GestureDetector(

@@ -40,13 +40,40 @@ class HomePage extends StatelessWidget {
           ),
           Row(
             children: <Widget>[
-              Text(
-                'Due',
-                textAlign: TextAlign.left,
-                style: heading.copyWith(
-                  fontSize: 18,
-                ),
-              ),
+              userTasks.length > 0
+                  ? Text(
+                      'Due',
+                      textAlign: TextAlign.left,
+                      style: heading.copyWith(
+                        fontSize: 18,
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        left: 20,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'You have no outstanding tasks',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          GestureDetector(
+                            child: Icon(
+                              Icons.help_outline,
+                              color: colorOrange,
+                            ),
+                            onTap: () => showHelpToast(context,
+                                "Either you have not entered any tasks or all your tasks have been archived"),
+                          )
+//                          showHelpToast(context, "message"),
+                        ],
+                      ),
+                    ),
             ],
           ),
           SizedBox(
@@ -54,7 +81,7 @@ class HomePage extends StatelessWidget {
           ),
           ListView.builder(
             shrinkWrap: true,
-            itemCount: userTasks.length ?? 1,
+            itemCount: userTasks.length,
             itemBuilder: (context, index) {
               return TaskTile(taskDetails: userTasks[index]);
             },

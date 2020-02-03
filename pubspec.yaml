@@ -5,7 +5,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.4.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -18,11 +18,18 @@ dependencies:
   flutter_spinkit: ^4.1.1+1
   datetime_picker_formfield: ^1.0.0
   intl: ^0.16.1
+  flushbar:
+
 
 dev_dependencies:
+  flutter_launcher_icons:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/property_returns_logo.png"
 
 flutter:
 
@@ -35,6 +42,7 @@ flutter:
   assets:
   # - images/
     - assets/
+    - assets/icon/property_returns_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:property_returns/screens/tasks/add_task.dart';
 import 'package:property_returns/services/database.dart';
+import 'package:property_returns/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/models/task_details.dart';
@@ -50,21 +51,6 @@ class _TaskListState extends State<TaskList> {
         break;
     }
 
-    void _showAddTaskPanel() {
-      showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20),
-            topLeft: Radius.circular(20),
-          ),
-        ),
-        context: context,
-        builder: (context) {
-          return AddTask();
-        },
-      );
-    }
-
     // Used <List<TasksDetails> StreamBuilder here as own list order
     // also not StreamProvider as only used here
     // TODO is this a good approach??
@@ -79,7 +65,7 @@ class _TaskListState extends State<TaskList> {
                 FlatButton.icon(
                     onPressed: () => null,
                     icon: Icon(Icons.search),
-                    label: Text('Search')),
+                    label: Text('')),
                 FlatButton.icon(
                     onPressed: () {
                       setState(() {
@@ -97,8 +83,6 @@ class _TaskListState extends State<TaskList> {
                             _displayOrder = DisplayOrder.dueDateFirst;
                             break;
                         }
-
-//                        _displayOrder = DisplayOrder.dueDateLast;
                       });
                     },
                     icon: (_displayOrder == DisplayOrder.dueDateFirst ||
@@ -112,22 +96,38 @@ class _TaskListState extends State<TaskList> {
               ],
             ),
             body: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: allUserTasks.data.length,
-                itemBuilder: (context, index) {
-                  return TaskTile(taskDetails: allUserTasks.data[index]);
-                },
-              ),
+              padding: const EdgeInsets.all(10.0),
+              child: allUserTasks.data.length > 0
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: allUserTasks.data.length,
+                      itemBuilder: (context, index) {
+                        return TaskTile(taskDetails: allUserTasks.data[index]);
+                      },
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 30),
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              "Either you have not entered any tasks or all your tasks have been archived. "
+                              "Use the 'plus' button below right to add tasks. "
+                              "If you wish to revisit tasks which have been completed (archived) go back tyo main menu and select 'Tasks archived' near the bottom",
+                              style:
+                                  TextStyle(color: colorOrange, fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
             ),
             floatingActionButton: FloatingActionButton(
               child: Icon(
                 Icons.add,
               ),
-              onPressed: () {
-                _showAddTaskPanel();
-              },
+              onPressed: () => Navigator.pushNamed(context, AddTask.id),
             ),
           );
         } else {

@@ -25,25 +25,14 @@ class TaskTile extends StatelessWidget {
           color: taskDetails.taskImportance > 5 ? Colors.white : Colors.black),
     );
 
-    void _showEditTaskPanel() {
-      showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20),
-            topLeft: Radius.circular(20),
-          ),
-        ),
-        context: context,
-        builder: (context) {
-          return EditTask(
-            tasksDetails: taskDetails,
-          );
-        },
-      );
-    }
-
     return GestureDetector(
-      onTap: _showEditTaskPanel,
+      //TODO using MaterialPageRoute - is it possible to use 'routes' as defined in main.dart
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => EditTask(
+                    tasksDetails: taskDetails,
+                  ))),
       child: Container(
         height: 30,
         child: Row(
