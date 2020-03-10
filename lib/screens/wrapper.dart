@@ -21,7 +21,7 @@ class Wrapper extends StatelessWidget {
         providers: [
           StreamProvider<UserData>.value(
               value: DatabaseServices(uid: user.userUid).userData),
-          StreamProvider<List<TasksDetails>>.value(
+          StreamProvider<List<TaskDetails>>.value(
               value: DatabaseServices(uid: user.userUid).userTasksByImportance),
           StreamProvider<QuerySnapshot>.value(
               value: DatabaseServices(uid: user.userUid).allTasks),

@@ -62,7 +62,7 @@ class _AddTaskState extends State<AddTask> {
                   TextFormField(
 //                initialValue: 'initial value',
                     decoration:
-                        textInputDecoration.copyWith(hintText: 'short title'),
+                        kTextInputDecoration.copyWith(hintText: 'short title'),
                     validator: (val) => val.isEmpty
                         ? 'Please enter a brief task description'
                         : null,
@@ -74,7 +74,7 @@ class _AddTaskState extends State<AddTask> {
                   TextFormField(
 //                initialValue: 'initial description',
                     decoration:
-                        textInputDecoration.copyWith(hintText: 'more details'),
+                        kTextInputDecoration.copyWith(hintText: 'more details'),
                     validator: (val) =>
                         val.isEmpty ? 'Please enter task details' : null,
                     onChanged: (val) => setState(() => _currentDetail = val),
@@ -86,7 +86,7 @@ class _AddTaskState extends State<AddTask> {
                     children: <Widget>[
                       Text(
                         'Importance',
-                        style: fieldHeading,
+                        style: kFieldHeading,
                       ),
                       Slider(
                         divisions: 9,
@@ -104,7 +104,7 @@ class _AddTaskState extends State<AddTask> {
                     children: <Widget>[
                       Text(
                         'Due',
-                        style: fieldHeading,
+                        style: kFieldHeading,
                       ),
                       SizedBox(
                         width: 10,
@@ -167,7 +167,7 @@ class _AddTaskState extends State<AddTask> {
                     children: <Widget>[
                       Text(
                         'Property',
-                        style: fieldHeading,
+                        style: kFieldHeading,
                       ),
                       SizedBox(
                         width: 20,
@@ -199,7 +199,7 @@ class _AddTaskState extends State<AddTask> {
                     children: <Widget>[
                       Text(
                         'Tenant',
-                        style: fieldHeading,
+                        style: kFieldHeading,
                       ),
                       SizedBox(
                         width: 20,
@@ -231,7 +231,7 @@ class _AddTaskState extends State<AddTask> {
                     children: <Widget>[
                       Text(
                         'Trade',
-                        style: fieldHeading,
+                        style: kFieldHeading,
                       ),
                       SizedBox(
                         width: 20,
@@ -263,7 +263,7 @@ class _AddTaskState extends State<AddTask> {
                     children: <Widget>[
                       Text(
                         'Agent',
-                        style: fieldHeading,
+                        style: kFieldHeading,
                       ),
                       SizedBox(
                         width: 20,
@@ -295,7 +295,7 @@ class _AddTaskState extends State<AddTask> {
                     children: <Widget>[
                       Text(
                         'Document',
-                        style: fieldHeading,
+                        style: kFieldHeading,
                       ),
                       SizedBox(
                         width: 20,
@@ -322,24 +322,31 @@ class _AddTaskState extends State<AddTask> {
                   SizedBox(
                     height: 20,
                   ),
-                  RaisedButton(
-                      child: Text('Add'),
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          DateTime _currentEditedDateTime = DateTime.now();
-                          await DatabaseServices().addUserTask(
-                              user.userUid,
-                              _currentTitle,
-                              _currentDetail,
-                              _currentArchived,
-                              _currentImportance,
-                              _currentDueDateTime,
-                              _currentEditedDateTime);
-                          Navigator.pop(context);
-                        }
-                      })
                 ],
               )),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+                child: Text('Add'),
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    DateTime _currentEditedDateTime = DateTime.now();
+                    await DatabaseServices().addUserTask(
+                        user.userUid,
+                        _currentTitle,
+                        _currentDetail,
+                        _currentArchived,
+                        _currentImportance,
+                        _currentDueDateTime,
+                        _currentEditedDateTime);
+                    Navigator.pop(context);
+                  }
+                })
+          ],
         ),
       ),
     );

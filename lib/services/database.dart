@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:property_returns/models/property_details.dart';
 import 'package:property_returns/models/task_details.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/models/user_details.dart';
@@ -6,7 +7,9 @@ import 'package:property_returns/models/user_details.dart';
 class DatabaseServices {
   final String uid; // user uid
   final String taskID; // task id
-  DatabaseServices({this.uid, this.taskID});
+  final String propertyUid;
+
+  DatabaseServices({this.uid, this.taskID, this.propertyUid});
 
   //
   // collection reference shorthand
@@ -17,6 +20,13 @@ class DatabaseServices {
   final CollectionReference userTaskCollection =
       Firestore.instance.collection('tasks');
 
+  final CollectionReference userPropertyCollection =
+      Firestore.instance.collection('properties');
+
+  final CollectionReference userUnitCollection =
+      Firestore.instance.collection('units');
+
+  //
   //
   // UserDetails (does not include userUid)
   //
@@ -110,16 +120,16 @@ class DatabaseServices {
     });
   }
 
-  // get TaskDetails stream for a given user ordered by importance
-  Stream<TasksDetails> get taskByDocumentID {
+  // get TaskDetails stream for a given task and user ordered by importance
+  Stream<TaskDetails> get taskByDocumentID {
     return userTaskCollection
         .document(taskID)
         .snapshots()
         .map(_tasksDetailsFromSnapshot);
   }
 
-  TasksDetails _tasksDetailsFromSnapshot(DocumentSnapshot snapshot) {
-    return TasksDetails(
+  TaskDetails _tasksDetailsFromSnapshot(DocumentSnapshot snapshot) {
+    return TaskDetails(
       taskID: snapshot.documentID,
       userUid: uid,
       taskTitle: snapshot.data['title'] ?? 'no title',
@@ -132,7 +142,8 @@ class DatabaseServices {
   }
 
   // get TaskDetails stream for a given user ordered by importance
-  Stream<List<TasksDetails>> get userTasksByImportance {
+  // for home summary screen
+  Stream<List<TaskDetails>> get userTasksByImportance {
     return userTaskCollection
         .where('userUid', isEqualTo: uid)
         .where('archived', isEqualTo: false)
@@ -143,7 +154,7 @@ class DatabaseServices {
   }
 
   // get TaskDetails stream for a given user ordered by dueDateTime descending
-  Stream<List<TasksDetails>> get userTasksByDueDateEarliestFirst {
+  Stream<List<TaskDetails>> get userTasksByDueDateEarliestFirst {
     return userTaskCollection
         .where('userUid', isEqualTo: uid)
         .where('archived', isEqualTo: false)
@@ -153,7 +164,7 @@ class DatabaseServices {
   }
 
   // get TaskDetails stream for a given user ordered by dueDateTime ascending
-  Stream<List<TasksDetails>> get userTasksByDueDateLatestFirst {
+  Stream<List<TaskDetails>> get userTasksByDueDateLatestFirst {
     return userTaskCollection
         .where('userUid', isEqualTo: uid)
         .where('archived', isEqualTo: false)
@@ -162,8 +173,8 @@ class DatabaseServices {
         .map(_userTasksFromSnapshot);
   }
 
-  // get TaskDetails stream for a given user ordered by dueDateTime ascending
-  Stream<List<TasksDetails>> get userTasksByImportanceHighestFirst {
+  // get TaskDetails stream for a given user ordered by importance descending
+  Stream<List<TaskDetails>> get userTasksByImportanceHighestFirst {
     return userTaskCollection
         .where('userUid', isEqualTo: uid)
         .where('archived', isEqualTo: false)
@@ -172,8 +183,9 @@ class DatabaseServices {
         .map(_userTasksFromSnapshot);
   }
 
-  // get TaskDetails stream for a given user ordered by dueDateTime ascending
-  Stream<List<TasksDetails>> get userTasksByImportanceLowestFirst {
+  //
+  // get TaskDetails stream for a given user ordered by importance ascending
+  Stream<List<TaskDetails>> get userTasksByImportanceLowestFirst {
     return userTaskCollection
         .where('userUid', isEqualTo: uid)
         .where('archived', isEqualTo: false)
@@ -182,9 +194,9 @@ class DatabaseServices {
         .map(_userTasksFromSnapshot);
   }
 
-  List<TasksDetails> _userTasksFromSnapshot(QuerySnapshot snapshot) {
+  List<TaskDetails> _userTasksFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
-      return TasksDetails(
+      return TaskDetails(
         taskID: doc.documentID,
         userUid: uid,
         taskTitle: doc.data['title'] ?? 'no title',
@@ -196,6 +208,8 @@ class DatabaseServices {
       );
     }).toList();
   }
+
+  //
 
   //
   // simple way to get all tasks in database for a user
@@ -211,7 +225,98 @@ class DatabaseServices {
 // use below to access in class
 //need import cloud_firestore to class file
 //  final allTasks = Provider.of<QuerySnapshot>(context);
-//  for (var doc in allTasks.documents) {
+//  for (var doc in allTasks.screens.documents) {
 //  print(doc.data);
 //  }
+
+// **********  Property & Units **********
+//
+
+  // add a property
+  Future addUserProperty(
+      String userUid,
+      String propertyName,
+      String propertyNotes,
+      String propertyZone,
+      String propertyAddress,
+      double propertyLandArea,
+      DateTime propertyDatePurchased,
+      String propertyRatesBillingCode,
+      String propertyInsurancePolicy,
+      String propertyInsuranceSource,
+      DateTime propertyInsuranceExpiryDate,
+      String propertyLegalDescription,
+      double propertyValuation,
+      String propertyValuationSource,
+      bool propertyArchived,
+      DateTime propertyRecordCreatedDateTime,
+      DateTime propertyRecordLastEdited) async {
+    return await userPropertyCollection.document().setData(
+      {
+        'userUid': userUid,
+        'propertyName': propertyName,
+        'propertyNotes': propertyNotes,
+        'propertyZone': propertyZone,
+        'propertyAddress': propertyAddress,
+        'propertyLandArea': propertyLandArea,
+        'propertyDatePurchased': propertyDatePurchased,
+        'propertyRatesBillingCode': propertyRatesBillingCode,
+        'propertyInsurancePolicy': propertyInsurancePolicy,
+        'propertyInsuranceSource': propertyInsuranceSource,
+        'propertyInsuranceDate': propertyInsuranceExpiryDate,
+        'propertyLegalDescription': propertyLegalDescription,
+        'propertyMarketValuation': propertyValuation,
+        'propertyMarketValuationSource': propertyValuationSource,
+        'propertyArchived': propertyArchived,
+        'propertyRecordCreatedDateTime': propertyRecordCreatedDateTime,
+        'propertyRecordLastEdited': propertyRecordLastEdited,
+      },
+    );
+  }
+
+// get property details stream for a given user ordered by property name
+  Stream<List<PropertyDetails>> get userProperties {
+    return userPropertyCollection
+        .where('userUid', isEqualTo: uid)
+        .where('propertyArchived', isEqualTo: false)
+        .orderBy('propertyName', descending: false)
+        .snapshots()
+        .map(_userPropertiesFromSnapshot);
+  }
+
+  List<PropertyDetails> _userPropertiesFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return PropertyDetails(
+        propertyUid: doc.documentID,
+        userUid: uid,
+        propertyName: doc.data['propertyName'] ?? 'no name',
+        propertyNotes: doc.data['propertyNotes'] ?? 'no notes',
+        propertyArchived: doc.data['archived'] ?? false,
+        propertyAddress: doc.data['propertyAddress'] ?? 'no address',
+        propertyDatePurchased:
+            doc.data['propertyDatePurchased'] ?? Timestamp.now(),
+        propertyRecordLastEdited: doc.data['editedDateTime'] ?? Timestamp.now(),
+      );
+    }).toList();
+  }
+
+// get unit name stream for a given property ordered by unit name
+  Stream<List<UnitDetails>> get userUnitsForProperty {
+    return userUnitCollection
+        .where('propertyUid', isEqualTo: propertyUid)
+        .orderBy('unitName', descending: false)
+        .snapshots()
+        .map(_userUnitsFromSnapshot);
+  }
+
+  List<UnitDetails> _userUnitsFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return UnitDetails(
+        unitUid: doc.documentID,
+        userUid: uid,
+        unitName: doc.data['unitName'] ?? 'no name',
+        unitNotes: doc.data['unitNotes'] ?? 'no notes',
+      );
+    }).toList();
+  }
 }

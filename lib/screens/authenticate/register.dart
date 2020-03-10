@@ -49,7 +49,7 @@ class _RegisterState extends State<Register> {
                     ),
                     TextFormField(
                       decoration:
-                          textInputDecoration.copyWith(hintText: 'Email'),
+                          kTextInputDecoration.copyWith(hintText: 'Email'),
                       validator: (val) => val.isEmpty ? 'Enter an email' : null,
                       onChanged: (val) {
                         // in course the Net Ninja used Set State here
@@ -61,7 +61,7 @@ class _RegisterState extends State<Register> {
                     ),
                     TextFormField(
                       decoration:
-                          textInputDecoration.copyWith(hintText: 'Password'),
+                          kTextInputDecoration.copyWith(hintText: 'Password'),
                       obscureText: true,
                       validator: (val) => val.length < 6
                           ? 'Must have six or more characters'

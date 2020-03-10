@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flushbar/flushbar.dart';
 
-const textInputDecoration = InputDecoration(
+const kTextInputDecoration = InputDecoration(
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(
       color: Colors.white,
@@ -9,28 +9,30 @@ const textInputDecoration = InputDecoration(
     ),
   ),
   focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: colorOrange, width: 2),
+    borderSide: BorderSide(color: kColorOrange, width: 2),
   ),
   fillColor: Colors.white,
   filled: true,
 );
 
-const colorOrange = Color(0xfffda400);
-const colorBlue = Color(0xff1691e6);
-const heading =
-    TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: colorOrange);
-const fieldHeading =
-    TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: colorOrange);
+const kColorOrange = Color(0xfffda400);
+const kColorBlue = Color(0xff1691e6);
+const kHeading =
+    TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: kColorOrange);
+const kFieldHeading =
+    TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: kColorOrange);
+const kInputText =
+TextStyle(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.black);
 
 // display FlushBar (toast, snackBar)
-void showHelpToast(context, String message) {
+void kShowHelpToast(context, String message) {
   Flushbar(
     messageText: Text(
       message,
       style: TextStyle(color: Colors.white, fontSize: 20),
     ),
     duration: Duration(seconds: 10),
-    backgroundColor: colorBlue,
+    backgroundColor: kColorBlue,
     flushbarPosition: FlushbarPosition.BOTTOM,
     borderRadius: 10,
   )..show(context);

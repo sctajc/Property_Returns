@@ -52,9 +52,9 @@ class _TaskListState extends State<TaskList> {
     }
 
     // Used <List<TasksDetails> StreamBuilder here as own list order
-    // also not StreamProvider as only used here
     // TODO is this a good approach??
-    return StreamBuilder<List<TasksDetails>>(
+    // needs to be StreamProvider but how to handle 'allUserTasks'?
+    return StreamBuilder<List<TaskDetails>>(
       stream: _databaseServicesDisplayOrder,
       builder: (context, allUserTasks) {
         if (allUserTasks.hasData) {
@@ -116,7 +116,7 @@ class _TaskListState extends State<TaskList> {
                               "Use the 'plus' button below right to add tasks. "
                               "If you wish to revisit tasks which have been completed (archived) go back tyo main menu and select 'Tasks archived' near the bottom",
                               style:
-                                  TextStyle(color: colorOrange, fontSize: 20),
+                                  TextStyle(color: kColorOrange, fontSize: 20),
                             ),
                           ),
                         ],

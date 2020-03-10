@@ -11,7 +11,7 @@ import 'package:property_returns/models/task_details.dart';
 class EditTask extends StatefulWidget {
   static String id = 'edit_task_screen';
 
-  final TasksDetails tasksDetails;
+  final TaskDetails tasksDetails;
 
   EditTask({this.tasksDetails});
 
@@ -37,12 +37,12 @@ class _EditTaskState extends State<EditTask> {
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: StreamBuilder<TasksDetails>(
+      child: StreamBuilder<TaskDetails>(
         stream: DatabaseServices(uid: user.userUid, taskID: taskID)
             .taskByDocumentID,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            TasksDetails tasksDetails = snapshot.data;
+            TaskDetails tasksDetails = snapshot.data;
 
             return Scaffold(
               resizeToAvoidBottomPadding: false,
@@ -64,7 +64,7 @@ class _EditTaskState extends State<EditTask> {
                         TextFormField(
                           keyboardType: TextInputType.text,
                           initialValue: tasksDetails.taskTitle,
-                          decoration: textInputDecoration.copyWith(
+                          decoration: kTextInputDecoration.copyWith(
                               hintText: 'short title'),
                           validator: (val) => val.isEmpty
                               ? 'Please enter a brief task description'
@@ -78,7 +78,7 @@ class _EditTaskState extends State<EditTask> {
                         TextFormField(
                           keyboardType: TextInputType.text,
                           initialValue: tasksDetails.taskDetail,
-                          decoration: textInputDecoration.copyWith(
+                          decoration: kTextInputDecoration.copyWith(
                               hintText: 'more details'),
                           validator: (val) =>
                               val.isEmpty ? 'Please enter task details' : null,
@@ -92,7 +92,7 @@ class _EditTaskState extends State<EditTask> {
                           children: <Widget>[
                             Text(
                               'Importance',
-                              style: fieldHeading,
+                              style: kFieldHeading,
                             ),
                             Slider(
                               divisions: 9,
@@ -110,7 +110,7 @@ class _EditTaskState extends State<EditTask> {
                           children: <Widget>[
                             Text(
                               'Due:',
-                              style: fieldHeading,
+                              style: kFieldHeading,
                             ),
                             SizedBox(
                               width: 10,
@@ -167,7 +167,7 @@ class _EditTaskState extends State<EditTask> {
                           children: <Widget>[
                             Text(
                               'Archive task?',
-                              style: fieldHeading,
+                              style: kFieldHeading,
                             ),
                             SizedBox(
                               width: 20,
@@ -185,11 +185,11 @@ class _EditTaskState extends State<EditTask> {
                               width: 20,
                             ),
                             GestureDetector(
-                              onTap: () => showHelpToast(context,
+                              onTap: () => kShowHelpToast(context,
                                   "If selected the task will be removed from your displayed tasks. These will normally be tasks which are completed. These tasks can be accessed through 'Tasks Archived"),
                               child: Icon(
                                 Icons.help_outline,
-                                color: colorOrange,
+                                color: kColorOrange,
                               ),
                             ),
                           ],
@@ -197,31 +197,36 @@ class _EditTaskState extends State<EditTask> {
                         SizedBox(
                           height: 10,
                         ),
-                        RaisedButton(
-                          child: Text('Save'),
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              print(
-                                  'edit line 149: ${widget.tasksDetails.taskID}');
-                              DateTime _currentEditedDateTime = DateTime.now();
-                              await DatabaseServices().updateUserTask(
-                                  widget.tasksDetails.taskID,
-                                  user.userUid,
-                                  _currentTitle ?? tasksDetails.taskTitle,
-                                  _currentDetail ?? tasksDetails.taskDetail,
-                                  _currentArchived ?? tasksDetails.taskArchived,
-                                  _currentImportance ??
-                                      tasksDetails.taskImportance,
-                                  _currentDueDateTime ??
-                                      tasksDetails.taskDueDateTime.toDate(),
-                                  _currentEditedDateTime);
-                              Navigator.pop(context);
-                            }
-                          },
-                        )
                       ],
                     ),
                   ),
+                ),
+              ),
+              bottomNavigationBar: BottomAppBar(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    RaisedButton(
+                      child: Text('Save'),
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          print('edit line 149: ${widget.tasksDetails.taskID}');
+                          DateTime _currentEditedDateTime = DateTime.now();
+                          await DatabaseServices().updateUserTask(
+                              widget.tasksDetails.taskID,
+                              user.userUid,
+                              _currentTitle ?? tasksDetails.taskTitle,
+                              _currentDetail ?? tasksDetails.taskDetail,
+                              _currentArchived ?? tasksDetails.taskArchived,
+                              _currentImportance ?? tasksDetails.taskImportance,
+                              _currentDueDateTime ??
+                                  tasksDetails.taskDueDateTime.toDate(),
+                              _currentEditedDateTime);
+                          Navigator.pop(context);
+                        }
+                      },
+                    )
+                  ],
                 ),
               ),
             );

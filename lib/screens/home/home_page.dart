@@ -7,23 +7,10 @@ import 'package:property_returns/screens/tasks/task_tile.dart';
 import 'package:property_returns/shared/loading.dart';
 
 class HomePage extends StatelessWidget {
+  final int numberOfUserTaskToDisplay = 8;
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    final userData = Provider.of<UserData>(context);
-    final userTasks = Provider.of<List<TasksDetails>>(context);
-//    userTasks.forEach(
-//      (userTasks) {
-////        print(userTasks.taskTitle);
-////        print(userTasks.taskDueDateTime);
-////        print(userTasks.taskImportance);
-//      },
-//    );
-
-//    final allTasks = Provider.of<QuerySnapshot>(context);
-//    for (var doc in allTasks.documents) {
-//      print(doc.data);
-//    }
+    final userTasks = Provider.of<List<TaskDetails>>(context);
     if (userTasks == null) {
       return Loading();
     } else {
@@ -32,8 +19,8 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-            'Upcoming Tasks',
-            style: heading,
+            'Upcoming Important Tasks',
+            style: kHeading,
           ),
           SizedBox(
             height: 0,
@@ -44,7 +31,7 @@ class HomePage extends StatelessWidget {
                   ? Text(
                       'Due',
                       textAlign: TextAlign.left,
-                      style: heading.copyWith(
+                      style: kHeading.copyWith(
                         fontSize: 18,
                       ),
                     )
@@ -65,9 +52,9 @@ class HomePage extends StatelessWidget {
                           GestureDetector(
                             child: Icon(
                               Icons.help_outline,
-                              color: colorOrange,
+                              color: kColorOrange,
                             ),
-                            onTap: () => showHelpToast(context,
+                            onTap: () => kShowHelpToast(context,
                                 "Either you have not entered any tasks or all your tasks have been archived"),
                           )
 //                          showHelpToast(context, "message"),
@@ -81,7 +68,10 @@ class HomePage extends StatelessWidget {
           ),
           ListView.builder(
             shrinkWrap: true,
-            itemCount: userTasks.length,
+//            itemCount: userTasks.length,
+            itemCount: userTasks.length > numberOfUserTaskToDisplay
+                ? numberOfUserTaskToDisplay
+                : userTasks.length,
             itemBuilder: (context, index) {
               return TaskTile(taskDetails: userTasks[index]);
             },
@@ -90,8 +80,8 @@ class HomePage extends StatelessWidget {
             height: 20,
           ),
           Text(
-            'Upcoming Lease Events',
-            style: heading,
+            'Next Lease Events',
+            style: kHeading,
           ),
           SizedBox(
             height: 20,
@@ -101,10 +91,10 @@ class HomePage extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8),
             children: <Widget>[
               Container(
-                  height: 20, child: Text('15/01/2020 - Check rates paid')),
-              Container(
                   height: 20,
                   child: Text('12/02/2020 - New roof should be checked')),
+              Container(
+                  height: 20, child: Text('15/01/2020 - Check rates paid')),
               Container(
                   height: 20, child: Text('14/02/2020 - Do plumbing check')),
               Container(

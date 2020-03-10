@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:property_returns/models/user.dart';
+import 'package:property_returns/screens/properties/property_list.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/services/auth.dart';
 import 'package:property_returns/screens/home/settings_form.dart';
@@ -82,16 +83,16 @@ class Home extends StatelessWidget {
                 ),
                 Text(
                   userData.userName ?? '',
-                  style: heading.copyWith(fontSize: 18),
+                  style: kHeading.copyWith(fontSize: 18),
                 ),
                 SizedBox(height: 7),
                 Text(
                   user.userEmail,
-                  style: heading.copyWith(fontSize: 18),
+                  style: kHeading.copyWith(fontSize: 18),
                 ),
               ],
             ),
-            decoration: BoxDecoration(color: colorBlue),
+            decoration: BoxDecoration(color: kColorBlue),
           ),
           GestureDetector(
             onTap: () {
@@ -127,7 +128,7 @@ class Home extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
+              Navigator.pushNamed(context, PropertyList.id);
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
@@ -183,7 +184,7 @@ class Home extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
+              Navigator.pushNamed(context, 'test_flutter_markdown_screen');
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 10, 0, 0),

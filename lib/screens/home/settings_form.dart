@@ -47,8 +47,8 @@ class _SettingsFormState extends State<SettingsForm> {
                       TextFormField(
                         keyboardType: TextInputType.text,
                         initialValue: userData.userName,
-                        decoration:
-                            textInputDecoration.copyWith(hintText: 'your name'),
+                        decoration: kTextInputDecoration.copyWith(
+                            hintText: 'your name'),
                         validator: (val) =>
                             val.isEmpty ? 'Please enter your name' : null,
                         onChanged: (val) => setState(() => _currentName = val),
@@ -56,16 +56,29 @@ class _SettingsFormState extends State<SettingsForm> {
                       SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        'Task Notification days',
-                        style: fieldHeading,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Task Notification: ',
+                            style: kFieldHeading,
+                          ),
+                          Text(
+                            ' $_currentTaskNotificationDays ',
+                            style: kInputText,
+                          ),
+                          Text(
+                            'days',
+                            style: kFieldHeading,
+                          ),
+                        ],
                       ),
                       Slider(
-                        divisions: 10,
+//                        divisions: 10,
                         min: 0,
                         max: 100,
-                        label:
-                            '${_currentTaskNotificationDays ?? userData.taskNotificationDays}',
+//                        label:
+//                            '${_currentTaskNotificationDays ?? userData.taskNotificationDays}',
                         value: (_currentTaskNotificationDays ??
                                 userData.taskNotificationDays)
                             .toDouble(),
@@ -75,41 +88,61 @@ class _SettingsFormState extends State<SettingsForm> {
                       SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        'Lease Notification days ',
-                        style: fieldHeading,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Lease Notification: ',
+                            style: kFieldHeading,
+                          ),
+                          Text(
+                            ' $_currentLeaseNotificationDays ',
+                            style: kInputText,
+                          ),
+                          Text(
+                            'days',
+                            style: kFieldHeading,
+                          ),
+                        ],
                       ),
                       Slider(
-                        divisions: 10,
+//                        divisions: 10,
                         min: 0,
                         max: 100,
-                        label:
-                            '${_currentLeaseNotificationDays ?? userData.leaseNotificationDays}',
+//                        label:
+//                            '${_currentLeaseNotificationDays ?? userData.leaseNotificationDays}',
                         value: (_currentLeaseNotificationDays ??
                                 userData.leaseNotificationDays)
                             .toDouble(),
                         onChanged: (newVal) => setState(() =>
                             _currentLeaseNotificationDays = newVal.round()),
                       ),
-                      RaisedButton(
-                          child: Text(
-                            'Update',
-                          ),
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              await DatabaseServices(uid: user.userUid)
-                                  .updateUserDetails(
-                                      _currentName ?? userData.userName,
-                                      _currentLeaseNotificationDays ??
-                                          userData.leaseNotificationDays,
-                                      _currentTaskNotificationDays ??
-                                          userData.taskNotificationDays);
-                              Navigator.pop(context);
-                            }
-                          })
                     ],
                   ),
                 ),
+              ),
+            ),
+            bottomNavigationBar: BottomAppBar(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                      child: Text(
+                        'Update',
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          await DatabaseServices(uid: user.userUid)
+                              .updateUserDetails(
+                                  _currentName ?? userData.userName,
+                                  _currentLeaseNotificationDays ??
+                                      userData.leaseNotificationDays,
+                                  _currentTaskNotificationDays ??
+                                      userData.taskNotificationDays);
+                          Navigator.pop(context);
+                        }
+                      })
+                ],
               ),
             ),
           );

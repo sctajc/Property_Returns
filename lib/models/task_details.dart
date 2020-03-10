@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class TasksDetails {
+class TaskDetails {
   final String taskID;
   final String userUid;
   final String taskTitle;
@@ -10,7 +10,7 @@ class TasksDetails {
   final Timestamp taskDueDateTime;
   final Timestamp taskLastEditedDateTime;
 
-  TasksDetails(
+  TaskDetails(
       {this.taskID,
       this.userUid,
       this.taskTitle,
