@@ -209,7 +209,49 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
+              child: Text('Property Summary'),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+//              Navigator.pushNamed(context, 'task_list');
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
+              constraints: BoxConstraints(
+                minHeight: _minHeight,
+                maxHeight: _maxHeight,
+              ),
               child: Text('Tasks archived'),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+//              Navigator.pushNamed(context, 'task_list');
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
+              constraints: BoxConstraints(
+                minHeight: _minHeight,
+                maxHeight: _maxHeight,
+              ),
+              child: Text('Properties archived'),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+//              Navigator.pushNamed(context, 'task_list');
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
+              constraints: BoxConstraints(
+                minHeight: _minHeight,
+                maxHeight: _maxHeight,
+              ),
+              child: Text('Units archived'),
             ),
           ),
           GestureDetector(

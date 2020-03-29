@@ -8,12 +8,11 @@ class DatabaseServices {
   final String uid; // user uid
   final String taskID; // task id
   final String propertyUid;
+  final String unitUid;
 
-  DatabaseServices({this.uid, this.taskID, this.propertyUid});
+  DatabaseServices({this.uid, this.taskID, this.propertyUid, this.unitUid});
 
-  //
   // collection reference shorthand
-  //
   final CollectionReference userDetailsCollection =
       Firestore.instance.collection('user_details');
 
@@ -32,11 +31,13 @@ class DatabaseServices {
   //
   Future updateUserDetails(String userName, int leaseNotificationDays,
       int taskNotificationDays) async {
-    return await userDetailsCollection.document(uid).setData({
-      'user_name': userName,
-      'lease_notification_days': leaseNotificationDays,
-      'task_notification_days': taskNotificationDays,
-    });
+    return await userDetailsCollection.document(uid).setData(
+      {
+        'user_name': userName,
+        'lease_notification_days': leaseNotificationDays,
+        'task_notification_days': taskNotificationDays,
+      },
+    );
   }
 
   //
@@ -51,13 +52,15 @@ class DatabaseServices {
   }
 
   List<UserDetails> _userListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
-      return UserDetails(
-        userName: doc.data['user_name'] ?? '',
-        leaseNotificationDays: doc.data['lease_notification_days'] ?? 0,
-        taskNotificationDays: doc.data['task_notification_days'] ?? 0,
-      );
-    }).toList();
+    return snapshot.documents.map(
+      (doc) {
+        return UserDetails(
+          userName: doc.data['user_name'] ?? '',
+          leaseNotificationDays: doc.data['lease_notification_days'] ?? 0,
+          taskNotificationDays: doc.data['task_notification_days'] ?? 0,
+        );
+      },
+    ).toList();
   }
 
   //
@@ -84,43 +87,53 @@ class DatabaseServices {
   // TASKS
   //
   // add a task
-  Future addUserTask(String userUid, String title, String detail, bool archived,
-      int importance, DateTime dueDateTime, DateTime editedDateTime) async {
+  Future addUserTask(
+    String userUid,
+    String taskTitle,
+    String taskDetail,
+    bool taskArchived,
+    int taskImportance,
+    DateTime taskDueDateTime,
+    Timestamp taskEditedDateTime,
+  ) async {
     return await userTaskCollection.document().setData(
       {
         'userUid': userUid,
-        'title': title,
-        'detail': detail,
-        'archived': archived,
-        'importance': importance,
-        'dueDateTime': dueDateTime,
-        'editedDateTime': editedDateTime,
+        'title': taskTitle,
+        'detail': taskDetail,
+        'archived': taskArchived,
+        'importance': taskImportance,
+        'dueDateTime': taskDueDateTime,
+        'editedDateTime': taskEditedDateTime,
       },
     );
   }
 
   // update a task
   Future updateUserTask(
-      String taskID,
-      String userUid,
-      String title,
-      String detail,
-      bool archived,
-      int importance,
-      DateTime dueDateTime,
-      DateTime editedDateTime) async {
-    return await userTaskCollection.document(taskID).updateData({
-      'userUid': userUid,
-      'title': title,
-      'detail': detail,
-      'archived': archived,
-      'importance': importance,
-      'dueDateTime': dueDateTime,
-      'editedDateTime': editedDateTime,
-    });
+    String taskID,
+    String userUid,
+    String taskTitle,
+    String taskDetail,
+    bool taskArchived,
+    int taskImportance,
+    DateTime taskDueDateTime,
+    Timestamp taskEditedDateTime,
+  ) async {
+    return await userTaskCollection.document(taskID).updateData(
+      {
+        'userUid': userUid,
+        'title': taskTitle,
+        'detail': taskDetail,
+        'archived': taskArchived,
+        'importance': taskImportance,
+        'dueDateTime': taskDueDateTime,
+        'editedDateTime': taskEditedDateTime,
+      },
+    );
   }
 
-  // get TaskDetails stream for a given task and user ordered by importance
+  // get Task Details stream for a given task
   Stream<TaskDetails> get taskByDocumentID {
     return userTaskCollection
         .document(taskID)
@@ -195,18 +208,20 @@ class DatabaseServices {
   }
 
   List<TaskDetails> _userTasksFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
-      return TaskDetails(
-        taskID: doc.documentID,
-        userUid: uid,
-        taskTitle: doc.data['title'] ?? 'no title',
-        taskDetail: doc.data['detail'] ?? 'no detail',
-        taskArchived: doc.data['archived'] ?? false,
-        taskImportance: doc.data['importance'] ?? 5,
-        taskDueDateTime: doc.data['dueDateTime'] ?? Timestamp.now(),
-        taskLastEditedDateTime: doc.data['editedDateTime'] ?? Timestamp.now(),
-      );
-    }).toList();
+    return snapshot.documents.map(
+      (doc) {
+        return TaskDetails(
+          taskID: doc.documentID,
+          userUid: uid,
+          taskTitle: doc.data['title'] ?? 'no title',
+          taskDetail: doc.data['detail'] ?? 'no detail',
+          taskArchived: doc.data['archived'] ?? false,
+          taskImportance: doc.data['importance'] ?? 5,
+          taskDueDateTime: doc.data['dueDateTime'] ?? Timestamp.now(),
+          taskLastEditedDateTime: doc.data['editedDateTime'] ?? Timestamp.now(),
+        );
+      },
+    ).toList();
   }
 
   //
@@ -222,35 +237,30 @@ class DatabaseServices {
         .snapshots();
   }
 
-// use below to access in class
-//need import cloud_firestore to class file
-//  final allTasks = Provider.of<QuerySnapshot>(context);
-//  for (var doc in allTasks.screens.documents) {
-//  print(doc.data);
-//  }
-
-// **********  Property & Units **********
+//
+// **********  Property (& Units below) **********
 //
 
   // add a property
   Future addUserProperty(
-      String userUid,
-      String propertyName,
-      String propertyNotes,
-      String propertyZone,
-      String propertyAddress,
-      double propertyLandArea,
-      DateTime propertyDatePurchased,
-      String propertyRatesBillingCode,
-      String propertyInsurancePolicy,
-      String propertyInsuranceSource,
-      DateTime propertyInsuranceExpiryDate,
-      String propertyLegalDescription,
-      double propertyValuation,
-      String propertyValuationSource,
-      bool propertyArchived,
-      DateTime propertyRecordCreatedDateTime,
-      DateTime propertyRecordLastEdited) async {
+    String userUid,
+    String propertyName,
+    String propertyNotes,
+    String propertyZone,
+    String propertyAddress,
+    double propertyLandArea,
+    DateTime propertyDatePurchased,
+    String propertyRatesBillingCode,
+    String propertyInsurancePolicy,
+    String propertyInsuranceSource,
+    DateTime propertyInsuranceExpiryDate,
+    String propertyLegalDescription,
+    double propertyValuation,
+    String propertyValuationSource,
+    bool propertyArchived,
+    Timestamp propertyRecordCreatedDateTime,
+    Timestamp propertyRecordLastEdited,
+  ) async {
     return await userPropertyCollection.document().setData(
       {
         'userUid': userUid,
@@ -274,7 +284,89 @@ class DatabaseServices {
     );
   }
 
-// get property details stream for a given user ordered by property name
+  // update a property
+  Future updateUserProperty(
+    String userUid,
+    String propertyName,
+    String propertyNotes,
+    String propertyZone,
+    String propertyAddress,
+    num propertyLandArea,
+    DateTime propertyDatePurchased,
+    String propertyRatesBillingCode,
+    String propertyInsurancePolicy,
+    String propertyInsuranceSource,
+    DateTime propertyInsuranceExpiryDate,
+    String propertyLegalDescription,
+    num propertyValuation,
+    String propertyValuationSource,
+    bool propertyArchived,
+    Timestamp propertyRecordCreatedDateTime,
+    Timestamp propertyRecordLastEdited,
+  ) async {
+    return await userPropertyCollection.document(propertyUid).updateData(
+      {
+        'userUid': userUid,
+        'propertyName': propertyName,
+        'propertyNotes': propertyNotes,
+        'propertyZone': propertyZone,
+        'propertyAddress': propertyAddress,
+        'propertyLandArea': propertyLandArea,
+        'propertyDatePurchased': propertyDatePurchased,
+        'propertyRatesBillingCode': propertyRatesBillingCode,
+        'propertyInsurancePolicy': propertyInsurancePolicy,
+        'propertyInsuranceSource': propertyInsuranceSource,
+        'propertyInsuranceExpiryDate': propertyInsuranceExpiryDate,
+        'propertyLegalDescription': propertyLegalDescription,
+        'propertyMarketValuation': propertyValuation,
+        'propertyMarketValuationSource': propertyValuationSource,
+        'propertyArchived': propertyArchived,
+        'propertyRecordCreatedDateTime': propertyRecordCreatedDateTime,
+        'propertyRecordLastEdited': propertyRecordLastEdited,
+      },
+    );
+  }
+
+  // get property Details stream for a given property
+  //TODO why is stream not updating edit field when data changed in firebase
+  Stream<PropertyDetails> get propertyByDocumentID {
+    return userPropertyCollection
+        .document(propertyUid)
+        .snapshots()
+        .map(_propertyDetailsFromSnapshot);
+  }
+
+  PropertyDetails _propertyDetailsFromSnapshot(DocumentSnapshot snapshot) {
+    return PropertyDetails(
+      userUid: uid,
+      propertyName: snapshot.data['propertyName'] ?? 'no name',
+      propertyNotes: snapshot.data['propertyNotes'] ?? 'no notes',
+      propertyAddress: snapshot.data['propertyAddress'] ?? 'no address',
+      propertyZone: snapshot.data['propertyZone'] ?? 'no zone',
+      propertyLandArea: snapshot.data['propertyLandArea'] ?? 0,
+      propertyDatePurchased:
+          snapshot.data['propertyDatePurchased'] ?? DateTime.now(),
+      propertyRatesBillingCode:
+          snapshot.data['propertyRatesBillingCode'] ?? 'no code',
+      propertyInsurancePolicy:
+          snapshot.data['propertyInsurancePolicy'] ?? 'no policy',
+      propertyInsuranceSource:
+          snapshot.data['propertyInsuranceSource'] ?? 'no source',
+      propertyInsuranceExpiryDate:
+          snapshot.data['propertyInsuranceExpiryDate'] ?? DateTime.now(),
+      propertyLegalDescription:
+          snapshot.data['propertyLegalDescription'] ?? 'no desc',
+      propertyMarketValuation: snapshot.data['propertyMarketValuation'] ?? 0,
+      propertyMarketValuationSource:
+          snapshot.data['propertyMarketValuationSource'] ?? 'no source',
+//      propertyArchived: snapshot.data['propertyArchived'] ?? false,
+      propertyRecordCreatedDateTime:
+          snapshot.data['propertyRecordCreatedDateTime'],
+      propertyRecordLastEdited: snapshot.data['propertyRecordLastEdited'],
+    );
+  }
+
+  // get property details stream for a given user ordered by property name
   Stream<List<PropertyDetails>> get userProperties {
     return userPropertyCollection
         .where('userUid', isEqualTo: uid)
@@ -300,23 +392,114 @@ class DatabaseServices {
     }).toList();
   }
 
-// get unit name stream for a given property ordered by unit name
+  //
+  //
+  //   ******** Units ********
+  //
+
+  // add a unit to a property
+  Future addPropertyUnit(
+    String userUid,
+    String unitPropertyUid,
+    String unitName,
+    String unitNotes,
+    String unitLeaseDescription,
+    num unitArea,
+    bool unitResidential,
+    bool unitArchived,
+    Timestamp unitRecordCreatedDateTime,
+    Timestamp unitRecordLastEdited,
+  ) async {
+    return await userUnitCollection.document().setData(
+      {
+        'userUid': userUid,
+        'propertyUid': unitPropertyUid,
+        'unitName': unitName,
+        'unitNotes': unitNotes,
+        'unitLeaseDescription': unitLeaseDescription,
+        'unitArea': unitArea,
+        'unitResidential': unitResidential,
+        'unitArchived': unitArchived,
+        'unitRecordCreatedDateTime': unitRecordCreatedDateTime,
+        'unitRecordLastEdited': unitRecordLastEdited,
+      },
+    );
+  }
+
+  // update a unit's details
+  Future updatePropertyUnit(
+    String userUid,
+    String unitPropertyUid,
+    String unitName,
+    String unitNotes,
+    String unitLeaseDescription,
+    num unitArea,
+    bool unitResidential,
+    bool unitArchived,
+    Timestamp unitRecordCreatedDateTime,
+    Timestamp unitRecordLastEdited,
+  ) async {
+    return await userUnitCollection.document(unitUid).updateData(
+      {
+        'userUid': userUid,
+        'unitName': unitName,
+        'unitNotes': unitNotes,
+        'unitLeaseDescription': unitLeaseDescription,
+        'unitArea': unitArea,
+        'unitResidential': unitResidential,
+        'unitArchived': unitArchived,
+        'unitRecordCreatedDateTime': unitRecordCreatedDateTime,
+        'unitRecordLastEdited': unitRecordLastEdited,
+      },
+    );
+  }
+
+  // get property Details stream for a given property
+  //TODO why is stream not updating edit field when data changed in firebase
+  Stream<UnitDetails> get unitByDocumentID {
+    return userUnitCollection
+        .document(unitUid)
+        .snapshots()
+        .map(_unitDetailsFromSnapshot);
+  }
+
+  UnitDetails _unitDetailsFromSnapshot(DocumentSnapshot snapshot) {
+    return UnitDetails(
+      unitUid: snapshot.data['unitUid'],
+      propertyUid: snapshot.data['propertyUid'],
+      userUid: snapshot.data['userUid'],
+      unitName: snapshot.data['unitName'] ?? 'no name',
+      unitNotes: snapshot.data['unitNotes'] ?? 'no notes',
+      unitArea: snapshot.data['unitArea'] ?? 0,
+      unitLeaseDescription:
+          snapshot.data['unitLeaseDescription'] ?? 'no description',
+      unitResidential: snapshot.data['unitResidential'] ?? false,
+      unitArchived: snapshot.data['unitArchived'],
+      unitRecordCreatedDateTime: snapshot.data['unitRecordCreatedDateTime'],
+      unitRecordLastEdited: snapshot.data['unitRecordLastEdited'],
+    );
+  }
+
+  // get unit name stream for a given property ordered by unit name
   Stream<List<UnitDetails>> get userUnitsForProperty {
     return userUnitCollection
         .where('propertyUid', isEqualTo: propertyUid)
+        .where('unitArchived', isEqualTo: false)
         .orderBy('unitName', descending: false)
         .snapshots()
         .map(_userUnitsFromSnapshot);
   }
 
   List<UnitDetails> _userUnitsFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
-      return UnitDetails(
-        unitUid: doc.documentID,
-        userUid: uid,
-        unitName: doc.data['unitName'] ?? 'no name',
-        unitNotes: doc.data['unitNotes'] ?? 'no notes',
-      );
-    }).toList();
+    return snapshot.documents.map(
+      (doc) {
+        return UnitDetails(
+          unitUid: doc.documentID,
+          userUid: uid,
+          unitName: doc.data['unitName'] ?? 'no name',
+          unitNotes: doc.data['unitNotes'] ?? 'no notes',
+        );
+      },
+    ).toList();
   }
 }

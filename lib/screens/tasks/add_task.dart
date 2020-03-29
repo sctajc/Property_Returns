@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:property_returns/services/database.dart';
@@ -31,11 +32,11 @@ class _AddTaskState extends State<AddTask> {
   String _currentDocumentSelected = 'none';
 
   // form values
-  String _currentTitle;
-  String _currentDetail;
-  int _currentImportance = 5;
-  DateTime _currentDueDateTime;
-  bool _currentArchived = false;
+  String _currentTaskTitle;
+  String _currentTaskDetail;
+  int _currentTaskImportance = 5;
+  DateTime _currentTaskDueDateTime;
+  bool _currentTaskArchived = false;
   String error = '';
 
   @override
@@ -66,7 +67,7 @@ class _AddTaskState extends State<AddTask> {
                     validator: (val) => val.isEmpty
                         ? 'Please enter a brief task description'
                         : null,
-                    onChanged: (val) => setState(() => _currentTitle = val),
+                    onChanged: (val) => setState(() => _currentTaskTitle = val),
                   ),
                   SizedBox(
                     height: 10,
@@ -77,7 +78,8 @@ class _AddTaskState extends State<AddTask> {
                         kTextInputDecoration.copyWith(hintText: 'more details'),
                     validator: (val) =>
                         val.isEmpty ? 'Please enter task details' : null,
-                    onChanged: (val) => setState(() => _currentDetail = val),
+                    onChanged: (val) =>
+                        setState(() => _currentTaskDetail = val),
                   ),
                   SizedBox(
                     height: 10,
@@ -92,9 +94,9 @@ class _AddTaskState extends State<AddTask> {
                         divisions: 9,
                         min: 1,
                         max: 10,
-                        value: (_currentImportance ?? 5).toDouble(),
+                        value: (_currentTaskImportance ?? 5).toDouble(),
                         onChanged: (val) => setState(
-                          () => _currentImportance = val.round(),
+                          () => _currentTaskImportance = val.round(),
                         ),
                       ),
                     ],
@@ -142,7 +144,7 @@ class _AddTaskState extends State<AddTask> {
                                         child: child,
                                       );
                                     });
-                                _currentDueDateTime =
+                                _currentTaskDueDateTime =
                                     DateTimeField.combine(date, time);
                                 return DateTimeField.combine(date, time);
                               } else {
@@ -331,21 +333,23 @@ class _AddTaskState extends State<AddTask> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             RaisedButton(
-                child: Text('Add'),
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    DateTime _currentEditedDateTime = DateTime.now();
-                    await DatabaseServices().addUserTask(
-                        user.userUid,
-                        _currentTitle,
-                        _currentDetail,
-                        _currentArchived,
-                        _currentImportance,
-                        _currentDueDateTime,
-                        _currentEditedDateTime);
-                    Navigator.pop(context);
-                  }
-                })
+              child: Text('Add'),
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  DateTime _currentEditedDateTime = DateTime.now();
+                  await DatabaseServices().addUserTask(
+                    user.userUid,
+                    _currentTaskTitle,
+                    _currentTaskDetail,
+                    _currentTaskArchived,
+                    _currentTaskImportance,
+                    _currentTaskDueDateTime,
+                    Timestamp.now(), //_currentEditedDateTime,
+                  );
+                  Navigator.pop(context);
+                }
+              },
+            )
           ],
         ),
       ),

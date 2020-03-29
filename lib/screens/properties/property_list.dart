@@ -19,11 +19,9 @@ class _PropertyListState extends State<PropertyList> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-//    final userData = Provider.of<UserData>(context);
-//    final userTasks = Provider.of<List<TasksDetails>>(context);
 
-    // Used <List<TasksDetails> StreamBuilder here as own list order
     // TODO is this a good approach??
+    // Used <List<TasksDetails> StreamBuilder here as own list order
     return StreamBuilder<List<PropertyDetails>>(
         stream: DatabaseServices(uid: user.userUid).userProperties,
         builder: (context, allUserProperties) {
@@ -33,14 +31,16 @@ class _PropertyListState extends State<PropertyList> {
                 title: Text('Properties'),
                 actions: <Widget>[
                   FlatButton.icon(
-                      onPressed: () => null,
-                      icon: Icon(Icons.search),
-                      label: Text('')),
+                    onPressed: () => null,
+                    icon: Icon(Icons.search),
+                    label: Text(''),
+                  ),
                   FlatButton.icon(
-                      onPressed: () => kShowHelpToast(context,
-                          'A unit is a defined area within a property available for individual renting'),
-                      icon: Icon(Icons.help),
-                      label: Text('Help')),
+                    onPressed: () => kShowHelpToast(context,
+                        'A unit is a defined area within a property available for individual renting'),
+                    icon: Icon(Icons.help),
+                    label: Text('Help'),
+                  ),
                 ],
               ),
               body: Padding(

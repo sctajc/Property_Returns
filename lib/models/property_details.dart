@@ -7,14 +7,14 @@ class PropertyDetails {
   final String propertyNotes;
   final String propertyZone;
   final String propertyAddress;
-  final double propertyLandArea;
+  final num propertyLandArea;
   final Timestamp propertyDatePurchased;
   final String propertyRatesBillingCode;
   final String propertyInsurancePolicy;
   final String propertyInsuranceSource;
-  final String propertyInsuranceDate;
+  final Timestamp propertyInsuranceExpiryDate;
   final String propertyLegalDescription;
-  final String propertyMarketValuation;
+  final num propertyMarketValuation;
   final String propertyMarketValuationSource;
   final bool propertyArchived;
   final Timestamp propertyRecordCreatedDateTime;
@@ -22,11 +22,12 @@ class PropertyDetails {
 
   PropertyDetails({
     this.propertyUid,
+    this.userUid,
     this.propertyName,
     this.propertyAddress,
-    this.propertyArchived,
+    this.propertyZone,
     this.propertyDatePurchased,
-    this.propertyInsuranceDate,
+    this.propertyInsuranceExpiryDate,
     this.propertyInsurancePolicy,
     this.propertyInsuranceSource,
     this.propertyLandArea,
@@ -35,9 +36,8 @@ class PropertyDetails {
     this.propertyMarketValuationSource,
     this.propertyNotes,
     this.propertyRatesBillingCode,
+    this.propertyArchived,
     this.propertyRecordCreatedDateTime,
-    this.propertyZone,
-    this.userUid,
     this.propertyRecordLastEdited,
   });
 }
@@ -48,7 +48,7 @@ class UnitDetails {
   final String userUid;
   final String unitName;
   final String unitNotes;
-  final double unitArea;
+  final num unitArea;
   final String unitLeaseDescription;
   final bool unitResidential;
   final bool unitArchived;

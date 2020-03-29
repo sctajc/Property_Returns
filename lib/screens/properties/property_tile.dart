@@ -1,16 +1,11 @@
 import 'dart:ui';
-import 'package:flushbar/flushbar.dart';
 import 'package:property_returns/models/property_details.dart';
-
-//import 'package:property_returns/screens/tasks/edit_property.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/screens/properties/add_unit.dart';
 import 'package:property_returns/screens/properties/edit_property.dart';
 import 'package:property_returns/screens/properties/edit_unit.dart';
 import 'package:property_returns/services/database.dart';
-import 'package:property_returns/shared/constants.dart';
 import 'package:provider/provider.dart';
 
 class PropertyTile extends StatefulWidget {
@@ -71,6 +66,7 @@ class _PropertyTileState extends State<PropertyTile> {
                         MaterialPageRoute(
                           builder: (context) => EditProperty(
                             propertyUid: widget.propertyDetails.propertyUid,
+                            propertyName: widget.propertyDetails.propertyName,
                           ),
                         ),
                       );
@@ -82,21 +78,22 @@ class _PropertyTileState extends State<PropertyTile> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(15, 0, 0, 8),
                     child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Text('Add a unit'),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddUnit(
-                                  propertyUid:
-                                      widget.propertyDetails.propertyUid,
-                                  propertyName:
-                                      widget.propertyDetails.propertyName,
-                                ),
-                              ));
-                        }),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text('Add a unit'),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddUnit(
+                              propertyUid: widget.propertyDetails.propertyUid,
+                              propertyName: widget.propertyDetails.propertyName,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -106,8 +103,9 @@ class _PropertyTileState extends State<PropertyTile> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.blue)),
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.blue),
+                  ),
                   child: Column(
                     children: <Widget>[
                       StreamBuilder<List<UnitDetails>>(
@@ -136,15 +134,6 @@ class _PropertyTileState extends State<PropertyTile> {
                                     itemExtent: 20,
                                     itemCount: allPropertyUnits.data.length,
                                     itemBuilder: (context, index) {
-//                                  print(
-//                                      'unitUid: ${allPropertyUnits.data[index].unitUid}');
-//                                  print(
-//                                      'unitName: ${allPropertyUnits.data[index].unitName}');
-//                                  print(
-//                                      'unitNotes: ${allPropertyUnits.data[index].unitNotes}');
-//                                  print(
-//                                      'userUid: ${allPropertyUnits.data[index].userUid}');
-
                                       return InkWell(
                                           child: Text(
                                             allPropertyUnits
@@ -157,6 +146,9 @@ class _PropertyTileState extends State<PropertyTile> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) => EditUnit(
+                                                  propertyName: widget
+                                                      .propertyDetails
+                                                      .propertyName,
                                                   unitUid: allPropertyUnits
                                                       .data[index].unitUid,
                                                   unitName: allPropertyUnits
@@ -171,7 +163,34 @@ class _PropertyTileState extends State<PropertyTile> {
                               ),
                             );
                           } else {
-                            return Text('All one unit');
+                            return InkWell(
+                              child: Text(
+                                'Details (as one unit)',
+                                maxLines: 1,
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddUnit(
+                                      propertyUid:
+                                          widget.propertyDetails.propertyUid,
+                                      propertyName:
+                                          widget.propertyDetails.propertyName,
+                                    ),
+//                                        EditUnit(
+//                                      propertyName:
+//                                          widget.propertyDetails.propertyName,
+//                                      unitUid:
+//                                          widget.propertyDetails.propertyUid,
+//                                      unitName:
+//                                          widget.propertyDetails.propertyName,
+//                                    ),
+                                  ),
+                                );
+                              },
+                            );
                           }
                         },
                       ),
