@@ -59,7 +59,7 @@ class _AddPropertyState extends State<AddProperty> {
                   ),
                   TextFormField(
                     decoration: kTextInputDecoration.copyWith(
-                        hintText: 'property name'),
+                        labelText: 'Name', hintText: 'property name'),
                     validator: (val) => val.isEmpty
                         ? 'Please enter what property is know as'
                         : null,
@@ -70,8 +70,8 @@ class _AddPropertyState extends State<AddProperty> {
                     height: 10,
                   ),
                   TextFormField(
-                    decoration:
-                        kTextInputDecoration.copyWith(hintText: 'more details'),
+                    decoration: kTextInputDecoration.copyWith(
+                        labelText: 'Details', hintText: 'more details'),
 //                    validator: (val) => val.isEmpty
 //                        ? 'Please enter any property details'
 //                        : null,
@@ -82,8 +82,8 @@ class _AddPropertyState extends State<AddProperty> {
                     height: 10,
                   ),
                   TextFormField(
-                    decoration:
-                        kTextInputDecoration.copyWith(hintText: 'address'),
+                    decoration: kTextInputDecoration.copyWith(
+                        labelText: 'Address', hintText: 'address'),
                     validator: (val) =>
                         val.isEmpty ? 'Please enter property address' : null,
                     onChanged: (val) =>
@@ -94,7 +94,7 @@ class _AddPropertyState extends State<AddProperty> {
                   ),
                   TextFormField(
                     decoration: kTextInputDecoration.copyWith(
-                        hintText: 'property zoning'),
+                        labelText: 'Zoning', hintText: 'property zoning'),
 //                    validator: (val) =>
 //                        val.isEmpty ? 'Please enter any property zone' : null,
                     onChanged: (val) =>
@@ -196,7 +196,7 @@ class _AddPropertyState extends State<AddProperty> {
                   ),
                   TextFormField(
                     decoration: kTextInputDecoration.copyWith(
-                        hintText: 'Rates billing code'),
+                        labelText: 'Rates Id', hintText: 'Rates billing code'),
 //                    validator: (val) =>
 //                        val.isEmpty ? 'Please enter any billing code' : null,
                     onChanged: (val) =>
@@ -207,7 +207,8 @@ class _AddPropertyState extends State<AddProperty> {
                   ),
                   TextFormField(
                     decoration: kTextInputDecoration.copyWith(
-                        hintText: 'Insurance policy'),
+                        labelText: 'Insurance Policy',
+                        hintText: 'Insurance policy number'),
 //                      validator: (val) => val.isEmpty
 //                          ? 'Please enter any insurance policy name, code etc'
 //                          : null,
@@ -219,7 +220,8 @@ class _AddPropertyState extends State<AddProperty> {
                   ),
                   TextFormField(
                     decoration: kTextInputDecoration.copyWith(
-                        hintText: 'Insurance source/broker'),
+                        labelText: 'Insurance Company',
+                        hintText: 'Insurance source/broker/company'),
 //                      validator: (val) => val.isEmpty
 //                          ? 'Please enter any insurance supplier'
 //                          : null,
@@ -294,6 +296,7 @@ class _AddPropertyState extends State<AddProperty> {
                   ),
                   TextFormField(
                     decoration: kTextInputDecoration.copyWith(
+                        labelText: 'Legal Description',
                         hintText: 'legal description'),
 //                    validator: (val) => val.isEmpty
 //                        ? 'Please enter property legal description'
@@ -307,8 +310,8 @@ class _AddPropertyState extends State<AddProperty> {
                   TextFormField(
                     keyboardType: TextInputType.number,
 //                initialValue: 'initial description',
-                    decoration:
-                        kTextInputDecoration.copyWith(hintText: 'valuation'),
+                    decoration: kTextInputDecoration.copyWith(
+                        labelText: 'Valuation Amount', hintText: 'valuation'),
 //                    validator: (val) =>
 //                        val.isEmpty ? 'Please enter valuation amount' : null,
                     onChanged: (val) => setState(
@@ -321,6 +324,7 @@ class _AddPropertyState extends State<AddProperty> {
                   TextFormField(
 //                initialValue: 'initial description',
                     decoration: kTextInputDecoration.copyWith(
+                        labelText: 'Valuation Agent',
                         hintText: 'valuation source'),
 //                      validator: (val) => val.isEmpty
 //                          ? 'Please enter any valuation source'
@@ -364,23 +368,19 @@ class _AddPropertyState extends State<AddProperty> {
                       Timestamp.now(),
                       Timestamp.now(),
                     );
-//                        .then((docReff) {
-//                      DatabaseServices().addPropertyUnit(
-//                        user.userUid,
-////                        'nnnnnnnnnn',
-//                        docRef.documentID, //docReff.documentID,
-//                        'Single unit',
-//                        '',
-//                        '',
-//                        0,
-//                        false,
-//                        false,
-//                        Timestamp.now(),
-//                        Timestamp.now(),
-//                      );
-//                      return null;
-//                    });
-//                    print('docRef: ${docRef.documentID}');
+                    await DatabaseServices().addPropertyUnit(
+                      user.userUid,
+                      docRef.documentID,
+                      'Single unit',
+                      '',
+                      '',
+                      0,
+                      false,
+                      false,
+                      Timestamp.now(),
+                      Timestamp.now(),
+                    );
+                    print('docRef: ${docRef.documentID}');
 
                     Navigator.pop(context);
                   }

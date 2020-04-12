@@ -41,7 +41,7 @@ class _EditPropertyState extends State<EditProperty> {
   num _currentPropertyMarketValuation;
   String _currentPropertyValuationSource;
   bool _currentPropertyArchived = false;
-  String error = '';
+//  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -316,8 +316,9 @@ class _EditPropertyState extends State<EditProperty> {
                                         ? 'Please enter insurance expiry date'
                                         : null,
                                     initialValue: propertyDetails
-                                        .data.propertyInsuranceExpiryDate
-                                        .toDate(), //DateTime.now(),
+                                            .data.propertyInsuranceExpiryDate
+                                            .toDate() ??
+                                        DateTime.now(),
                                     format: DateFormat("E,  MMM d, y"),
                                     onShowPicker:
                                         (context, currentValue) async {

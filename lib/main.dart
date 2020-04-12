@@ -12,6 +12,10 @@ import 'package:property_returns/models/user.dart';
 import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/screens/tasks/task_list.dart';
 import 'package:provider/provider.dart';
+import 'package:property_returns/services/database.dart';
+import 'package:property_returns/models/property_details.dart';
+import 'package:property_returns/models/task_details.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,6 +38,7 @@ class MyApp extends StatelessWidget {
       dividerColor: kColorOrange,
       dividerTheme: DividerThemeData(
         color: kColorOrange,
+        space: 50,
         thickness: 2,
         indent: 15,
         endIndent: 75,
@@ -55,6 +60,15 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         StreamProvider<User>.value(value: AuthService().user),
+        StreamProvider<UserData>.value(
+            value: DatabaseServices(uid: 'user.userUid').userData),
+        StreamProvider<QuerySnapshot>.value(
+            value: DatabaseServices(uid: 'user.userUid').allTasks),
+        StreamProvider<List<TaskDetails>>.value(
+            value: DatabaseServices(uid: 'user.userUid').userTasksByImportance),
+        StreamProvider<List<PropertyDetails>>.value(
+            value: DatabaseServices(uid: 'UuO2DO0JUVbVD0R1JqIclI7fprF3')
+                .userProperties),
       ],
       child: MaterialApp(
         theme: themeData,

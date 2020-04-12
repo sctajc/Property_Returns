@@ -37,7 +37,6 @@ class _EditUnitState extends State<EditUnit> {
   @override
   void initState() {
     super.initState();
-
     Firestore.instance
         .collection("units")
         .document(widget.unitUid)
@@ -234,7 +233,7 @@ class _EditUnitState extends State<EditUnit> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 RaisedButton(
-                  child: Text('Save'),
+                  child: Text('Update'),
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       await DatabaseServices(unitUid: widget.unitUid)

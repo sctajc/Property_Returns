@@ -178,6 +178,7 @@ class _PropertyTileState extends State<PropertyTile> {
                                           widget.propertyDetails.propertyUid,
                                       propertyName:
                                           widget.propertyDetails.propertyName,
+                                      defaultUnitName: 'Details (as one unit)',
                                     ),
 //                                        EditUnit(
 //                                      propertyName:

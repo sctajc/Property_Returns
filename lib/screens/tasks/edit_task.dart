@@ -63,7 +63,7 @@ class _EditTaskState extends State<EditTask> {
                         keyboardType: TextInputType.text,
                         initialValue: tasksDetails.taskTitle,
                         decoration: kTextInputDecoration.copyWith(
-                            hintText: 'short title'),
+                            labelText: 'Short Title', hintText: 'short title'),
                         validator: (val) => val.isEmpty
                             ? 'Please enter a brief task description'
                             : null,
@@ -74,10 +74,11 @@ class _EditTaskState extends State<EditTask> {
                         height: 10,
                       ),
                       TextFormField(
+                        maxLines: 3,
                         keyboardType: TextInputType.text,
                         initialValue: tasksDetails.taskDetail,
                         decoration: kTextInputDecoration.copyWith(
-                            hintText: 'more details'),
+                            labelText: 'Details', hintText: 'more details'),
                         validator: (val) =>
                             val.isEmpty ? 'Please enter task details' : null,
                         onChanged: (val) =>

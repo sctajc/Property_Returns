@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:property_returns/models/property_details.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/screens/properties/property_list.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/screens/home/home_page.dart';
 import 'package:property_returns/screens/tasks/task_list.dart';
 import 'package:property_returns/shared/loading.dart';
+import 'package:property_returns/services/database.dart';
 
 class Home extends StatelessWidget {
   // _auth is only required for signOut
@@ -18,6 +20,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     final userData = Provider.of<UserData>(context);
+    final userProperties = Provider.of<List<PropertyDetails>>(context);
 
     // display log out & settings buttons
     var appBar = AppBar(
@@ -30,7 +33,6 @@ class Home extends StatelessWidget {
             icon: Icon(Icons.person),
             label: Text('Log out')),
         FlatButton.icon(
-//            onPressed: () => _showSettingsPanel(),
             onPressed: () => Navigator.pushNamed(context, SettingsForm.id),
             icon: Icon(Icons.settings),
             label: Text('settings'))
@@ -61,6 +63,7 @@ class Home extends StatelessWidget {
   Drawer buildDrawer(BuildContext context) {
     final user = Provider.of<User>(context);
     final userData = Provider.of<UserData>(context);
+    final userProperties = Provider.of<List<PropertyDetails>>(context);
     final double _minHeight = 40;
     final double _maxHeight = 40;
 
@@ -87,7 +90,8 @@ class Home extends StatelessWidget {
                 ),
                 SizedBox(height: 7),
                 Text(
-                  user.userEmail,
+//                  user.userEmail,
+                  userProperties[1].propertyName,
                   style: kHeading.copyWith(fontSize: 18),
                 ),
               ],
@@ -98,6 +102,8 @@ class Home extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               Navigator.pushNamed(context, TaskList.id);
+//              Navigator.of(context)
+//                  .push(MaterialPageRoute(builder: (context) => TaskList()));
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 0, 0, 0),

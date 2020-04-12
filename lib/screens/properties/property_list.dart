@@ -25,63 +25,60 @@ class _PropertyListState extends State<PropertyList> {
     return StreamBuilder<List<PropertyDetails>>(
         stream: DatabaseServices(uid: user.userUid).userProperties,
         builder: (context, allUserProperties) {
-          if (allUserProperties.hasData) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text('Properties'),
-                actions: <Widget>[
-                  FlatButton.icon(
-                    onPressed: () => null,
-                    icon: Icon(Icons.search),
-                    label: Text(''),
-                  ),
-                  FlatButton.icon(
-                    onPressed: () => kShowHelpToast(context,
-                        'A unit is a defined area within a property available for individual renting'),
-                    icon: Icon(Icons.help),
-                    label: Text('Help'),
-                  ),
-                ],
-              ),
-              body: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: allUserProperties.data.length > 0
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: allUserProperties.data.length,
-                        itemBuilder: (context, index) {
-                          return PropertyTile(
-                              propertyDetails: allUserProperties.data[index]);
-                        },
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 30),
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                "Either you have not entered any properties or all your properties have been archived. "
-                                "Use the 'plus' button below right to add properties. "
-                                "If you wish to revisit properties which have been archived go back to main menu and select 'Properties archived' near the bottom",
-                                style: TextStyle(
-                                    color: kColorOrange, fontSize: 20),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-              ),
-              floatingActionButton: FloatingActionButton(
-                child: Icon(
-                  Icons.add,
+          if (!allUserProperties.hasData) return Loading();
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Properties'),
+              actions: <Widget>[
+                FlatButton.icon(
+                  onPressed: () => null,
+                  icon: Icon(Icons.search),
+                  label: Text(''),
                 ),
-                onPressed: () => Navigator.pushNamed(context, AddProperty.id),
+                FlatButton.icon(
+                  onPressed: () => kShowHelpToast(context,
+                      'A unit is a defined area within a property available for individual renting'),
+                  icon: Icon(Icons.help),
+                  label: Text('Help'),
+                ),
+              ],
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: allUserProperties.data.length > 0
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: allUserProperties.data.length,
+                      itemBuilder: (context, index) {
+                        return PropertyTile(
+                            propertyDetails: allUserProperties.data[index]);
+                      },
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 30),
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              "Either you have not entered any properties or all your properties have been archived. "
+                              "Use the 'plus' button below right to add properties. "
+                              "If you wish to revisit properties which have been archived go back to main menu and select 'Properties archived' near the bottom",
+                              style:
+                                  TextStyle(color: kColorOrange, fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(
+                Icons.add,
               ),
-            );
-          } else {
-            return Loading();
-          }
+              onPressed: () => Navigator.pushNamed(context, AddProperty.id),
+            ),
+          );
         });
   }
 }

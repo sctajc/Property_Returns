@@ -5,12 +5,14 @@ import 'package:property_returns/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/screens/tasks/task_tile.dart';
 import 'package:property_returns/shared/loading.dart';
+import 'package:property_returns/models/property_details.dart';
 
 class HomePage extends StatelessWidget {
   final int numberOfUserTaskToDisplay = 8;
   @override
   Widget build(BuildContext context) {
     final userTasks = Provider.of<List<TaskDetails>>(context);
+    final userProperties = Provider.of<List<PropertyDetails>>(context);
     if (userTasks == null) {
       return Loading();
     } else {
@@ -19,7 +21,7 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-            'Upcoming Important Tasks',
+            'Upcoming Important Tasks ${userProperties[1].propertyName}',
             style: kHeading,
           ),
           SizedBox(

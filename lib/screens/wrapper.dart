@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:property_returns/models/property_details.dart';
 import 'package:property_returns/models/task_details.dart';
 import 'package:property_returns/screens/authenticate/authenticate.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,8 @@ class Wrapper extends StatelessWidget {
               value: DatabaseServices(uid: user.userUid).userTasksByImportance),
           StreamProvider<QuerySnapshot>.value(
               value: DatabaseServices(uid: user.userUid).allTasks),
+          StreamProvider<List<PropertyDetails>>.value(
+              value: DatabaseServices(uid: user.userUid).userProperties),
         ],
         child: Home(),
       );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:property_returns/models/property_details.dart';
 import 'package:property_returns/screens/tasks/add_task.dart';
 import 'package:property_returns/services/database.dart';
 import 'package:property_returns/shared/constants.dart';
@@ -29,6 +30,7 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
+    final userProperties = Provider.of<List<PropertyDetails>>(context);
 //    final userData = Provider.of<UserData>(context);
 //    final userTasks = Provider.of<List<TasksDetails>>(context);
 
@@ -60,7 +62,8 @@ class _TaskListState extends State<TaskList> {
         if (allUserTasks.hasData) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Tasks'),
+//              title: Text('Tasks'),
+              title: Text(userProperties[1].propertyName),
               actions: <Widget>[
                 FlatButton.icon(
                     onPressed: () => null,

@@ -5,8 +5,8 @@ class PropertyDetails {
   final String userUid;
   final String propertyName;
   final String propertyNotes;
-  final String propertyZone;
   final String propertyAddress;
+  final String propertyZone;
   final num propertyLandArea;
   final Timestamp propertyDatePurchased;
   final String propertyRatesBillingCode;

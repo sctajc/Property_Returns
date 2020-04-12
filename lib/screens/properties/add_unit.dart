@@ -13,7 +13,8 @@ class AddUnit extends StatefulWidget {
   static String id = 'add_unit_screen';
   final String propertyUid;
   final String propertyName;
-  AddUnit({this.propertyUid, this.propertyName});
+  final String defaultUnitName;
+  AddUnit({this.propertyUid, this.propertyName, this.defaultUnitName});
 
   @override
   _AddUnitState createState() => _AddUnitState();
@@ -34,7 +35,6 @@ class _AddUnitState extends State<AddUnit> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
@@ -53,8 +53,10 @@ class _AddUnitState extends State<AddUnit> {
                     height: 10,
                   ),
                   TextFormField(
-                    decoration:
-                        kTextInputDecoration.copyWith(hintText: 'unit name'),
+                    // used for initial/single/first unit for property
+                    initialValue: widget.defaultUnitName,
+                    decoration: kTextInputDecoration.copyWith(
+                        labelText: 'Name', hintText: 'unit name'),
                     validator: (val) => val.isEmpty
                         ? 'Please enter what this area is know by'
                         : null,
@@ -64,8 +66,8 @@ class _AddUnitState extends State<AddUnit> {
                     height: 10,
                   ),
                   TextFormField(
-                    decoration:
-                        kTextInputDecoration.copyWith(hintText: 'more details'),
+                    decoration: kTextInputDecoration.copyWith(
+                        labelText: 'Details', hintText: 'more details'),
 //                    validator: (val) => val.isEmpty
 //                        ? 'Please enter any property details'
 //                        : null,
@@ -76,6 +78,7 @@ class _AddUnitState extends State<AddUnit> {
                   ),
                   TextFormField(
                     decoration: kTextInputDecoration.copyWith(
+                        labelText: 'Description',
                         hintText: 'Lease description'),
                     validator: (val) =>
                         val.isEmpty ? 'Please enter lease description' : null,

@@ -93,6 +93,7 @@ class DatabaseServices {
     String taskDetail,
     bool taskArchived,
     int taskImportance,
+    String taskUnitUid,
     DateTime taskDueDateTime,
     Timestamp taskEditedDateTime,
   ) async {
@@ -103,6 +104,7 @@ class DatabaseServices {
         'detail': taskDetail,
         'archived': taskArchived,
         'importance': taskImportance,
+        'unitUid': taskUnitUid,
         'dueDateTime': taskDueDateTime,
         'editedDateTime': taskEditedDateTime,
       },
@@ -261,7 +263,9 @@ class DatabaseServices {
     Timestamp propertyRecordCreatedDateTime,
     Timestamp propertyRecordLastEdited,
   ) async {
-    return await userPropertyCollection.document().setData(
+    DocumentReference document =
+        userPropertyCollection.document(); //new document is created here
+    await document.setData(
       {
         'userUid': userUid,
         'propertyName': propertyName,
@@ -273,7 +277,7 @@ class DatabaseServices {
         'propertyRatesBillingCode': propertyRatesBillingCode,
         'propertyInsurancePolicy': propertyInsurancePolicy,
         'propertyInsuranceSource': propertyInsuranceSource,
-        'propertyInsuranceDate': propertyInsuranceExpiryDate,
+        'propertyInsuranceExpiryDate': propertyInsuranceExpiryDate,
         'propertyLegalDescription': propertyLegalDescription,
         'propertyMarketValuation': propertyValuation,
         'propertyMarketValuationSource': propertyValuationSource,
@@ -282,6 +286,8 @@ class DatabaseServices {
         'propertyRecordLastEdited': propertyRecordLastEdited,
       },
     );
+    // returns the document after setting the data finishes so in this way, your docRef must not be null anymore.
+    return document;
   }
 
   // update a property
@@ -359,7 +365,7 @@ class DatabaseServices {
       propertyMarketValuation: snapshot.data['propertyMarketValuation'] ?? 0,
       propertyMarketValuationSource:
           snapshot.data['propertyMarketValuationSource'] ?? 'no source',
-//      propertyArchived: snapshot.data['propertyArchived'] ?? false,
+      propertyArchived: snapshot.data['propertyArchived'] ?? false,
       propertyRecordCreatedDateTime:
           snapshot.data['propertyRecordCreatedDateTime'],
       propertyRecordLastEdited: snapshot.data['propertyRecordLastEdited'],
@@ -490,12 +496,23 @@ class DatabaseServices {
         .map(_userUnitsFromSnapshot);
   }
 
+  // get unit name stream for a user
+  Stream<List<UnitDetails>> get allUnitsForUser {
+    return userUnitCollection
+        .where('userUid', isEqualTo: uid)
+        .where('unitArchived', isEqualTo: false)
+        .orderBy('unitName', descending: false)
+        .snapshots()
+        .map(_userUnitsFromSnapshot);
+  }
+
   List<UnitDetails> _userUnitsFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map(
       (doc) {
         return UnitDetails(
           unitUid: doc.documentID,
           userUid: uid,
+          propertyUid: doc.data['propertyUid'],
           unitName: doc.data['unitName'] ?? 'no name',
           unitNotes: doc.data['unitNotes'] ?? 'no notes',
         );
