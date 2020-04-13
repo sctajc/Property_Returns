@@ -30,7 +30,7 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    final userProperties = Provider.of<List<PropertyDetails>>(context);
+//    final userProperties = Provider.of<List<PropertyDetails>>(context);
 //    final userData = Provider.of<UserData>(context);
 //    final userTasks = Provider.of<List<TasksDetails>>(context);
 
