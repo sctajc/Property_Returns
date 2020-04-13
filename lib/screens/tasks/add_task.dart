@@ -21,6 +21,7 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
   Map propertyUnitNames = Map<String, String>();
+  Map<String, String> mapProperties = {'none': 'none'};
 
   String _currentPropertySelected = 'none';
   String _currentTenantSelected = 'none';
@@ -36,18 +37,15 @@ class _AddTaskState extends State<AddTask> {
   bool _currentTaskArchived = false;
   String error = '';
 
-  Map<String, String> mapProperties = {'none': 'none'};
-//  Map<String, String> mapProperties = {
-//    'none': 'none',
-//    '3DdtpMfk8ouSm11VxGcT': 'Rosebank',
-//    '3tVEzjFXzweKLHTA7M3I': 'Queen St',
-//    'fHmGiLU1am5DvPLPGOi6': 'all Fields',
-//  };
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     final userProperties = Provider.of<List<PropertyDetails>>(context);
+
+    for (PropertyDetails userProperty in userProperties) {
+      mapProperties[userProperty.propertyUid] = userProperty.propertyName;
+      print(mapProperties);
+    }
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,

@@ -62,8 +62,8 @@ class _TaskListState extends State<TaskList> {
         if (allUserTasks.hasData) {
           return Scaffold(
             appBar: AppBar(
-//              title: Text('Tasks'),
-              title: Text(userProperties[1].propertyName),
+              title: Text('Tasks'),
+//              title: Text(userProperties[1].propertyName),
               actions: <Widget>[
                 FlatButton.icon(
                     onPressed: () => null,

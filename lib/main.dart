@@ -59,16 +59,18 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        StreamProvider<User>.value(value: AuthService().user),
-        StreamProvider<UserData>.value(
-            value: DatabaseServices(uid: 'user.userUid').userData),
-        StreamProvider<QuerySnapshot>.value(
-            value: DatabaseServices(uid: 'user.userUid').allTasks),
-        StreamProvider<List<TaskDetails>>.value(
-            value: DatabaseServices(uid: 'user.userUid').userTasksByImportance),
-        StreamProvider<List<PropertyDetails>>.value(
-            value: DatabaseServices(uid: 'UuO2DO0JUVbVD0R1JqIclI7fprF3')
-                .userProperties),
+        StreamProvider<User>(create: (_) => AuthService().user),
+        StreamProvider<UserData>(
+            create: (_) => DatabaseServices(uid: 'user.userUid').userData),
+        StreamProvider<QuerySnapshot>(
+            create: (_) => DatabaseServices(uid: 'user.userUid').allTasks),
+        StreamProvider<List<TaskDetails>>(
+            create: (_) =>
+                DatabaseServices(uid: 'user.userUid').userTasksByImportance),
+        StreamProvider<List<PropertyDetails>>(
+          create: (_) => DatabaseServices(uid: 'UuO2DO0JUVbVD0R1JqIclI7fprF3')
+              .userProperties,
+        ),
       ],
       child: MaterialApp(
         theme: themeData,

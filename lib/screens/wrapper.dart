@@ -20,14 +20,17 @@ class Wrapper extends StatelessWidget {
 //      print('Wrapper: ${user.userEmail}');
       return MultiProvider(
         providers: [
-          StreamProvider<UserData>.value(
-              value: DatabaseServices(uid: user.userUid).userData),
-          StreamProvider<List<TaskDetails>>.value(
-              value: DatabaseServices(uid: user.userUid).userTasksByImportance),
-          StreamProvider<QuerySnapshot>.value(
-              value: DatabaseServices(uid: user.userUid).allTasks),
-          StreamProvider<List<PropertyDetails>>.value(
-              value: DatabaseServices(uid: user.userUid).userProperties),
+          StreamProvider<UserData>(
+              create: (_) => DatabaseServices(uid: user.userUid).userData),
+          StreamProvider<List<TaskDetails>>(
+              create: (_) =>
+                  DatabaseServices(uid: user.userUid).userTasksByImportance),
+          StreamProvider<QuerySnapshot>(
+              create: (_) => DatabaseServices(uid: user.userUid).allTasks),
+          StreamProvider<List<PropertyDetails>>(
+            create: (_) => DatabaseServices(uid: 'UuO2DO0JUVbVD0R1JqIclI7fprF3')
+                .userProperties,
+          )
         ],
         child: Home(),
       );
