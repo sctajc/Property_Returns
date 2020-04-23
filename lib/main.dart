@@ -29,9 +29,10 @@ class MyApp extends StatelessWidget {
         ),
       ),
       sliderTheme: SliderThemeData(
-          thumbColor: kColorOrange,
-          activeTrackColor: kColorOrange,
-          inactiveTrackColor: Colors.orange[100]),
+        thumbColor: kColorOrange,
+        activeTrackColor: kColorOrange,
+        inactiveTrackColor: Colors.orange[100],
+      ),
       primaryColor: kColorBlue,
       accentColor: kColorOrange,
       fontFamily: 'Roboto',
@@ -60,19 +61,25 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         StreamProvider<User>(create: (_) => AuthService().user),
-        StreamProvider<UserData>(
-            create: (_) => DatabaseServices(uid: 'user.userUid').userData),
-        StreamProvider<QuerySnapshot>(
-            create: (_) => DatabaseServices(uid: 'user.userUid').allTasks),
-        StreamProvider<List<TaskDetails>>(
-            create: (_) =>
-                DatabaseServices(uid: 'user.userUid').userTasksByImportance),
-        StreamProvider<List<PropertyDetails>>(
-          create: (_) => DatabaseServices(uid: 'UuO2DO0JUVbVD0R1JqIclI7fprF3')
-              .userProperties,
+        ProxyProvider<User, DatabaseServices>(
+          update: (_, user, __) => DatabaseServices(uid: user?.userUid),
         ),
+//        StreamProvider<UserData>(
+//            create: (_) => DatabaseServices(uid: user.userUid).userData),
+//        StreamProvider<QuerySnapshot>(
+//            create: (_) => DatabaseServices(uid: 'user.userUid').allTasks),
+//        StreamProvider<List<TaskDetails>>(
+//            create: (_) =>
+//                DatabaseServices(uid: 'user.userUid').userTasksByImportance),
+// TODO this should work but ProxyProvider does not work with StreamProvider???
+//      Instead have a StreamBuilder in relevant class (eg AddTask())
+//        StreamProvider<List<PropertyDetails>>(
+//          create: (_) => DatabaseServices(uid: 'UuO2DO0JUVbVD0R1JqIclI7fprF3')
+//              .userProperties,
+//        ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: themeData,
         home: Wrapper(),
         routes: {

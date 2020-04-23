@@ -10,10 +10,14 @@ class UserData {
   final String userName;
   final int leaseNotificationDays;
   final int taskNotificationDays;
+  final bool areaMeasurementM2;
+  final String currencySymbol;
 
   UserData(
       {this.userUid,
       this.userName,
       this.leaseNotificationDays,
-      this.taskNotificationDays});
+      this.taskNotificationDays,
+      this.areaMeasurementM2,
+      this.currencySymbol});
 }

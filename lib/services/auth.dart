@@ -37,7 +37,7 @@ class AuthService {
 
       // create a new document for the user with the uid
       await DatabaseServices(uid: user.uid)
-          .updateUserDetails('Please enter a name', 30, 30);
+          .updateUserDetails('Please enter a name', 30, 30, true, '\$');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

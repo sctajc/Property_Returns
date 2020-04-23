@@ -14,7 +14,8 @@ class PropertyDetails {
   final String propertyInsuranceSource;
   final Timestamp propertyInsuranceExpiryDate;
   final String propertyLegalDescription;
-  final num propertyMarketValuation;
+  final num propertyMarketValuationAmount;
+  final Timestamp propertyMarketValuationDate;
   final String propertyMarketValuationSource;
   final bool propertyArchived;
   final Timestamp propertyRecordCreatedDateTime;
@@ -32,7 +33,8 @@ class PropertyDetails {
     this.propertyInsuranceSource,
     this.propertyLandArea,
     this.propertyLegalDescription,
-    this.propertyMarketValuation,
+    this.propertyMarketValuationAmount,
+    this.propertyMarketValuationDate,
     this.propertyMarketValuationSource,
     this.propertyNotes,
     this.propertyRatesBillingCode,
@@ -49,8 +51,12 @@ class UnitDetails {
   final String unitName;
   final String unitNotes;
   final num unitArea;
+  final num unitPercentageSplit;
   final String unitLeaseDescription;
   final bool unitResidential;
+  final num unitRentalValuationAmount;
+  final Timestamp unitRentalValuationDate;
+  final String unitRentalValuationSource;
   final bool unitArchived;
   final Timestamp unitRecordCreatedDateTime;
   final Timestamp unitRecordLastEdited;
@@ -58,12 +64,16 @@ class UnitDetails {
   UnitDetails({
     this.unitUid,
     this.propertyUid,
-    this.unitResidential,
     this.unitRecordCreatedDateTime,
     this.unitNotes,
     this.unitName,
     this.unitLeaseDescription,
     this.unitArea,
+    this.unitPercentageSplit,
+    this.unitResidential,
+    this.unitRentalValuationAmount,
+    this.unitRentalValuationDate,
+    this.unitRentalValuationSource,
     this.unitArchived,
     this.userUid,
     this.unitRecordLastEdited,

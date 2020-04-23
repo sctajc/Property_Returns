@@ -21,7 +21,7 @@ dependencies:
   flushbar:
   font_awesome_flutter: ^8.5.0
   flutter_markdown: ^0.3.4
-
+  currency_pickers: ^1.0.6
 
 dev_dependencies:
   pedantic: ^1.8.0+1

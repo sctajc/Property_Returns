@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:property_returns/models/property_details.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/screens/properties/property_list.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +19,8 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     final userData = Provider.of<UserData>(context);
-    final userProperties = Provider.of<List<PropertyDetails>>(context);
+    final userProperties =
+        Provider.of<DatabaseServices>(context).userProperties;
 
     // display log out & settings buttons
     var appBar = AppBar(
@@ -63,7 +63,6 @@ class Home extends StatelessWidget {
   Drawer buildDrawer(BuildContext context) {
     final user = Provider.of<User>(context);
     final userData = Provider.of<UserData>(context);
-    final userProperties = Provider.of<List<PropertyDetails>>(context);
     final double _minHeight = 40;
     final double _maxHeight = 40;
 
@@ -90,8 +89,7 @@ class Home extends StatelessWidget {
                 ),
                 SizedBox(height: 7),
                 Text(
-//                  user.userEmail,
-                  userProperties[1].propertyName,
+                  user.userEmail,
                   style: kHeading.copyWith(fontSize: 18),
                 ),
               ],

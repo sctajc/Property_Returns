@@ -25,11 +25,11 @@ class Wrapper extends StatelessWidget {
           StreamProvider<List<TaskDetails>>(
               create: (_) =>
                   DatabaseServices(uid: user.userUid).userTasksByImportance),
-          StreamProvider<QuerySnapshot>(
-              create: (_) => DatabaseServices(uid: user.userUid).allTasks),
-          StreamProvider<List<PropertyDetails>>(
-            create: (_) => DatabaseServices(uid: user.userUid).userProperties,
-          )
+//          StreamProvider<QuerySnapshot>(
+//              create: (_) => DatabaseServices(uid: user.userUid).allTasks),
+//          StreamProvider<List<PropertyDetails>>(
+//            create: (_) => DatabaseServices(uid: user.userUid).userProperties,
+//          )
         ],
         child: Home(),
       );

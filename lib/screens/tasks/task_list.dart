@@ -30,9 +30,6 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-//    final userProperties = Provider.of<List<PropertyDetails>>(context);
-//    final userData = Provider.of<UserData>(context);
-//    final userTasks = Provider.of<List<TasksDetails>>(context);
 
     switch (_displayOrder) {
       case DisplayOrder.dueDateFirst:
@@ -59,83 +56,79 @@ class _TaskListState extends State<TaskList> {
     return StreamBuilder<List<TaskDetails>>(
       stream: _databaseServicesDisplayOrder,
       builder: (context, allUserTasks) {
-        if (allUserTasks.hasData) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Tasks'),
+        if (!allUserTasks.hasData) return Loading();
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Tasks'),
 //              title: Text(userProperties[1].propertyName),
-              actions: <Widget>[
-                FlatButton.icon(
-                    onPressed: () => null,
-                    icon: Icon(Icons.search),
-                    label: Text('')),
-                FlatButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        switch (_displayOrder) {
-                          case DisplayOrder.dueDateFirst:
-                            _displayOrder = DisplayOrder.dueDateLast;
-                            break;
-                          case DisplayOrder.dueDateLast:
-                            _displayOrder = DisplayOrder.importanceHighest;
-                            break;
-                          case DisplayOrder.importanceHighest:
-                            _displayOrder = DisplayOrder.importanceLowest;
-                            break;
-                          case DisplayOrder.importanceLowest:
-                            _displayOrder = DisplayOrder.dueDateFirst;
-                            break;
-                        }
-                      });
+            actions: <Widget>[
+              FlatButton.icon(
+                  onPressed: () => null,
+                  icon: Icon(Icons.search),
+                  label: Text('')),
+              FlatButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      switch (_displayOrder) {
+                        case DisplayOrder.dueDateFirst:
+                          _displayOrder = DisplayOrder.dueDateLast;
+                          break;
+                        case DisplayOrder.dueDateLast:
+                          _displayOrder = DisplayOrder.importanceHighest;
+                          break;
+                        case DisplayOrder.importanceHighest:
+                          _displayOrder = DisplayOrder.importanceLowest;
+                          break;
+                        case DisplayOrder.importanceLowest:
+                          _displayOrder = DisplayOrder.dueDateFirst;
+                          break;
+                      }
+                    });
+                  },
+                  icon: (_displayOrder == DisplayOrder.dueDateFirst ||
+                          _displayOrder == DisplayOrder.importanceHighest)
+                      ? Icon(Icons.arrow_downward)
+                      : Icon(Icons.arrow_upward),
+                  label: (_displayOrder == DisplayOrder.dueDateFirst ||
+                          _displayOrder == DisplayOrder.dueDateLast)
+                      ? Text('Date')
+                      : Text('Importance')),
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: allUserTasks.data.length > 0
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: allUserTasks.data.length,
+                    itemBuilder: (context, index) {
+                      return TaskTile(taskDetails: allUserTasks.data[index]);
                     },
-                    icon: (_displayOrder == DisplayOrder.dueDateFirst ||
-                            _displayOrder == DisplayOrder.importanceHighest)
-                        ? Icon(Icons.arrow_downward)
-                        : Icon(Icons.arrow_upward),
-                    label: (_displayOrder == DisplayOrder.dueDateFirst ||
-                            _displayOrder == DisplayOrder.dueDateLast)
-                        ? Text('Date')
-                        : Text('Importance')),
-              ],
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: allUserTasks.data.length > 0
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: allUserTasks.data.length,
-                      itemBuilder: (context, index) {
-                        return TaskTile(taskDetails: allUserTasks.data[index]);
-                      },
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 30),
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              "Either you have not entered any tasks or all your tasks have been archived. "
-                              "Use the 'plus' button below right to add tasks. "
-                              "If you wish to revisit tasks which have been completed (archived) go back tyo main menu and select 'Tasks archived' near the bottom",
-                              style:
-                                  TextStyle(color: kColorOrange, fontSize: 20),
-                            ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 30),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            "Either you have not entered any tasks or all your tasks have been archived. "
+                            "Use the 'plus' button below right to add tasks. "
+                            "If you wish to revisit tasks which have been completed (archived) go back tyo main menu and select 'Tasks archived' near the bottom",
+                            style: TextStyle(color: kColorOrange, fontSize: 20),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(
+              Icons.add,
             ),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(
-                Icons.add,
-              ),
-              onPressed: () => Navigator.pushNamed(context, AddTask.id),
-            ),
-          );
-        } else {
-          return Loading();
-        }
+            onPressed: () => Navigator.pushNamed(context, AddTask.id),
+          ),
+        );
       },
     );
   }

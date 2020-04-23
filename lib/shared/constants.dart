@@ -22,7 +22,7 @@ const kHeading =
 const kFieldHeading =
     TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: kColorOrange);
 const kInputText =
-TextStyle(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.black);
+    TextStyle(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.black);
 
 // display FlushBar (toast, snackBar)
 void kShowHelpToast(context, String message) {
@@ -37,3 +37,19 @@ void kShowHelpToast(context, String message) {
     borderRadius: 10,
   )..show(context);
 }
+
+const List<String> currencies = [
+  '\$',
+  '€',
+  '¥',
+  '£',
+  '元',
+  'kr',
+  '₩',
+  '₹',
+  '₽',
+  'R',
+  'zł',
+  '฿',
+  '₪'
+];

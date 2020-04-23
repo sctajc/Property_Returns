@@ -3,14 +3,23 @@ import 'package:property_returns/models/property_details.dart';
 import 'package:property_returns/models/task_details.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/models/user_details.dart';
+import 'package:property_returns/models/company_details.dart';
 
 class DatabaseServices {
   final String uid; // user uid
   final String taskID; // task id
   final String propertyUid;
   final String unitUid;
+  final String companyUid;
+  final String personUid;
 
-  DatabaseServices({this.uid, this.taskID, this.propertyUid, this.unitUid});
+  DatabaseServices(
+      {this.uid,
+      this.taskID,
+      this.propertyUid,
+      this.unitUid,
+      this.companyUid,
+      this.personUid});
 
   // collection reference shorthand
   final CollectionReference userDetailsCollection =
@@ -25,17 +34,29 @@ class DatabaseServices {
   final CollectionReference userUnitCollection =
       Firestore.instance.collection('units');
 
+  final CollectionReference userCompanyCollection =
+      Firestore.instance.collection('companies');
+
+  final CollectionReference userPersonCollection =
+      Firestore.instance.collection('persons');
+
   //
   //
   // UserDetails (does not include userUid)
   //
-  Future updateUserDetails(String userName, int leaseNotificationDays,
-      int taskNotificationDays) async {
+  Future updateUserDetails(
+      String userName,
+      int leaseNotificationDays,
+      int taskNotificationDays,
+      bool areaMeasurementM2,
+      String currencySymbol) async {
     return await userDetailsCollection.document(uid).setData(
       {
         'user_name': userName,
         'lease_notification_days': leaseNotificationDays,
         'task_notification_days': taskNotificationDays,
+        'areaMeasurementM2': areaMeasurementM2,
+        'currencySymbol': currencySymbol,
       },
     );
   }
@@ -80,6 +101,8 @@ class DatabaseServices {
       userName: snapshot.data['user_name'],
       leaseNotificationDays: snapshot.data['lease_notification_days'],
       taskNotificationDays: snapshot.data['task_notification_days'],
+      areaMeasurementM2: snapshot.data['areaMeasurementM2'],
+      currencySymbol: snapshot.data['currencySymbol'],
     );
   }
 
@@ -120,6 +143,7 @@ class DatabaseServices {
     bool taskArchived,
     int taskImportance,
     DateTime taskDueDateTime,
+    String taskUnitUid,
     Timestamp taskEditedDateTime,
   ) async {
     return await userTaskCollection.document(taskID).updateData(
@@ -130,6 +154,7 @@ class DatabaseServices {
         'archived': taskArchived,
         'importance': taskImportance,
         'dueDateTime': taskDueDateTime,
+        'unitUid': taskUnitUid,
         'editedDateTime': taskEditedDateTime,
       },
     );
@@ -152,6 +177,7 @@ class DatabaseServices {
       taskArchived: snapshot.data['archived'] ?? false,
       taskImportance: snapshot.data['importance'] ?? 5,
       taskDueDateTime: snapshot.data['dueDateTime'] ?? DateTime.now(),
+      taskUnitUid: snapshot.data['unitUid'] ?? 'none',
       taskLastEditedDateTime: snapshot.data['editedDateTime'] ?? DateTime.now(),
     );
   }
@@ -240,7 +266,7 @@ class DatabaseServices {
   }
 
 //
-// **********  Property (& Units below) **********
+// **********  Property (& then Units below) **********
 //
 
   // add a property
@@ -257,8 +283,9 @@ class DatabaseServices {
     String propertyInsuranceSource,
     DateTime propertyInsuranceExpiryDate,
     String propertyLegalDescription,
-    double propertyValuation,
-    String propertyValuationSource,
+    double propertyMarketValuationAmount,
+    DateTime propertyMarketValuationDate,
+    String propertyMarketValuationSource,
     bool propertyArchived,
     Timestamp propertyRecordCreatedDateTime,
     Timestamp propertyRecordLastEdited,
@@ -279,8 +306,9 @@ class DatabaseServices {
         'propertyInsuranceSource': propertyInsuranceSource,
         'propertyInsuranceExpiryDate': propertyInsuranceExpiryDate,
         'propertyLegalDescription': propertyLegalDescription,
-        'propertyMarketValuation': propertyValuation,
-        'propertyMarketValuationSource': propertyValuationSource,
+        'propertyMarketValuationAmount': propertyMarketValuationAmount,
+        'propertyMarketValuationDate': propertyMarketValuationDate,
+        'propertyMarketValuationSource': propertyMarketValuationSource,
         'propertyArchived': propertyArchived,
         'propertyRecordCreatedDateTime': propertyRecordCreatedDateTime,
         'propertyRecordLastEdited': propertyRecordLastEdited,
@@ -304,7 +332,8 @@ class DatabaseServices {
     String propertyInsuranceSource,
     DateTime propertyInsuranceExpiryDate,
     String propertyLegalDescription,
-    num propertyValuation,
+    num propertyMarketValuationAmount,
+    DateTime propertyMarketValuationDate,
     String propertyValuationSource,
     bool propertyArchived,
     Timestamp propertyRecordCreatedDateTime,
@@ -324,7 +353,8 @@ class DatabaseServices {
         'propertyInsuranceSource': propertyInsuranceSource,
         'propertyInsuranceExpiryDate': propertyInsuranceExpiryDate,
         'propertyLegalDescription': propertyLegalDescription,
-        'propertyMarketValuation': propertyValuation,
+        'propertyMarketValuationAmount': propertyMarketValuationAmount,
+        'propertyMarketValuationDate': propertyMarketValuationDate,
         'propertyMarketValuationSource': propertyValuationSource,
         'propertyArchived': propertyArchived,
         'propertyRecordCreatedDateTime': propertyRecordCreatedDateTime,
@@ -350,19 +380,19 @@ class DatabaseServices {
       propertyAddress: snapshot.data['propertyAddress'] ?? 'no address',
       propertyZone: snapshot.data['propertyZone'] ?? 'no zone',
       propertyLandArea: snapshot.data['propertyLandArea'] ?? 0,
-      propertyDatePurchased:
-          snapshot.data['propertyDatePurchased'] ?? DateTime.now(),
+      propertyDatePurchased: snapshot.data['propertyDatePurchased'],
       propertyRatesBillingCode:
           snapshot.data['propertyRatesBillingCode'] ?? 'no code',
       propertyInsurancePolicy:
           snapshot.data['propertyInsurancePolicy'] ?? 'no policy',
       propertyInsuranceSource:
           snapshot.data['propertyInsuranceSource'] ?? 'no source',
-      propertyInsuranceExpiryDate:
-          snapshot.data['propertyInsuranceExpiryDate'] ?? DateTime.now(),
+      propertyInsuranceExpiryDate: snapshot.data['propertyInsuranceExpiryDate'],
       propertyLegalDescription:
           snapshot.data['propertyLegalDescription'] ?? 'no desc',
-      propertyMarketValuation: snapshot.data['propertyMarketValuation'] ?? 0,
+      propertyMarketValuationAmount:
+          snapshot.data['propertyMarketValuationAmount'] ?? 0,
+      propertyMarketValuationDate: snapshot.data['propertyMarketValuationDate'],
       propertyMarketValuationSource:
           snapshot.data['propertyMarketValuationSource'] ?? 'no source',
       propertyArchived: snapshot.data['propertyArchived'] ?? false,
@@ -411,7 +441,11 @@ class DatabaseServices {
     String unitNotes,
     String unitLeaseDescription,
     num unitArea,
+    num unitPercentageSplit,
     bool unitResidential,
+    num unitRentalValuationAmount,
+    DateTime unitRentalValuationDate,
+    String unitRentalValuationSource,
     bool unitArchived,
     Timestamp unitRecordCreatedDateTime,
     Timestamp unitRecordLastEdited,
@@ -424,7 +458,11 @@ class DatabaseServices {
         'unitNotes': unitNotes,
         'unitLeaseDescription': unitLeaseDescription,
         'unitArea': unitArea,
+        'unitPercentageSplit': unitPercentageSplit,
         'unitResidential': unitResidential,
+        'unitRentalValuationAmount': unitRentalValuationAmount,
+        'unitRentalValuationDate': unitRentalValuationDate,
+        'unitRentalValuationSource': unitRentalValuationSource,
         'unitArchived': unitArchived,
         'unitRecordCreatedDateTime': unitRecordCreatedDateTime,
         'unitRecordLastEdited': unitRecordLastEdited,
@@ -440,7 +478,11 @@ class DatabaseServices {
     String unitNotes,
     String unitLeaseDescription,
     num unitArea,
+    num unitPercentageSplit,
     bool unitResidential,
+    num unitRentalValuationAmount,
+    DateTime unitRentalValuationDate,
+    String unitRentalValuationSource,
     bool unitArchived,
     Timestamp unitRecordCreatedDateTime,
     Timestamp unitRecordLastEdited,
@@ -452,7 +494,11 @@ class DatabaseServices {
         'unitNotes': unitNotes,
         'unitLeaseDescription': unitLeaseDescription,
         'unitArea': unitArea,
+        'unitPercentageSplit': unitPercentageSplit,
         'unitResidential': unitResidential,
+        'unitRentalValuationAmount': unitRentalValuationAmount,
+        'unitRentalValuationDate': unitRentalValuationDate,
+        'unitRentalValuationSource': unitRentalValuationSource,
         'unitArchived': unitArchived,
         'unitRecordCreatedDateTime': unitRecordCreatedDateTime,
         'unitRecordLastEdited': unitRecordLastEdited,
@@ -460,7 +506,7 @@ class DatabaseServices {
     );
   }
 
-  // get property Details stream for a given property
+  // get unit Details stream for a given unit
   //TODO why is stream not updating edit field when data changed in firebase
   Stream<UnitDetails> get unitByDocumentID {
     return userUnitCollection
@@ -477,9 +523,13 @@ class DatabaseServices {
       unitName: snapshot.data['unitName'] ?? 'no name',
       unitNotes: snapshot.data['unitNotes'] ?? 'no notes',
       unitArea: snapshot.data['unitArea'] ?? 0,
+      unitPercentageSplit: snapshot.data['unitPercentageSplit'] ?? 0,
       unitLeaseDescription:
           snapshot.data['unitLeaseDescription'] ?? 'no description',
       unitResidential: snapshot.data['unitResidential'] ?? false,
+      unitRentalValuationAmount: snapshot['unitRentalValuationAmount'] ?? 0,
+      unitRentalValuationDate: snapshot['unitRentalValuationDate'],
+      unitRentalValuationSource: snapshot['unitRentalValuationSource'],
       unitArchived: snapshot.data['unitArchived'],
       unitRecordCreatedDateTime: snapshot.data['unitRecordCreatedDateTime'],
       unitRecordLastEdited: snapshot.data['unitRecordLastEdited'],
@@ -515,6 +565,258 @@ class DatabaseServices {
           propertyUid: doc.data['propertyUid'],
           unitName: doc.data['unitName'] ?? 'no name',
           unitNotes: doc.data['unitNotes'] ?? 'no notes',
+        );
+      },
+    ).toList();
+  }
+
+//
+// **********  Company (& then Person below) **********
+//
+
+// add a company
+  Future addUserCompany(
+    String userUid,
+    String companyName,
+    String companyComment,
+    String companyPhone,
+    String companyEmail,
+    String companyWebsite,
+    String companyPostalAddress,
+    bool companySetTenant,
+    bool companySetTrade,
+    bool companySetAgent,
+    bool companyArchived,
+    Timestamp companyRecordCreatedDateTime,
+    Timestamp companyRecordLastEdited,
+  ) async {
+    DocumentReference document =
+        userCompanyCollection.document(); //new document is created here
+    await document.setData(
+      {
+        'userUid': userUid,
+        'companyName': companyName,
+        'companyComment': companyComment,
+        'companyPhone': companyPhone,
+        'companyEmail': companyEmail,
+        'companyWebsite': companyWebsite,
+        'companyPostalAddress': companyPostalAddress,
+        'companySetTenant': companySetTenant,
+        'companySetTrade': companySetTrade,
+        'companySetAgent': companySetAgent,
+        'companyArchived': companyArchived,
+        'companyRecordCreatedDateTime': companyRecordCreatedDateTime,
+        'companyRecordLastEdited': companyRecordLastEdited,
+      },
+    );
+    // returns the document after setting the data finishes so in this way, your docRef must not be null anymore.
+    return document;
+  }
+
+// update a company
+  Future updateUserCompany(
+    String userUid,
+    String companyName,
+    String companyComment,
+    String companyPhone,
+    String companyEmail,
+    String companyWebsite,
+    String companyPostalAddress,
+    bool companySetTenant,
+    bool companySetTrade,
+    bool companySetAgent,
+    bool companyArchived,
+    Timestamp companyRecordCreatedDateTime,
+    Timestamp companyRecordLastEdited,
+  ) async {
+    return await userCompanyCollection.document(companyUid).updateData(
+      {
+        'userUid': userUid,
+        'companyName': companyName,
+        'companyComment': companyComment,
+        'companyPhone': companyPhone,
+        'companyEmail': companyEmail,
+        'companyWebsite': companyWebsite,
+        'companyPostalAddress': companyPostalAddress,
+        'companySetTenant': companySetTenant,
+        'companySetTrade': companySetTrade,
+        'companySetAgent': companySetAgent,
+        'companyArchived': companyArchived,
+        'companyRecordCreatedDateTime': companyRecordCreatedDateTime,
+        'companyRecordLastEdited': companyRecordLastEdited,
+      },
+    );
+  }
+
+// get property Details stream for a given property
+//TODO why is stream not updating edit field when data changed in firebase
+  Stream<CompanyDetails> get companyByDocumentID {
+    return userCompanyCollection
+        .document(companyUid)
+        .snapshots()
+        .map(_companyDetailsFromSnapshot);
+  }
+
+  CompanyDetails _companyDetailsFromSnapshot(DocumentSnapshot snapshot) {
+    return CompanyDetails(
+      userUid: uid,
+      companyName: snapshot.data['companyName'] ?? 'no name',
+      companyComment: snapshot.data['companyComment'] ?? 'no notes',
+      companyPhone: snapshot.data['companyPhone'] ?? 'no phone',
+      companyEmail: snapshot.data['companyEmail'] ?? 'no email',
+      companyWebsite: snapshot.data['companyWebsite'] ?? 'no website',
+      companyPostalAddress:
+          snapshot.data['companyPostalAddress'] ?? 'no postal address',
+      companySetTenant: snapshot.data['companySetTenant'] ?? false,
+      companySetTrade: snapshot.data['companySetTrade'] ?? false,
+      companySetAgent: snapshot.data['companySetAgent'] ?? false,
+      companyArchived: snapshot.data['companyArchived'] ?? false,
+      companyRecordCreatedDateTime:
+          snapshot.data['companyRecordCreatedDateTime'],
+      companyRecordLastEdited: snapshot.data['companyRecordLastEdited'],
+    );
+  }
+
+// get property details stream for a given user ordered by property name
+  Stream<List<CompanyDetails>> get userCompanies {
+    return userCompanyCollection
+        .where('userUid', isEqualTo: uid)
+        .where('companyArchived', isEqualTo: false)
+        .orderBy('companyyName', descending: false)
+        .snapshots()
+        .map(_userCompaniesFromSnapshot);
+  }
+
+  List<CompanyDetails> _userCompaniesFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return CompanyDetails(
+        companyUid: doc.documentID,
+        userUid: uid,
+        companyName: doc.data['companyName'] ?? 'no name',
+        companyComment: doc.data['companyComment'] ?? 'no notes',
+        companyArchived: doc.data['archived'] ?? false,
+        companyPostalAddress: doc.data['companyPostalAddress'] ?? 'no address',
+        companyRecordLastEdited: doc.data['editedDateTime'] ?? Timestamp.now(),
+      );
+    }).toList();
+  }
+
+//
+//
+//   ******** Persons ********
+//
+
+// add a person to a company
+  Future addCompanyPerson(
+    String userUid,
+    String personCompanyUid,
+    String personName,
+    String personPhone,
+    String personEmail,
+    String personRole,
+    String personComment,
+    bool personArchived,
+    Timestamp personRecordCreatedDateTime,
+    Timestamp personRecordLastEdited,
+  ) async {
+    return await userPersonCollection.document().setData(
+      {
+        'userUid': userUid,
+        'companyUid': personCompanyUid,
+        'personName': personName,
+        'personPhone': personPhone,
+        'personEmail': personEmail,
+        'personRole': personRole,
+        'personComment': personComment,
+        'personArchived': personArchived,
+        'personRecordCreatedDateTime': personRecordCreatedDateTime,
+        'personRecordLastEdited': personRecordLastEdited,
+      },
+    );
+  }
+
+// update a person's details
+  Future updateCompanyPerson(
+    String userUid,
+    String personCompanyUid,
+    String personName,
+    String personPhone,
+    String personEmail,
+    String personRole,
+    String personComment,
+    bool personArchived,
+    Timestamp personRecordCreatedDateTime,
+    Timestamp personRecordLastEdited,
+  ) async {
+    return await userPersonCollection.document(personUid).updateData(
+      {
+        'userUid': userUid,
+        'personName': personName,
+        'personPhone': personPhone,
+        'personEmail': personEmail,
+        'personRole': personRole,
+        'personComment': personComment,
+        'personArchived': personArchived,
+        'personRecordCreatedDateTime': personRecordCreatedDateTime,
+        'personRecordLastEdited': personRecordLastEdited,
+      },
+    );
+  }
+
+// get person Details stream for a given person
+//TODO why is stream not updating edit field when data changed in firebase
+  Stream<PersonDetails> get personByDocumentID {
+    return userPersonCollection
+        .document(personUid)
+        .snapshots()
+        .map(_personDetailsFromSnapshot);
+  }
+
+  PersonDetails _personDetailsFromSnapshot(DocumentSnapshot snapshot) {
+    return PersonDetails(
+      personUid: snapshot.data['personUid'],
+      companyUid: snapshot.data['companyUid'],
+      userUid: snapshot.data['userUid'],
+      personName: snapshot.data['personName'] ?? 'no name',
+      personPhone: snapshot.data['personPhone'] ?? 'no phone',
+      personEmail: snapshot.data['personEmail'] ?? 'no email',
+      personRole: snapshot.data['personRole'] ?? 'no role',
+      personComment: snapshot.data['personComment'] ?? 'no comment',
+      personArchived: snapshot.data['personArchived'],
+      personRecordCreatedDateTime: snapshot.data['personRecordCreatedDateTime'],
+      personRecordLastEdited: snapshot.data['personRecordLastEdited'],
+    );
+  }
+
+// get person name stream for a given company ordered by person name
+  Stream<List<PersonDetails>> get userPersonsForCompany {
+    return userPersonCollection
+        .where('companyUid', isEqualTo: companyUid)
+        .where('personArchived', isEqualTo: false)
+        .orderBy('personName', descending: false)
+        .snapshots()
+        .map(_userPersonsFromSnapshot);
+  }
+
+// get person name stream for a user
+  Stream<List<PersonDetails>> get allPersonsForUser {
+    return userPersonCollection
+        .where('userUid', isEqualTo: uid)
+        .where('personArchived', isEqualTo: false)
+        .orderBy('personName', descending: false)
+        .snapshots()
+        .map(_userPersonsFromSnapshot);
+  }
+
+  List<PersonDetails> _userPersonsFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map(
+      (doc) {
+        return PersonDetails(
+          personUid: doc.documentID,
+          userUid: uid,
+          companyUid: doc.data['companyyUid'],
+          personName: doc.data['personName'] ?? 'no name',
+          personComment: doc.data['personComment'] ?? 'no notes',
         );
       },
     ).toList();

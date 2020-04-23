@@ -6,19 +6,14 @@ import 'package:property_returns/models/task_details.dart';
 
 class TaskTile extends StatelessWidget {
   final TaskDetails taskDetails;
+
   TaskTile({this.taskDetails});
 
   @override
   Widget build(BuildContext context) {
-    Color _color;
-    _color = colorTaskImportance(taskDetails.taskImportance);
-
-    String _taskDueDate =
-//        DateFormat.yMMMEd().format(taskDetails.taskDueDateTime.toDate());
-        DateFormat('E, LLL d, y').format(taskDetails.taskDueDateTime.toDate());
-
+    Color _color = colorTaskImportance(taskDetails.taskImportance);
     Text _textLine = Text(
-      _taskDueDate,
+      DateFormat('E, LLL d, y').format(taskDetails.taskDueDateTime.toDate()),
       style: TextStyle(
           fontSize: 15,
           backgroundColor: _color,
@@ -28,27 +23,32 @@ class TaskTile extends StatelessWidget {
     return GestureDetector(
       //TODO using MaterialPageRoute - is it possible to use 'routes' as defined in main.dart
       onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => EditTask(
-                    tasksDetails: taskDetails,
-                  ))),
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditTask(
+            tasksDetails: taskDetails,
+          ),
+        ),
+      ),
       child: Container(
         height: 30,
         child: Row(
           children: <Widget>[
             Container(
               decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey[50],
-                        offset: Offset(10, 10),
-                        blurRadius: 20,
-                        spreadRadius: 10)
-                  ],
-                  color: _color,
-                  border: Border.all(width: 0),
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey[50],
+                      offset: Offset(10, 10),
+                      blurRadius: 20,
+                      spreadRadius: 10)
+                ],
+                color: _color,
+                border: Border.all(width: 0),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(8),
+                ),
+              ),
               width: 130,
               height: 20,
               child: Center(child: _textLine),

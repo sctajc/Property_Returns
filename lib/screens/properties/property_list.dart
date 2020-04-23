@@ -36,8 +36,10 @@ class _PropertyListState extends State<PropertyList> {
                   label: Text(''),
                 ),
                 FlatButton.icon(
-                  onPressed: () => kShowHelpToast(context,
-                      'A unit is a defined area within a property available for individual renting'),
+                  onPressed: () => kShowHelpToast(
+                      context,
+                      'A unit is a defined area within a property available for individual renting. '
+                      ' Property may be let as one single unit, or may contain many lettable areas.'),
                   icon: Icon(Icons.help),
                   label: Text('Help'),
                 ),
