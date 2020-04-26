@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:property_returns/models/user.dart';
+import 'package:property_returns/screens/contacts/company_list.dart';
 import 'package:property_returns/screens/properties/property_list.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/services/auth.dart';
@@ -146,7 +147,7 @@ class Home extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
+              Navigator.pushNamed(context, CompanyList.id);
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
@@ -154,35 +155,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Tenants'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-            },
-            child: Container(
-              padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
-              constraints: BoxConstraints(
-                minHeight: _minHeight,
-                maxHeight: _maxHeight,
-              ),
-              child: Text('Trades'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-            },
-            child: Container(
-              padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
-              constraints: BoxConstraints(
-                minHeight: _minHeight,
-                maxHeight: _maxHeight,
-              ),
-              child: Text('Agents'),
+              child: Text('Contacts'),
             ),
           ),
           GestureDetector(
@@ -213,6 +186,51 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
+              child: Text('List Tenants'),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+//              Navigator.pushNamed(context, 'task_list');
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
+              constraints: BoxConstraints(
+                minHeight: _minHeight,
+                maxHeight: _maxHeight,
+              ),
+              child: Text('List Trades'),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+//              Navigator.pushNamed(context, 'task_list');
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
+              constraints: BoxConstraints(
+                minHeight: _minHeight,
+                maxHeight: _maxHeight,
+              ),
+              child: Text('List Agents'),
+            ),
+          ),
+          Divider(
+            height: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+//              Navigator.pushNamed(context, 'task_list');
+            },
+            child: Container(
+              padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
+              constraints: BoxConstraints(
+                minHeight: _minHeight,
+                maxHeight: _maxHeight,
+              ),
               child: Text('Property Summary'),
             ),
           ),
@@ -227,7 +245,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Tasks archived'),
+              child: Text('Tasks Archived'),
             ),
           ),
           GestureDetector(
@@ -241,7 +259,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Properties archived'),
+              child: Text('Properties Archived'),
             ),
           ),
           GestureDetector(
@@ -255,7 +273,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Units archived'),
+              child: Text('Units Archived'),
             ),
           ),
           GestureDetector(
@@ -269,7 +287,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Past lease events'),
+              child: Text('Past lease Events'),
             ),
           ),
           Divider(

@@ -42,7 +42,6 @@ class _EditUnitState extends State<EditUnit> {
   bool _currentUnitArchived = false;
 
   DateTime _initialUnitRentalValuationDate;
-//  String error = '';
 
   @override
   void initState() {

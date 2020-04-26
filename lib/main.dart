@@ -6,6 +6,8 @@ import 'package:property_returns/screens/properties/property_list.dart';
 import 'package:property_returns/screens/tasks/add_task.dart';
 import 'package:property_returns/screens/tasks/edit_task.dart';
 import 'package:property_returns/screens/documents/test_flutter_markdown.dart';
+import 'package:property_returns/screens/contacts/add_company.dart';
+import 'package:property_returns/screens/contacts/company_list.dart';
 import 'package:property_returns/screens/wrapper.dart';
 import 'package:property_returns/services/auth.dart';
 import 'package:property_returns/models/user.dart';
@@ -13,9 +15,6 @@ import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/screens/tasks/task_list.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/services/database.dart';
-import 'package:property_returns/models/property_details.dart';
-import 'package:property_returns/models/task_details.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,6 +22,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var themeData = ThemeData(
+      primaryColor: kColorBlue,
+      accentColor: kColorOrange,
+      fontFamily: 'Roboto',
+      dividerColor: kColorOrange,
       textTheme: TextTheme(
         display4: TextStyle(
           fontWeight: FontWeight.bold,
@@ -33,10 +36,6 @@ class MyApp extends StatelessWidget {
         activeTrackColor: kColorOrange,
         inactiveTrackColor: Colors.orange[100],
       ),
-      primaryColor: kColorBlue,
-      accentColor: kColorOrange,
-      fontFamily: 'Roboto',
-      dividerColor: kColorOrange,
       dividerTheme: DividerThemeData(
         color: kColorOrange,
         space: 50,
@@ -91,6 +90,8 @@ class MyApp extends StatelessWidget {
           PropertyList.id: (context) => PropertyList(),
           AddProperty.id: (context) => AddProperty(),
           AddUnit.id: (context) => AddUnit(),
+          AddCompany.id: (context) => AddCompany(),
+          CompanyList.id: (context) => CompanyList(),
 //          'tenants': (context) => Tenants(),
 //          'trades': (context) => Trades(),
 //          'agents': (context) => Agents(),

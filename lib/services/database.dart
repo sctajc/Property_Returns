@@ -660,13 +660,12 @@ class DatabaseServices {
   CompanyDetails _companyDetailsFromSnapshot(DocumentSnapshot snapshot) {
     return CompanyDetails(
       userUid: uid,
-      companyName: snapshot.data['companyName'] ?? 'no name',
-      companyComment: snapshot.data['companyComment'] ?? 'no notes',
-      companyPhone: snapshot.data['companyPhone'] ?? 'no phone',
-      companyEmail: snapshot.data['companyEmail'] ?? 'no email',
-      companyWebsite: snapshot.data['companyWebsite'] ?? 'no website',
-      companyPostalAddress:
-          snapshot.data['companyPostalAddress'] ?? 'no postal address',
+      companyName: snapshot.data['companyName'],
+      companyComment: snapshot.data['companyComment'],
+      companyPhone: snapshot.data['companyPhone'],
+      companyEmail: snapshot.data['companyEmail'],
+      companyWebsite: snapshot.data['companyWebsite'],
+      companyPostalAddress: snapshot.data['companyPostalAddress'],
       companySetTenant: snapshot.data['companySetTenant'] ?? false,
       companySetTrade: snapshot.data['companySetTrade'] ?? false,
       companySetAgent: snapshot.data['companySetAgent'] ?? false,
@@ -677,12 +676,12 @@ class DatabaseServices {
     );
   }
 
-// get property details stream for a given user ordered by property name
+// get company details stream for a given user ordered by company name
   Stream<List<CompanyDetails>> get userCompanies {
     return userCompanyCollection
         .where('userUid', isEqualTo: uid)
         .where('companyArchived', isEqualTo: false)
-        .orderBy('companyyName', descending: false)
+        .orderBy('companyName', descending: false)
         .snapshots()
         .map(_userCompaniesFromSnapshot);
   }
@@ -694,9 +693,10 @@ class DatabaseServices {
         userUid: uid,
         companyName: doc.data['companyName'] ?? 'no name',
         companyComment: doc.data['companyComment'] ?? 'no notes',
-        companyArchived: doc.data['archived'] ?? false,
+        companyArchived: doc.data['companyArchived'] ?? false,
         companyPostalAddress: doc.data['companyPostalAddress'] ?? 'no address',
-        companyRecordLastEdited: doc.data['editedDateTime'] ?? Timestamp.now(),
+        companyRecordLastEdited:
+            doc.data['companyRecordLastEdited'] ?? Timestamp.now(),
       );
     }).toList();
   }
@@ -738,7 +738,7 @@ class DatabaseServices {
 // update a person's details
   Future updateCompanyPerson(
     String userUid,
-    String personCompanyUid,
+    String companyUid,
     String personName,
     String personPhone,
     String personEmail,
@@ -757,7 +757,7 @@ class DatabaseServices {
         'personRole': personRole,
         'personComment': personComment,
         'personArchived': personArchived,
-        'personRecordCreatedDateTime': personRecordCreatedDateTime,
+//        'personRecordCreatedDateTime': personRecordCreatedDateTime,
         'personRecordLastEdited': personRecordLastEdited,
       },
     );
@@ -777,11 +777,11 @@ class DatabaseServices {
       personUid: snapshot.data['personUid'],
       companyUid: snapshot.data['companyUid'],
       userUid: snapshot.data['userUid'],
-      personName: snapshot.data['personName'] ?? 'no name',
-      personPhone: snapshot.data['personPhone'] ?? 'no phone',
-      personEmail: snapshot.data['personEmail'] ?? 'no email',
-      personRole: snapshot.data['personRole'] ?? 'no role',
-      personComment: snapshot.data['personComment'] ?? 'no comment',
+      personName: snapshot.data['personName'],
+      personPhone: snapshot.data['personPhone'],
+      personEmail: snapshot.data['personEmail'],
+      personRole: snapshot.data['personRole'],
+      personComment: snapshot.data['personComment'],
       personArchived: snapshot.data['personArchived'],
       personRecordCreatedDateTime: snapshot.data['personRecordCreatedDateTime'],
       personRecordLastEdited: snapshot.data['personRecordLastEdited'],
@@ -815,8 +815,11 @@ class DatabaseServices {
           personUid: doc.documentID,
           userUid: uid,
           companyUid: doc.data['companyyUid'],
-          personName: doc.data['personName'] ?? 'no name',
-          personComment: doc.data['personComment'] ?? 'no notes',
+          personName: doc.data['personName'],
+          personRole: doc.data['personRole'],
+          personComment: doc.data['personComment'],
+          personEmail: doc.data['personEmail'],
+          personPhone: doc.data['personPhone'],
         );
       },
     ).toList();

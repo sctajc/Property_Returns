@@ -18,7 +18,7 @@ class AddProperty extends StatefulWidget {
 }
 
 class _AddPropertyState extends State<AddProperty> {
-  String justCreatedPropertyUid;
+//  String justCreatedPropertyUid;
   final _formKey = GlobalKey<FormState>();
   String areaMeasurementSymbol;
   String _currencySymbol = '\$';
@@ -485,7 +485,7 @@ class _AddPropertyState extends State<AddProperty> {
                         await DatabaseServices().addPropertyUnit(
                           user.userUid,
                           docRef.documentID,
-                          'Single unit',
+                          'Details (as one unit)',
                           '',
                           '',
                           0,

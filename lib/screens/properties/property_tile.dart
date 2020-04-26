@@ -21,7 +21,6 @@ class _PropertyTileState extends State<PropertyTile> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-
     return Card(
       elevation: 5,
       margin: EdgeInsets.all(2),

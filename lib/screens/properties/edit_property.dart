@@ -88,463 +88,462 @@ class _EditPropertyState extends State<EditProperty> {
                 child: Padding(
                   padding: EdgeInsets.all(15),
                   child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            initialValue: propertyDetails.data.propertyName,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Property Name',
-                                labelStyle: kFieldHeading,
-                                hintText: 'property name'),
-                            validator: (val) => val.isEmpty
-                                ? 'Please enter what property is know as'
-                                : null,
-                            onChanged: (val) =>
-                                setState(() => _currentPropertyName = val),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            initialValue: propertyDetails.data.propertyNotes,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Notes',
-                                labelStyle: kFieldHeading,
-                                hintText: 'more details'),
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          initialValue: propertyDetails.data.propertyName,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Property Name',
+                              labelStyle: kFieldHeading,
+                              hintText: 'property name'),
+                          validator: (val) => val.isEmpty
+                              ? 'Please enter what property is know as'
+                              : null,
+                          onChanged: (val) =>
+                              setState(() => _currentPropertyName = val),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          initialValue: propertyDetails.data.propertyNotes,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Notes',
+                              labelStyle: kFieldHeading,
+                              hintText: 'more details'),
 //                    validator: (val) => val.isEmpty
 //                        ? 'Please enter any property details'
 //                        : null,
-                            onChanged: (val) =>
-                                setState(() => _currentPropertyNotes = val),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            initialValue: propertyDetails.data.propertyAddress,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Property Address',
-                                labelStyle: kFieldHeading,
-                                hintText: 'address'),
-                            validator: (val) => val.isEmpty
-                                ? 'Please enter property address'
-                                : null,
-                            onChanged: (val) =>
-                                setState(() => _currentPropertyAddress = val),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            initialValue: propertyDetails.data.propertyZone,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Property Zoning',
-                                labelStyle: kFieldHeading,
-                                hintText: 'property zoning'),
+                          onChanged: (val) =>
+                              setState(() => _currentPropertyNotes = val),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          initialValue: propertyDetails.data.propertyAddress,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Property Address',
+                              labelStyle: kFieldHeading,
+                              hintText: 'address'),
+                          validator: (val) => val.isEmpty
+                              ? 'Please enter property address'
+                              : null,
+                          onChanged: (val) =>
+                              setState(() => _currentPropertyAddress = val),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          initialValue: propertyDetails.data.propertyZone,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Property Zoning',
+                              labelStyle: kFieldHeading,
+                              hintText: 'property zoning'),
 //                    validator: (val) =>
 //                        val.isEmpty ? 'Please enter any property zone' : null,
-                            onChanged: (val) =>
-                                setState(() => _currentPropertyZone = val),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Column(
-                                children: <Widget>[
-                                  Text(
-                                    _areaMeasurementSymbol,
-                                    style: kFieldHeading,
-                                  ),
+                          onChanged: (val) =>
+                              setState(() => _currentPropertyZone = val),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  _areaMeasurementSymbol,
+                                  style: kFieldHeading,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                inputFormatters: [
+                                  WhitelistingTextInputFormatter(
+                                    RegExp("[0-9.]"),
+                                  )
                                 ],
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  inputFormatters: [
-                                    WhitelistingTextInputFormatter(
-                                      RegExp("[0-9.]"),
-                                    )
-                                  ],
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: true),
-                                  initialValue: propertyDetails
-                                      .data.propertyLandArea
-                                      .toString(),
-                                  decoration: kTextInputDecoration.copyWith(
-                                      labelText: 'Land Area',
-                                      labelStyle: kFieldHeading,
-                                      hintText: 'land area'),
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                initialValue: propertyDetails
+                                    .data.propertyLandArea
+                                    .toString(),
+                                decoration: kTextInputDecoration.copyWith(
+                                    labelText: 'Land Area',
+                                    labelStyle: kFieldHeading,
+                                    hintText: 'land area'),
 //                    validator: (val) =>
 //                        val.isEmpty ? 'Please enter land area' : null,
 //                  validator: (val) => val.isNotEmpty? ,
-                                  onChanged: (val) => setState(
-                                    () => _currentPropertyLandArea =
-                                        double.parse(val),
-                                  ),
+                                onChanged: (val) => setState(
+                                  () => _currentPropertyLandArea =
+                                      double.parse(val),
                                 ),
                               ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Date',
-                                    style: kFieldHeading,
-                                  ),
-                                  Text(
-                                    'purchased',
-                                    style: kFieldHeading,
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue[50],
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Date',
+                                  style: kFieldHeading,
+                                ),
+                                Text(
+                                  'purchased',
+                                  style: kFieldHeading,
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[50],
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
                                     ),
-                                    padding: EdgeInsets.all(10),
-                                    child: SizedBox(
-                                      width: 200,
-                                      child: DateTimeField(
+                                  ),
+                                  padding: EdgeInsets.all(10),
+                                  child: SizedBox(
+                                    width: 200,
+                                    child: DateTimeField(
 //                                          validator: (val) => val == null
 //                                              ? 'Please enter a purchased date'
 //                                              : null,
-                                        initialValue:
-                                            _initialPropertyDatePurchased,
-                                        //DateTime.now(),
-                                        format: DateFormat("E,  MMM d, y"),
-                                        onShowPicker:
-                                            (context, currentValue) async {
-                                          final date = await showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(1950),
-                                            lastDate: DateTime.now(),
-                                          );
-                                          if (date != null) {
-                                            _currentPropertyDatePurchased =
-                                                date;
-                                            return _currentPropertyDatePurchased;
-                                          } else {
-                                            return currentValue;
-                                          }
-                                        },
-                                      ),
+                                      initialValue:
+                                          _initialPropertyDatePurchased,
+                                      //DateTime.now(),
+                                      format: DateFormat("E,  MMM d, y"),
+                                      onShowPicker:
+                                          (context, currentValue) async {
+                                        final date = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1950),
+                                          lastDate: DateTime.now(),
+                                        );
+                                        if (date != null) {
+                                          _currentPropertyDatePurchased = date;
+                                          return _currentPropertyDatePurchased;
+                                        } else {
+                                          return currentValue;
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            initialValue:
-                                propertyDetails.data.propertyRatesBillingCode,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Rates Billing Code',
-                                labelStyle: kFieldHeading,
-                                hintText: 'rates id'),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          initialValue:
+                              propertyDetails.data.propertyRatesBillingCode,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Rates Billing Code',
+                              labelStyle: kFieldHeading,
+                              hintText: 'rates id'),
 //                    validator: (val) =>
 //                        val.isEmpty ? 'Please enter any billing code' : null,
-                            onChanged: (val) => setState(
-                                () => _currentPropertyRatesBillingCode = val),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            initialValue:
-                                propertyDetails.data.propertyInsurancePolicy,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Insurance Policy',
-                                labelStyle: kFieldHeading,
-                                hintText: 'insurance policy'),
+                          onChanged: (val) => setState(
+                              () => _currentPropertyRatesBillingCode = val),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          initialValue:
+                              propertyDetails.data.propertyInsurancePolicy,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Insurance Policy',
+                              labelStyle: kFieldHeading,
+                              hintText: 'insurance policy'),
 //                      validator: (val) => val.isEmpty
 //                          ? 'Please enter any insurance policy name, code etc'
 //                          : null,
-                            onChanged: (val) => setState(
-                                () => _currentPropertyInsurancePolicy = val),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            initialValue:
-                                propertyDetails.data.propertyInsuranceSource,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Insurance Source/Broker',
-                                labelStyle: kFieldHeading,
-                                hintText: 'insurance source/broker'),
+                          onChanged: (val) => setState(
+                              () => _currentPropertyInsurancePolicy = val),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          initialValue:
+                              propertyDetails.data.propertyInsuranceSource,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Insurance Source/Broker',
+                              labelStyle: kFieldHeading,
+                              hintText: 'insurance source/broker'),
 //                      validator: (val) => val.isEmpty
 //                          ? 'Please enter any insurance supplier'
 //                          : null,
-                            onChanged: (val) => setState(
-                                () => _currentPropertyInsuranceSource = val),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Insurance',
-                                    style: kFieldHeading,
-                                  ),
-                                  Text(
-                                    'expiry',
-                                    style: kFieldHeading,
-                                  ),
-                                  Text(
-                                    'date',
-                                    style: kFieldHeading,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue[50],
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
+                          onChanged: (val) => setState(
+                              () => _currentPropertyInsuranceSource = val),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Insurance',
+                                  style: kFieldHeading,
+                                ),
+                                Text(
+                                  'expiry',
+                                  style: kFieldHeading,
+                                ),
+                                Text(
+                                  'date',
+                                  style: kFieldHeading,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[50],
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
                                     ),
-                                    padding: EdgeInsets.all(10),
-                                    child: SizedBox(
-                                      width: 200,
-                                      child: DateTimeField(
+                                  ),
+                                  padding: EdgeInsets.all(10),
+                                  child: SizedBox(
+                                    width: 200,
+                                    child: DateTimeField(
 //                                          validator: (val) => val == null
 //                                              ? 'Please enter insurance expiry date'
 //                                              : null,
-                                        initialValue:
-                                            _initialPropertyInsuranceExpiryDate,
-                                        format: DateFormat("E,  MMM d, y"),
-                                        onShowPicker:
-                                            (context, currentValue) async {
-                                          final date = await showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(2010),
-                                            lastDate: DateTime(2100),
-                                          );
-                                          if (date != null) {
-                                            _currentPropertyInsuranceExpiryDate =
-                                                date;
-                                            return _currentPropertyInsuranceExpiryDate;
-                                          } else {
-                                            return currentValue;
-                                          }
-                                        },
-                                      ),
+                                      initialValue:
+                                          _initialPropertyInsuranceExpiryDate,
+                                      format: DateFormat("E,  MMM d, y"),
+                                      onShowPicker:
+                                          (context, currentValue) async {
+                                        final date = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2010),
+                                          lastDate: DateTime(2100),
+                                        );
+                                        if (date != null) {
+                                          _currentPropertyInsuranceExpiryDate =
+                                              date;
+                                          return _currentPropertyInsuranceExpiryDate;
+                                        } else {
+                                          return currentValue;
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            initialValue:
-                                propertyDetails.data.propertyLegalDescription,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Legal Description',
-                                labelStyle: kFieldHeading,
-                                hintText: 'legal description'),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          initialValue:
+                              propertyDetails.data.propertyLegalDescription,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Legal Description',
+                              labelStyle: kFieldHeading,
+                              hintText: 'legal description'),
 //                    validator: (val) => val.isEmpty
 //                        ? 'Please enter property legal description'
 //                        : null,
-                            onChanged: (val) => setState(
-                                () => _currentPropertyLegalDescription = val),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                _currencySymbol,
-                                style: kFieldHeading,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  inputFormatters: [
-                                    WhitelistingTextInputFormatter(
-                                        RegExp("[0-9.]"))
-                                  ],
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: true),
-                                  initialValue: propertyDetails
-                                      .data.propertyMarketValuationAmount
-                                      .toStringAsFixed(2),
-                                  decoration: kTextInputDecoration.copyWith(
-                                      labelText: 'Market Valuation',
-                                      labelStyle: kFieldHeading,
-                                      hintText: 'market valuation'),
+                          onChanged: (val) => setState(
+                              () => _currentPropertyLegalDescription = val),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              _currencySymbol,
+                              style: kFieldHeading,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                inputFormatters: [
+                                  WhitelistingTextInputFormatter(
+                                      RegExp("[0-9.]"))
+                                ],
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                initialValue: propertyDetails
+                                    .data.propertyMarketValuationAmount
+                                    .toStringAsFixed(2),
+                                decoration: kTextInputDecoration.copyWith(
+                                    labelText: 'Market Valuation',
+                                    labelStyle: kFieldHeading,
+                                    hintText: 'market valuation'),
 //                    validator: (val) =>
 //                        val.isEmpty ? 'Please enter valuation amount' : null,
-                                  onChanged: (val) => setState(
-                                    () =>
-                                        _currentPropertyMarketValuationAmount =
-                                            double.parse(val),
-                                  ),
+                                onChanged: (val) => setState(
+                                  () => _currentPropertyMarketValuationAmount =
+                                      double.parse(val),
                                 ),
                               ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Market',
-                                    style: kFieldHeading,
-                                  ),
-                                  Text(
-                                    'valuation',
-                                    style: kFieldHeading,
-                                  ),
-                                  Text(
-                                    'date',
-                                    style: kFieldHeading,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue[50],
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Market',
+                                  style: kFieldHeading,
+                                ),
+                                Text(
+                                  'valuation',
+                                  style: kFieldHeading,
+                                ),
+                                Text(
+                                  'date',
+                                  style: kFieldHeading,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[50],
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
                                     ),
-                                    padding: EdgeInsets.all(10),
-                                    child: SizedBox(
-                                      width: 200,
-                                      child: DateTimeField(
+                                  ),
+                                  padding: EdgeInsets.all(10),
+                                  child: SizedBox(
+                                    width: 200,
+                                    child: DateTimeField(
 //                                          validator: (val) => val == null
 //                                              ? 'Please enter insurance expiry date'
 //                                              : null,
-                                        initialValue:
-                                            _initialPropertyMarketValuationDate,
-                                        format: DateFormat("E,  MMM d, y"),
-                                        onShowPicker:
-                                            (context, currentValue) async {
-                                          final date = await showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(2010),
-                                            lastDate: DateTime(2100),
-                                          );
-                                          if (date != null) {
-                                            _currentPropertyMarketValuationDate =
-                                                date;
-                                            return _currentPropertyMarketValuationDate;
-                                          } else {
-                                            return currentValue;
-                                          }
-                                        },
-                                      ),
+                                      initialValue:
+                                          _initialPropertyMarketValuationDate,
+                                      format: DateFormat("E,  MMM d, y"),
+                                      onShowPicker:
+                                          (context, currentValue) async {
+                                        final date = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2010),
+                                          lastDate: DateTime(2100),
+                                        );
+                                        if (date != null) {
+                                          _currentPropertyMarketValuationDate =
+                                              date;
+                                          return _currentPropertyMarketValuationDate;
+                                        } else {
+                                          return currentValue;
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            initialValue: propertyDetails
-                                .data.propertyMarketValuationSource,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Market Valuation Source',
-                                labelStyle: kFieldHeading,
-                                hintText: 'market valuation source'),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          initialValue: propertyDetails
+                              .data.propertyMarketValuationSource,
+                          decoration: kTextInputDecoration.copyWith(
+                              labelText: 'Market Valuation Source',
+                              labelStyle: kFieldHeading,
+                              hintText: 'market valuation source'),
 //                      validator: (val) => val.isEmpty
 //                          ? 'Please enter any valuation source'
 //                          : null,
-                            onChanged: (val) => setState(() =>
-                                _currentPropertyMarketValuationSource = val),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Text(
-                                'Archive property?',
-                                style: kFieldHeading,
+                          onChanged: (val) => setState(() =>
+                              _currentPropertyMarketValuationSource = val),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              'Archive property?',
+                              style: kFieldHeading,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Checkbox(
+                              value: _archiveProperty,
+                              onChanged: (value) {
+                                setState(() {
+                                  _archiveProperty = value;
+                                  _currentPropertyArchived = _archiveProperty;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            GestureDetector(
+                              onTap: () => kShowHelpToast(context,
+                                  "If selected the property will be removed from your displayed properties. These will normally be properties which are not being managed anymore. These properties can be accessed through 'Properties Archived'"),
+                              child: Icon(
+                                Icons.help_outline,
+                                color: kColorOrange,
                               ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Checkbox(
-                                value: _archiveProperty,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _archiveProperty = value;
-                                    _currentPropertyArchived = _archiveProperty;
-                                  });
-                                },
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () => kShowHelpToast(context,
-                                    "If selected the property will be removed from your displayed properties. These will normally be properties which are not being managed anymore. These properties can be accessed through 'Properties Archived'"),
-                                child: Icon(
-                                  Icons.help_outline,
-                                  color: kColorOrange,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            // so keyboard does not hide bottom textfield
-                            height: MediaQuery.of(context).viewInsets.bottom,
-                          ),
-                        ],
-                      )),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          // so keyboard does not hide bottom textfield
+                          height: MediaQuery.of(context).viewInsets.bottom,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               bottomNavigationBar: BottomAppBar(
