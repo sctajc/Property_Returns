@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/services/database.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'add_person.dart';
 import 'edit_company.dart';
 import 'edit_person.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class CompanyTile extends StatefulWidget {
   final CompanyDetails companyDetails;
-
   CompanyTile({this.companyDetails});
 
   @override
@@ -18,9 +20,30 @@ class CompanyTile extends StatefulWidget {
 }
 
 class _CompanyTileState extends State<CompanyTile> {
+  TextEditingController _numberCompanyPhone = TextEditingController();
+  TextEditingController _emailCompanyEmail = TextEditingController();
+  String _tooltipCompanyPhone;
+  String _tooltipCompanyEmail;
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
+
+    widget.companyDetails.companyPhone != null
+        ? _numberCompanyPhone.text =
+            widget.companyDetails.companyPhone.replaceAll(RegExp(r'\D'), '')
+        : _numberCompanyPhone = null;
+    _numberCompanyPhone != null
+        ? _tooltipCompanyPhone = _numberCompanyPhone.text
+        : _tooltipCompanyPhone = 'No number';
+
+    widget.companyDetails.companyEmail != null
+        ? _emailCompanyEmail.text = widget.companyDetails.companyEmail
+        : _emailCompanyEmail = null;
+    _emailCompanyEmail != null
+        ? _tooltipCompanyEmail = _emailCompanyEmail.text
+        : _tooltipCompanyEmail = 'No email';
+
     return Card(
       elevation: 5,
       margin: EdgeInsets.all(2),
@@ -32,8 +55,8 @@ class _CompanyTileState extends State<CompanyTile> {
               Row(
                 children: <Widget>[
                   showCompanyButton(context),
-                  IconButton(icon: Icon(Icons.phone), onPressed: null),
-                  IconButton(icon: Icon(Icons.email), onPressed: null),
+                  showCompanyPhoneIcon(),
+                  showCompanyEmailIcon(),
                   showAddPersonButton(context),
                 ],
               ),
@@ -48,6 +71,34 @@ class _CompanyTileState extends State<CompanyTile> {
         ),
       ),
     );
+  }
+
+  showCompanyEmailIcon() {
+    return IconButton(
+        tooltip: _tooltipCompanyEmail,
+        icon: Icon(Icons.email),
+        color: Colors.lightBlue,
+        onPressed: _emailCompanyEmail != null
+            ? () async {
+                if (await canLaunch('mailto:$_emailCompanyEmail')) {
+                  await launch('mailto:$_tooltipCompanyEmail');
+                } else {
+                  throw 'Could not launch emailer app for mailto:$_tooltipCompanyEmail';
+                }
+              }
+            : null);
+  }
+
+  showCompanyPhoneIcon() {
+    return IconButton(
+        tooltip: _tooltipCompanyPhone,
+        icon: Icon(Icons.phone),
+        color: Colors.lightBlue,
+        onPressed: _numberCompanyPhone != null
+            ? () async {
+                FlutterPhoneDirectCaller.callNumber(_tooltipCompanyPhone);
+              }
+            : null);
   }
 
   showCompanyComments() => Text(widget.companyDetails.companyComment);
@@ -87,7 +138,10 @@ class _CompanyTileState extends State<CompanyTile> {
                             String _displayName =
                                 allCompanyPersons.data[index].personName;
                             if (allCompanyPersons.data[index].personRole !=
-                                null)
+                                    null &&
+                                allCompanyPersons
+                                        .data[index].personRole.length >
+                                    0)
                               _displayName = _displayName +
                                   ' - ' +
                                   allCompanyPersons.data[index].personRole;
@@ -95,45 +149,87 @@ class _CompanyTileState extends State<CompanyTile> {
                             if (_displayName.length > 30)
                               _displayName =
                                   _displayName.substring(0, 27) + '...';
-                            return InkWell(
-                                child: Row(
-                                  children: <Widget>[
-                                    IconButton(
-                                      icon: Icon(Icons.phone),
-                                      onPressed: null,
-                                      alignment: Alignment.topLeft,
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.email),
-                                      onPressed: null,
-                                      alignment: Alignment.topLeft,
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        _displayName,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.visible,
-                                        style: TextStyle(fontSize: 15),
-                                      ),
-                                      height: 1,
-                                    ),
-                                  ],
+                            TextEditingController _numberPersonPhone =
+                                TextEditingController();
+                            TextEditingController _emailPersonEmail =
+                                TextEditingController();
+                            String _tooltipPersonPhone;
+                            String _tooltipPersonEmail;
+
+                            allCompanyPersons.data[index].personPhone != null
+                                ? _numberPersonPhone.text = allCompanyPersons
+                                    .data[index].personPhone
+                                    .replaceAll(RegExp(r'\D'), '')
+                                : _numberPersonPhone = null;
+                            _numberPersonPhone != null
+                                ? _tooltipPersonPhone = _numberPersonPhone.text
+                                : _tooltipPersonPhone = 'No number';
+
+                            allCompanyPersons.data[index].personEmail != null
+                                ? _emailPersonEmail.text =
+                                    allCompanyPersons.data[index].personEmail
+                                : _emailPersonEmail = null;
+                            _emailPersonEmail != null
+                                ? _tooltipPersonEmail = _emailPersonEmail.text
+                                : _tooltipPersonEmail = 'No email';
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(Icons.phone),
+                                  tooltip: _tooltipPersonPhone,
+                                  color: Colors.lightBlue,
+                                  onPressed: _numberPersonPhone != null
+                                      ? () async {
+                                          FlutterPhoneDirectCaller.callNumber(
+                                              _tooltipPersonPhone);
+                                        }
+                                      : null,
+                                  padding: EdgeInsets.all(0),
                                 ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => EditPerson(
-                                        companyName:
-                                            widget.companyDetails.companyName,
-                                        personUid: allCompanyPersons
-                                            .data[index].personUid,
-                                        personName: allCompanyPersons
-                                            .data[index].personName,
-                                      ),
+                                IconButton(
+                                  icon: Icon(Icons.email),
+                                  tooltip: _tooltipPersonEmail,
+                                  color: Colors.lightBlue,
+                                  onPressed: _emailPersonEmail != null
+                                      ? () async {
+                                          if (await canLaunch(
+                                              'mailto:$_tooltipPersonEmail')) {
+                                            print(
+                                                '$_displayName email: $_tooltipPersonEmail');
+                                            await launch(
+                                                'mailto:$_tooltipPersonEmail');
+                                          } else {
+                                            throw 'Could not launch emailer app for mailto:$_tooltipPersonEmail';
+                                          }
+                                        }
+                                      : null,
+                                  padding: EdgeInsets.all(0),
+                                ),
+                                InkWell(
+                                    child: Text(
+                                      _displayName,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.visible,
+                                      style: TextStyle(fontSize: 15),
                                     ),
-                                  );
-                                });
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EditPerson(
+                                            companyName: widget
+                                                .companyDetails.companyName,
+                                            personUid: allCompanyPersons
+                                                .data[index].personUid,
+                                            personName: allCompanyPersons
+                                                .data[index].personName,
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                              ],
+                            );
                           },
                         ),
                       ),
@@ -169,24 +265,26 @@ class _CompanyTileState extends State<CompanyTile> {
   }
 
   showAddPersonButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 0, 0, 8),
-      child: RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text('Add person'),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddPerson(
-                companyUid: widget.companyDetails.companyUid,
-                companyName: widget.companyDetails.companyName,
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 0, 0, 8),
+        child: RaisedButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text('Add person'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddPerson(
+                  companyUid: widget.companyDetails.companyUid,
+                  companyName: widget.companyDetails.companyName,
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

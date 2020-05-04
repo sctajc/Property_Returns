@@ -19,6 +19,8 @@ class _CompanyListState extends State<CompanyList> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
+    var _displayEmailIcon = '\u{0E0BE}'; // Email icon
+    var _displayPhoneIcon = '\u{0E0BE}'; // phone icon
 
     // TODO is this a good approach??
     // Used <List<TasksDetails> StreamBuilder here as own list order
@@ -35,12 +37,7 @@ class _CompanyListState extends State<CompanyList> {
                   icon: Icon(Icons.search),
                   label: Text(''),
                 ),
-                FlatButton.icon(
-                  onPressed: () => kShowHelpToast(
-                      context, 'A company could be any organisation.'),
-                  icon: Icon(Icons.help),
-                  label: Text('Help'),
-                ),
+                showCompanyAppBarHelp(context),
               ],
             ),
             body: Container(
@@ -83,5 +80,17 @@ class _CompanyListState extends State<CompanyList> {
             ),
           );
         });
+  }
+
+  showCompanyAppBarHelp(BuildContext context) {
+    return FlatButton.icon(
+      onPressed: () => kShowHelpToast(
+          context,
+          // TODO should be able to display icons here??
+          'A company could be any organisation. Long press icons to see phone number and email address. '
+          'Short press icons to phone or email. '),
+      icon: Icon(Icons.help),
+      label: Text('Help'),
+    );
   }
 }

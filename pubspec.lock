@@ -99,6 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  email_validator:
+    dependency: "direct main"
+    description:
+      name: email_validator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   firebase:
     dependency: transitive
     description:
@@ -160,6 +167,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_email_sender:
+    dependency: "direct main"
+    description:
+      name: flutter_email_sender
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -174,6 +188,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.4"
+  flutter_phone_direct_caller:
+    dependency: "direct main"
+    description:
+      name: flutter_phone_direct_caller
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -336,6 +357,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  string_validator:
+    dependency: "direct main"
+    description:
+      name: string_validator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   term_glyph:
     dependency: transitive
     description:
@@ -357,6 +385,34 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  url_launcher:
+    dependency: "direct main"
+    description:
+      name: url_launcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.4.5"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1+5"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
+  url_launcher_web:
+    dependency: transitive
+    description:
+      name: url_launcher_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+2"
   vector_math:
     dependency: transitive
     description:
@@ -380,4 +436,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.7.0-dev <3.0.0"
-  flutter: ">=1.12.13+hotfix.4 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"

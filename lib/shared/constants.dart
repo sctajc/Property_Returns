@@ -53,16 +53,3 @@ const List<String> currencies = [
   '฿',
   '₪'
 ];
-
-Pattern emailPattern = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
-    "\\@" +
-    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-    "(" +
-    "\\." +
-    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-    ")+";
-RegExp emailRegex = RegExp(emailPattern);
-
-// need a website regexp that works
-Pattern webPattern = "http(s)?://)?([\w-]+\.)+[\w-]+(/[\w- ;,./?%&=]*";
-RegExp webRegex = RegExp(webPattern);

@@ -82,161 +82,25 @@ class _SettingsFormState extends State<SettingsForm> {
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      keyboardType: TextInputType.text,
-                      initialValue: userData.userName,
-                      decoration: kTextInputDecoration.copyWith(
-                          hintText: 'name',
-                          labelStyle: kFieldHeading,
-                          labelText: 'Known as'),
-                      validator: (val) =>
-                          val.isEmpty ? 'Please enter your name' : null,
-                      onChanged: (val) => setState(() => _currentName = val),
-                    ),
+                    textFormFieldSettingsName(userData),
                     SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Task Notification: ',
-                          style: kFieldHeading,
-                        ),
-                        Text(
-                          '${_currentTaskNotificationDays ?? userData.taskNotificationDays} ',
-                          style: kInputText.copyWith(fontSize: 18),
-                        ),
-                        Text(
-                          'days',
-                          style: kFieldHeading,
-                        ),
-                      ],
-                    ),
-                    Slider(
-                      min: 0,
-                      max: 100,
-//                        label:
-//                            '${_currentTaskNotificationDays ?? userData.taskNotificationDays}',
-                      value: (_currentTaskNotificationDays ??
-                              userData.taskNotificationDays)
-                          .toDouble(),
-                      onChanged: (newVal) => setState(
-                          () => _currentTaskNotificationDays = newVal.round()),
-                    ),
+                    sliderTextSettingsTaskNotification(userData),
+                    sliderSliderSettingsTaskNotification(userData),
                     SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Lease Notification: ',
-                          style: kFieldHeading,
-                        ),
-                        Text(
-                          '${_currentLeaseNotificationDays ?? userData.leaseNotificationDays} ',
-                          style: kInputText.copyWith(fontSize: 18),
-                        ),
-                        Text(
-                          'days',
-                          style: kFieldHeading,
-                        ),
-                      ],
-                    ),
-                    Slider(
-                      min: 0,
-                      max: 100,
-//                        label:
-//                            '${_currentLeaseNotificationDays ?? userData.leaseNotificationDays}',
-                      value: (_currentLeaseNotificationDays ??
-                              userData.leaseNotificationDays)
-                          .toDouble(),
-                      onChanged: (newVal) => setState(() {
-                        _currentLeaseNotificationDays = newVal.round();
-                      }),
-                    ),
+                    sliderTextSettingsLeaseNotification(userData),
+                    sliderSliderSettingsLeaseNotification(userData),
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Area Measurement (squared): ',
-                            style: kFieldHeading,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Radio(
-                                value: 0,
-                                groupValue: _currentAreaMeasurementM2,
-                                onChanged: _handleRadioAreaMeasurementChange,
-                              ),
-                              Text(
-                                'Meters',
-                                style: kInputText,
-                              ),
-                              Radio(
-                                  value: 1,
-                                  groupValue: _currentAreaMeasurementM2,
-                                  onChanged: _handleRadioAreaMeasurementChange),
-                              Text(
-                                'Feet',
-                                style: kInputText,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    radioSettingsAreaSymbol(),
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            'Currency Symbol',
-                            style: kFieldHeading,
-                          ),
-                          Wrap(
-                            spacing: 8,
-                            children: List<Widget>.generate(
-                              currencies.length,
-                              (int index) {
-                                return ChoiceChip(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8),
-                                    ),
-                                  ),
-                                  label: Text(
-                                    currencies[index],
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                  selected: (currencies[index] ==
-                                          _currentCurrencySymbol)
-                                      ? true
-                                      : false,
-                                  onSelected: (bool selected) {
-                                    if (selected)
-                                      setState(() {
-                                        _currentCurrencySymbol =
-                                            currencies[index];
-                                      });
-                                  },
-                                );
-                              },
-                            ).toList(),
-                          ),
-                        ],
-                      ),
-                    ),
+                    choiceChipSettingsCurrencySymbol(),
                     SizedBox(
                       height: 20,
                     ),
@@ -282,6 +146,162 @@ class _SettingsFormState extends State<SettingsForm> {
           ),
         );
       },
+    );
+  }
+
+  choiceChipSettingsCurrencySymbol() {
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            'Currency Symbol',
+            style: kFieldHeading,
+          ),
+          Wrap(
+            spacing: 8,
+            children: List<Widget>.generate(
+              currencies.length,
+              (int index) {
+                return ChoiceChip(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                  ),
+                  label: Text(
+                    currencies[index],
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+                  ),
+                  selected: (currencies[index] == _currentCurrencySymbol)
+                      ? true
+                      : false,
+                  onSelected: (bool selected) {
+                    if (selected)
+                      setState(() {
+                        _currentCurrencySymbol = currencies[index];
+                      });
+                  },
+                );
+              },
+            ).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  radioSettingsAreaSymbol() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Area Measurement (squared): ',
+            style: kFieldHeading,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Radio(
+                value: 0,
+                groupValue: _currentAreaMeasurementM2,
+                onChanged: _handleRadioAreaMeasurementChange,
+              ),
+              Text(
+                'Meters',
+                style: kInputText,
+              ),
+              Radio(
+                  value: 1,
+                  groupValue: _currentAreaMeasurementM2,
+                  onChanged: _handleRadioAreaMeasurementChange),
+              Text(
+                'Feet',
+                style: kInputText,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  sliderSliderSettingsLeaseNotification(UserData userData) {
+    return Slider(
+      min: 0,
+      max: 100,
+//                        label:
+//                            '${_currentLeaseNotificationDays ?? userData.leaseNotificationDays}',
+      value: (_currentLeaseNotificationDays ?? userData.leaseNotificationDays)
+          .toDouble(),
+      onChanged: (newVal) => setState(() {
+        _currentLeaseNotificationDays = newVal.round();
+      }),
+    );
+  }
+
+  sliderTextSettingsLeaseNotification(UserData userData) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Lease Notification: ',
+          style: kFieldHeading,
+        ),
+        Text(
+          '${_currentLeaseNotificationDays ?? userData.leaseNotificationDays} ',
+          style: kInputText.copyWith(fontSize: 18),
+        ),
+        Text(
+          'days',
+          style: kFieldHeading,
+        ),
+      ],
+    );
+  }
+
+  sliderSliderSettingsTaskNotification(UserData userData) {
+    return Slider(
+      min: 0,
+      max: 100,
+//                        label:
+//                            '${_currentTaskNotificationDays ?? userData.taskNotificationDays}',
+      value: (_currentTaskNotificationDays ?? userData.taskNotificationDays)
+          .toDouble(),
+      onChanged: (newVal) =>
+          setState(() => _currentTaskNotificationDays = newVal.round()),
+    );
+  }
+
+  sliderTextSettingsTaskNotification(UserData userData) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Task Notification: ',
+          style: kFieldHeading,
+        ),
+        Text(
+          '${_currentTaskNotificationDays ?? userData.taskNotificationDays} ',
+          style: kInputText.copyWith(fontSize: 18),
+        ),
+        Text(
+          'days',
+          style: kFieldHeading,
+        ),
+      ],
+    );
+  }
+
+  textFormFieldSettingsName(UserData userData) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      initialValue: userData.userName,
+      decoration: kTextInputDecoration.copyWith(
+          hintText: 'name', labelStyle: kFieldHeading, labelText: 'Known as'),
+      validator: (val) => val.isEmpty ? 'Please enter your name' : null,
+      onChanged: (val) => setState(() => _currentName = val),
     );
   }
 }

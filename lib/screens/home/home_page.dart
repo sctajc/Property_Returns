@@ -37,14 +37,14 @@ class HomePage extends StatelessWidget {
                       top: 20,
                       left: 20,
                     ),
-                    child: Row(
+                    child: Column(
                       children: <Widget>[
                         Text(
                           'You have no outstanding tasks',
                           style: TextStyle(fontSize: 20),
                         ),
                         SizedBox(
-                          width: 20,
+                          height: 20,
                         ),
                         GestureDetector(
                           child: Icon(
@@ -75,7 +75,7 @@ class HomePage extends StatelessWidget {
           height: 20,
         ),
         Text(
-          'Next Lease Events',
+          'Upcoming Lease Events',
           style: kHeading,
         ),
         SizedBox(

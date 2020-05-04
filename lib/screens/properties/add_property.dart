@@ -67,91 +67,24 @@ class _AddPropertyState extends State<AddProperty> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Property Name',
-                          labelStyle: kFieldHeading,
-                          hintText: 'property name'),
-                      validator: (val) => val.isEmpty
-                          ? 'Please enter what property is know as'
-                          : null,
-                      onChanged: (val) =>
-                          setState(() => _currentPropertyName = val),
-                    ),
+                    textFormFieldPropertyName(),
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Details',
-                          labelStyle: kFieldHeading,
-                          hintText: 'more details'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-                      onChanged: (val) =>
-                          setState(() => _currentPropertyNotes = val),
-                    ),
+                    textFormFieldPropertyDetails(),
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Address',
-                          labelStyle: kFieldHeading,
-                          hintText: 'address'),
-                      validator: (val) =>
-                          val.isEmpty ? 'Please enter property address' : null,
-                      onChanged: (val) =>
-                          setState(() => _currentPropertyAddress = val),
-                    ),
+                    textFormFieldPropertyAddress(),
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Zoning',
-                          labelStyle: kFieldHeading,
-                          hintText: 'property zoning'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter any property zone' : null,
-                      onChanged: (val) =>
-                          setState(() => _currentPropertyZone = val),
-                    ),
+                    textFormFieldPropertyZone(),
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Text(
-                              'Land area',
-                              style: kFieldHeading,
-                            ),
-                            Text(
-                              areaMeasurementSymbol,
-                              style: kFieldHeading,
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: kTextInputDecoration.copyWith(
-                                labelStyle: kFieldHeading,
-                                hintText: 'land area'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter land area' : null,
-//                  validator: (val) => val.isNotEmpty? ,
-                            onChanged: (val) => setState(
-                              () =>
-                                  _currentPropertyLandArea = double.parse(val),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    textFormFieldPropertyLandArea(),
+                    // date property purchased
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -214,44 +147,16 @@ class _AddPropertyState extends State<AddProperty> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Rates Billing Code',
-                          labelStyle: kFieldHeading,
-                          hintText: 'rates Id'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter any billing code' : null,
-                      onChanged: (val) => setState(
-                          () => _currentPropertyRatesBillingCode = val),
-                    ),
+                    textFormFieldPropertyRatesCode(),
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Insurance Policy',
-                          labelStyle: kFieldHeading,
-                          hintText: 'insurance policy number'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any insurance policy name, code etc'
-//                          : null,
-                      onChanged: (val) =>
-                          setState(() => _currentPropertyInsurancePolicy = val),
-                    ),
+                    textFormFieldPropertyInsurancePolicy(),
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Insurance Company',
-                          labelStyle: kFieldHeading,
-                          hintText: 'insurance source/broker/company'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any insurance supplier'
-//                          : null,
-                      onChanged: (val) =>
-                          setState(() => _currentPropertyInsuranceSource = val),
-                    ),
+                    textFormFieldPropertyInsuranceSource(),
+                    // insurance expiry date
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -319,51 +224,12 @@ class _AddPropertyState extends State<AddProperty> {
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Legal Description',
-                          labelStyle: kFieldHeading,
-                          hintText: 'legal description'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter property legal description'
-//                        : null,
-                      onChanged: (val) => setState(
-                          () => _currentPropertyLegalDescription = val),
-                    ),
+                    textFormFieldPropertyLegalDescription(),
                     SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          _currencySymbol,
-                          style: kFieldHeading,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            inputFormatters: [
-                              WhitelistingTextInputFormatter(RegExp("[0-9.]"))
-                            ],
-                            keyboardType:
-                                TextInputType.numberWithOptions(decimal: true),
-//                initialValue: 'initial description',
-                            decoration: kTextInputDecoration.copyWith(
-                                labelText: 'Market Valuation',
-                                labelStyle: kFieldHeading,
-                                hintText: 'market valuation'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter valuation amount' : null,
-                            onChanged: (val) => setState(
-                              () => _currentPropertyMarketValuationAmount =
-                                  double.parse(val),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    textFormFieldPropertyMarketValuation(),
+                    // market valuation date
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -431,18 +297,7 @@ class _AddPropertyState extends State<AddProperty> {
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-//                initialValue: 'initial description',
-                      decoration: kTextInputDecoration.copyWith(
-                          labelText: 'Market Valuation Agent',
-                          labelStyle: kFieldHeading,
-                          hintText: 'market valuation source'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any valuation source'
-//                          : null,
-                      onChanged: (val) => setState(
-                          () => _currentPropertyMarketValuationSource = val),
-                    ),
+                    textFormFieldPropertyMarketValuationSource(),
                     SizedBox(
                       // so keyboard does not hide bottom textfield
                       height: MediaQuery.of(context).viewInsets.bottom,
@@ -507,6 +362,184 @@ class _AddPropertyState extends State<AddProperty> {
           ),
         );
       },
+    );
+  }
+
+  textFormFieldPropertyMarketValuationSource() {
+    return TextFormField(
+//                initialValue: 'initial description',
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Market Valuation Agent',
+          labelStyle: kFieldHeading,
+          hintText: 'market valuation source'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any valuation source'
+//                          : null,
+      onChanged: (val) =>
+          setState(() => _currentPropertyMarketValuationSource = val),
+    );
+  }
+
+  textFormFieldPropertyMarketValuation() {
+    return Row(
+      children: <Widget>[
+        Text(
+          _currencySymbol,
+          style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: TextFormField(
+            inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+//                initialValue: 'initial description',
+            decoration: kTextInputDecoration.copyWith(
+                labelText: 'Market Valuation',
+                labelStyle: kFieldHeading,
+                hintText: 'market valuation'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter valuation amount' : null,
+            onChanged: (val) => setState(
+              () => _currentPropertyMarketValuationAmount = double.parse(val),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  textFormFieldPropertyLegalDescription() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Legal Description',
+          labelStyle: kFieldHeading,
+          hintText: 'legal description'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter property legal description'
+//                        : null,
+      onChanged: (val) =>
+          setState(() => _currentPropertyLegalDescription = val),
+    );
+  }
+
+  textFormFieldPropertyInsuranceSource() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Insurance Company',
+          labelStyle: kFieldHeading,
+          hintText: 'insurance source/broker/company'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any insurance supplier'
+//                          : null,
+      onChanged: (val) => setState(() => _currentPropertyInsuranceSource = val),
+    );
+  }
+
+  textFormFieldPropertyInsurancePolicy() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Insurance Policy',
+          labelStyle: kFieldHeading,
+          hintText: 'insurance policy number'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any insurance policy name, code etc'
+//                          : null,
+      onChanged: (val) => setState(() => _currentPropertyInsurancePolicy = val),
+    );
+  }
+
+  textFormFieldPropertyRatesCode() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Rates Billing Code',
+          labelStyle: kFieldHeading,
+          hintText: 'rates Id'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter any billing code' : null,
+      onChanged: (val) =>
+          setState(() => _currentPropertyRatesBillingCode = val),
+    );
+  }
+
+  textFormFieldPropertyLandArea() {
+    return Row(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Text(
+              'Land area',
+              style: kFieldHeading,
+            ),
+            Text(
+              areaMeasurementSymbol,
+              style: kFieldHeading,
+            ),
+          ],
+        ),
+        Expanded(
+          child: TextFormField(
+            keyboardType: TextInputType.number,
+            decoration: kTextInputDecoration.copyWith(
+                labelStyle: kFieldHeading, hintText: 'land area'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter land area' : null,
+//                  validator: (val) => val.isNotEmpty? ,
+            onChanged: (val) => setState(
+              () => _currentPropertyLandArea = double.parse(val),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  textFormFieldPropertyZone() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Zoning',
+          labelStyle: kFieldHeading,
+          hintText: 'property zoning'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter any property zone' : null,
+      onChanged: (val) => setState(() => _currentPropertyZone = val),
+    );
+  }
+
+  textFormFieldPropertyAddress() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Address', labelStyle: kFieldHeading, hintText: 'address'),
+      validator: (val) => val.isEmpty ? 'Please enter property address' : null,
+      onChanged: (val) => setState(() => _currentPropertyAddress = val),
+    );
+  }
+
+  textFormFieldPropertyDetails() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Details',
+          labelStyle: kFieldHeading,
+          hintText: 'more details'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentPropertyNotes = val),
+    );
+  }
+
+  textFormFieldPropertyName() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Property Name',
+          labelStyle: kFieldHeading,
+          hintText: 'property name'),
+      validator: (val) =>
+          val.isEmpty ? 'Please enter what property is know as' : null,
+      onChanged: (val) => setState(() => _currentPropertyName = val),
     );
   }
 }

@@ -169,7 +169,7 @@ class Home extends StatelessWidget {
                 minHeight: _minHeight,
                 maxHeight: _maxHeight,
               ),
-              child: Text('Documents'),
+              child: Text('Leases'),
             ),
           ),
           Divider(

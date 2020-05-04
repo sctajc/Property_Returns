@@ -15,7 +15,6 @@ class AddUnit extends StatefulWidget {
   final String propertyUid;
   final String propertyName;
   final String defaultUnitName;
-
   AddUnit({this.propertyUid, this.propertyName, this.defaultUnitName});
 
   @override
@@ -67,193 +66,32 @@ class _AddUnitState extends State<AddUnit> {
                         SizedBox(
                           height: 10,
                         ),
-                        TextFormField(
-                          // used for initial/single/first unit for property
-                          initialValue: widget.defaultUnitName,
-                          decoration: kTextInputDecoration.copyWith(
-                              labelText: 'Name',
-                              labelStyle: kFieldHeading,
-                              hintText: 'unit name'),
-                          validator: (val) => val.isEmpty
-                              ? 'Please enter what this area is know by'
-                              : null,
-                          onChanged: (val) =>
-                              setState(() => _currentUnitName = val),
-                        ),
+                        _displayUnitNameField(),
                         SizedBox(
                           height: 10,
                         ),
-                        TextFormField(
-                          decoration: kTextInputDecoration.copyWith(
-                              labelText: 'Details',
-                              labelStyle: kFieldHeading,
-                              hintText: 'more details'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-                          onChanged: (val) =>
-                              setState(() => _currentUnitNotes = val),
-                        ),
+                        _displayUnitDetailsField(),
                         SizedBox(
                           height: 10,
                         ),
-                        TextFormField(
-                          decoration: kTextInputDecoration.copyWith(
-                              labelText: 'Description',
-                              labelStyle: kFieldHeading,
-                              hintText: 'Lease description'),
-                          validator: (val) => val.isEmpty
-                              ? 'Please enter lease description'
-                              : null,
-                          onChanged: (val) => setState(
-                              () => _currentUnitLeaseDescription = val),
-                        ),
+                        _displayUnitLeaseDescription(),
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  _areaMeasurementSymbol,
-                                  style: kFieldHeading,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: TextFormField(
-                                inputFormatters: [
-                                  WhitelistingTextInputFormatter(
-                                      RegExp("[0-9.]"))
-                                ],
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-                                decoration: kTextInputDecoration.copyWith(
-                                    labelText: 'Floor Area',
-                                    labelStyle: kFieldHeading,
-                                    hintText: 'floor area'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter land area' : null,
-//                  validator: (val) => val.isNotEmpty? ,
-                                onChanged: (val) => setState(
-                                    () => _currentUnitArea = double.parse(val)),
-                              ),
-                            ),
-                          ],
-                        ),
+                        _displayUnitFloorAreaField(),
                         SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Text(
-                                  '%  ',
-                                  style: kFieldHeading,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: TextFormField(
-                                inputFormatters: [
-                                  WhitelistingTextInputFormatter(
-                                      RegExp("[0-9.]"))
-                                ],
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-                                decoration: kTextInputDecoration.copyWith(
-                                    labelText: 'of Total Property',
-                                    labelStyle: kFieldHeading,
-                                    hintText: 'of total property'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter land area' : null,
-//                  validator: (val) => val.isNotEmpty? ,
-                                onChanged: (val) => setState(() =>
-                                    _currentUnitPercentageSplit =
-                                        double.parse(val)),
-                              ),
-                            ),
-                          ],
-                        ),
+                        _displayUnitPercentageSplitField(),
                         SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Residential?',
-                              style: kFieldHeading,
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Checkbox(
-                              value: unitResidential,
-                              onChanged: (value) {
-                                setState(() {
-                                  unitResidential = value;
-                                  _currentUnitResidential = unitResidential;
-                                });
-                              },
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            GestureDetector(
-                              onTap: () => kShowHelpToast(context,
-                                  "If selected the unit is residential only"),
-                              child: Icon(
-                                Icons.help_outline,
-                                color: kColorOrange,
-                              ),
-                            ),
-                          ],
-                        ),
+                        _displayUnitResidentialField(context),
                         SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              _currencySymbol,
-                              style: kFieldHeading,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: TextFormField(
-                                inputFormatters: [
-                                  WhitelistingTextInputFormatter(
-                                      RegExp("[0-9.]"))
-                                ],
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-//                                initialValue: unitDetails
-//                                    .data.propertyMarketValuationAmount
-//                                    .toStringAsFixed(2),
-                                decoration: kTextInputDecoration.copyWith(
-                                    labelText: 'Rental Valuation',
-                                    labelStyle: kFieldHeading,
-                                    hintText: 'rental valuation'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter valuation amount' : null,
-                                onChanged: (val) => setState(
-                                  () => _currentUnitRentalValuationAmount =
-                                      double.parse(val),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        _displayUnitRentalValuationField(),
+                        // display rental valuation date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -322,19 +160,7 @@ class _AddUnitState extends State<AddUnit> {
                         SizedBox(
                           height: 10,
                         ),
-                        TextFormField(
-                          // used for initial/single/first unit for property
-//                          initialValue: widget.defaultUnitName,
-                          decoration: kTextInputDecoration.copyWith(
-                              labelText: 'Rental Valuation Source',
-                              labelStyle: kFieldHeading,
-                              hintText: 'rental valuation source'),
-//                          validator: (val) => val.isEmpty
-//                              ? 'Please enter who supplied the rental valuation'
-//                              : null,
-                          onChanged: (val) => setState(
-                              () => _currentUnitRentalValuationSource = val),
-                        ),
+                        _displayUnitRentalValuationSourceField(),
                         SizedBox(
                           height: 10,
                         ),
@@ -378,5 +204,193 @@ class _AddUnitState extends State<AddUnit> {
             ),
           );
         });
+  }
+
+  _displayUnitRentalValuationSourceField() {
+    return TextFormField(
+      // used for initial/single/first unit for property
+//                          initialValue: widget.defaultUnitName,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Rental Valuation Source',
+          labelStyle: kFieldHeading,
+          hintText: 'rental valuation source'),
+//                          validator: (val) => val.isEmpty
+//                              ? 'Please enter who supplied the rental valuation'
+//                              : null,
+      onChanged: (val) =>
+          setState(() => _currentUnitRentalValuationSource = val),
+    );
+  }
+
+  _displayUnitRentalValuationField() {
+    return Row(
+      children: <Widget>[
+        Text(
+          _currencySymbol,
+          style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: TextFormField(
+            inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+//                                initialValue: unitDetails
+//                                    .data.propertyMarketValuationAmount
+//                                    .toStringAsFixed(2),
+            decoration: kTextInputDecoration.copyWith(
+                labelText: 'Rental Valuation',
+                labelStyle: kFieldHeading,
+                hintText: 'rental valuation'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter valuation amount' : null,
+            onChanged: (val) => setState(
+              () => _currentUnitRentalValuationAmount = double.parse(val),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _displayUnitResidentialField(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Residential?',
+          style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Checkbox(
+          value: unitResidential,
+          onChanged: (value) {
+            setState(() {
+              unitResidential = value;
+              _currentUnitResidential = unitResidential;
+            });
+          },
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        GestureDetector(
+          onTap: () => kShowHelpToast(
+              context, "If selected the unit is residential only"),
+          child: Icon(
+            Icons.help_outline,
+            color: kColorOrange,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _displayUnitPercentageSplitField() {
+    return Row(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Text(
+              '%  ',
+              style: kFieldHeading,
+            ),
+          ],
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: TextFormField(
+            inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: kTextInputDecoration.copyWith(
+                labelText: 'of Total Property',
+                labelStyle: kFieldHeading,
+                hintText: 'of total property'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter land area' : null,
+//                  validator: (val) => val.isNotEmpty? ,
+            onChanged: (val) =>
+                setState(() => _currentUnitPercentageSplit = double.parse(val)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _displayUnitFloorAreaField() {
+    return Row(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Text(
+              _areaMeasurementSymbol,
+              style: kFieldHeading,
+            ),
+          ],
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: TextFormField(
+            inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: kTextInputDecoration.copyWith(
+                labelText: 'Floor Area',
+                labelStyle: kFieldHeading,
+                hintText: 'floor area'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter land area' : null,
+//                  validator: (val) => val.isNotEmpty? ,
+            onChanged: (val) =>
+                setState(() => _currentUnitArea = double.parse(val)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _displayUnitLeaseDescription() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Description',
+          labelStyle: kFieldHeading,
+          hintText: 'Lease description'),
+      validator: (val) => val.isEmpty ? 'Please enter lease description' : null,
+      onChanged: (val) => setState(() => _currentUnitLeaseDescription = val),
+    );
+  }
+
+  _displayUnitDetailsField() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Details',
+          labelStyle: kFieldHeading,
+          hintText: 'more details'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentUnitNotes = val),
+    );
+  }
+
+  _displayUnitNameField() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
+      // used for initial/single/first unit for property
+      initialValue: widget.defaultUnitName,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Name', labelStyle: kFieldHeading, hintText: 'unit name'),
+      validator: (val) =>
+          val.isEmpty ? 'Please enter what this area is know by' : null,
+      onChanged: (val) => setState(() => _currentUnitName = val),
+    );
   }
 }

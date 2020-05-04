@@ -8,6 +8,7 @@ class TaskDetails {
   final bool taskArchived;
   final int taskImportance;
   final String taskUnitUid;
+  final String taskTenantUid;
   final Timestamp taskDueDateTime;
   final Timestamp taskLastEditedDateTime;
 
@@ -19,6 +20,7 @@ class TaskDetails {
       this.taskArchived,
       this.taskImportance,
       this.taskUnitUid,
+      this.taskTenantUid,
       this.taskDueDateTime,
       this.taskLastEditedDateTime});
 }

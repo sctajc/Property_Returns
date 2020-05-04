@@ -5,7 +5,6 @@ import 'package:property_returns/services/auth.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
-
   SignIn({this.toggleView});
 
   @override
@@ -51,30 +50,11 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      decoration:
-                          kTextInputDecoration.copyWith(hintText: 'Email'),
-                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                      onChanged: (val) {
-                        // in the course the Net Ninja used Set State here
-                        email = val;
-                      },
-                    ),
+                    _displaySignInEmailField(),
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      decoration:
-                          kTextInputDecoration.copyWith(hintText: 'Password'),
-                      obscureText: true,
-                      validator: (val) => val.length < 6
-                          ? 'Must have six or more charactures'
-                          : null,
-                      onChanged: (val) {
-                        // in the course the Net Ninja used Set State here
-                        password = val;
-                      },
-                    ),
+                    _displaySignInPasswordField(),
                     SizedBox(
                       height: 20,
                     ),
@@ -107,5 +87,31 @@ class _SignInState extends State<SignIn> {
               ),
             ),
           );
+  }
+
+  _displaySignInPasswordField() {
+    return TextFormField(
+      keyboardType: TextInputType.visiblePassword,
+      decoration: kTextInputDecoration.copyWith(hintText: 'Password'),
+      obscureText: true,
+      validator: (val) =>
+          val.length < 6 ? 'Must have six or more charactures' : null,
+      onChanged: (val) {
+        // in the course the Net Ninja used Set State here
+        password = val;
+      },
+    );
+  }
+
+  _displaySignInEmailField() {
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      decoration: kTextInputDecoration.copyWith(hintText: 'Email'),
+      validator: (val) => val.isEmpty ? 'Enter an email' : null,
+      onChanged: (val) {
+        // in the course the Net Ninja used Set State here
+        email = val;
+      },
+    );
   }
 }

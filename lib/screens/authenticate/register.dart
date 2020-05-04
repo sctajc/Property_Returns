@@ -47,33 +47,15 @@ class _RegisterState extends State<Register> {
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      decoration:
-                          kTextInputDecoration.copyWith(hintText: 'Email'),
-                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                      onChanged: (val) {
-                        // in course the Net Ninja used Set State here
-                        email = val;
-                      },
-                    ),
+                    _displayRegisterEmailField(),
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      decoration:
-                          kTextInputDecoration.copyWith(hintText: 'Password'),
-                      obscureText: true,
-                      validator: (val) => val.length < 6
-                          ? 'Must have six or more characters'
-                          : null,
-                      onChanged: (val) {
-                        // in course the Net Ninja used Set State here
-                        password = val;
-                      },
-                    ),
+                    _displayRegisterPasswordField(),
                     SizedBox(
                       height: 20,
                     ),
+                    // Register
                     RaisedButton(
                       child: Text(
                         'Register',
@@ -105,5 +87,30 @@ class _RegisterState extends State<Register> {
               ),
             ),
           );
+  }
+
+  TextFormField _displayRegisterEmailField() {
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      decoration: kTextInputDecoration.copyWith(hintText: 'Email'),
+      validator: (val) => val.isEmpty ? 'Enter an email' : null,
+      onChanged: (val) {
+        // in course the Net Ninja used Set State here
+        email = val;
+      },
+    );
+  }
+
+  TextFormField _displayRegisterPasswordField() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(hintText: 'Password'),
+      obscureText: true,
+      validator: (val) =>
+          val.length < 6 ? 'Must have six or more characters' : null,
+      onChanged: (val) {
+        // in course the Net Ninja used Set State here
+        password = val;
+      },
+    );
   }
 }

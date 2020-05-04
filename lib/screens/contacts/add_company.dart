@@ -6,9 +6,8 @@ import 'package:property_returns/models/user.dart';
 import 'package:property_returns/services/database.dart';
 import 'package:property_returns/shared/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:intl/intl.dart';
-import 'package:property_returns/shared/loading.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:string_validator/string_validator.dart';
 
 class AddCompany extends StatefulWidget {
   static String id = 'add_company_screen';
@@ -21,7 +20,6 @@ class _AddCompanyState extends State<AddCompany> {
   bool _isCompanyTenant = false;
   bool _isCompanyTrade = false;
   bool _isCompanyAgent = false;
-//  String justCreatedCompanyUid;
   final _formKey = GlobalKey<FormState>();
 
   // form values
@@ -55,186 +53,38 @@ class _AddCompanyState extends State<AddCompany> {
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  decoration: kTextInputDecoration.copyWith(
-                      labelText: 'Company Name',
-                      labelStyle: kFieldHeading,
-                      hintText: 'company name'),
-                  validator: (val) => val.isEmpty
-                      ? 'Please enter what company/organisation is know as'
-                      : null,
-                  onChanged: (val) => setState(() => _currentCompanyName = val),
-                ),
+                textFormFieldCompanyName(),
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  decoration: kTextInputDecoration.copyWith(
-                      labelText: 'Comments',
-                      labelStyle: kFieldHeading,
-                      hintText: 'more details'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-                  onChanged: (val) =>
-                      setState(() => _currentCompanyComments = val),
-                ),
+                textFormFieldComment(),
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  decoration: kTextInputDecoration.copyWith(
-                      labelText: 'Phone',
-                      labelStyle: kFieldHeading,
-                      hintText: 'phone'),
-//                      validator: (val) =>
-//                          val.isEmpty ? 'Please enter a phone number' : null,
-                  onChanged: (val) =>
-                      setState(() => _currentCompanyPhone = val),
-                ),
+                textFormFieldCompanyPhone(),
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  decoration: kTextInputDecoration.copyWith(
-                      labelText: 'Email',
-                      labelStyle: kFieldHeading,
-                      hintText: 'company email eg info@'),
-                  validator: (val) =>
-                      val.isNotEmpty && !emailRegex.hasMatch(val)
-                          ? 'Please enter a valid email'
-                          : null,
-                  onChanged: (val) =>
-                      setState(() => _currentCompanyEmail = val),
-                ),
+                textFormFieldCompanyEmail(),
                 SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  decoration: kTextInputDecoration.copyWith(
-                      labelText: 'Website',
-                      labelStyle: kFieldHeading,
-                      hintText: 'website'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter any billing code' : null,
-                  onChanged: (val) =>
-                      setState(() => _currentCompanyWebsite = val),
-                ),
+                textFormFieldCompanyWebsite(),
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  decoration: kTextInputDecoration.copyWith(
-                      labelText: 'Postal Address',
-                      labelStyle: kFieldHeading,
-                      hintText: 'postal address'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any insurance policy name, code etc'
-//                          : null,
-                  onChanged: (val) =>
-                      setState(() => _currentCompanyPostalAddress = val),
-                ),
+                textFormFieldCompanyPostalAddress(),
                 SizedBox(
                   height: 20,
                 ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'Tenant',
-                      style: kFieldHeading,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Checkbox(
-                      value: _isCompanyTenant,
-                      onChanged: (value) {
-                        setState(() {
-                          _isCompanyTenant = value;
-                          _currentCompanySetTenant = _isCompanyTenant;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      width: 1,
-                    ),
-                    GestureDetector(
-                      onTap: () => kShowHelpToast(context,
-                          "If selected this company can be assigned to leases'"),
-                      child: Icon(
-                        Icons.help_outline,
-                        color: kColorOrange,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    Text(
-                      'Trade',
-                      style: kFieldHeading,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Checkbox(
-                      value: _isCompanyTrade,
-                      onChanged: (value) {
-                        setState(() {
-                          _isCompanyTrade = value;
-                          _currentCompanySetTrade = _isCompanyTrade;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      width: 1,
-                    ),
-                    GestureDetector(
-                      onTap: () => kShowHelpToast(context,
-                          "If selected this company will be listed under trades, i.e a supplier'"),
-                      child: Icon(
-                        Icons.help_outline,
-                        color: kColorOrange,
-                      ),
-                    ),
-                  ],
-                ),
+                checkBoxCompanyTenant(context),
                 SizedBox(
                   height: 1,
                 ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'Agent  ',
-                      style: kFieldHeading,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Checkbox(
-                      value: _isCompanyAgent,
-                      onChanged: (value) {
-                        setState(() {
-                          _isCompanyAgent = value;
-                          _currentCompanySetAgent = _isCompanyAgent;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      width: 1,
-                    ),
-                    GestureDetector(
-                      onTap: () => kShowHelpToast(context,
-                          "If selected this company will be listed under agents'"),
-                      child: Icon(
-                        Icons.help_outline,
-                        color: kColorOrange,
-                      ),
-                    ),
-                  ],
-                ),
+                checkBoxCompanyAgent(context),
                 SizedBox(
                   width: 20,
                 ),
@@ -291,6 +141,183 @@ class _AddCompanyState extends State<AddCompany> {
           ],
         ),
       ),
+    );
+  }
+
+  checkBoxCompanyAgent(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Agent  ',
+          style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Checkbox(
+          value: _isCompanyAgent,
+          onChanged: (value) {
+            setState(() {
+              _isCompanyAgent = value;
+              _currentCompanySetAgent = _isCompanyAgent;
+            });
+          },
+        ),
+        SizedBox(
+          width: 1,
+        ),
+        GestureDetector(
+          onTap: () => kShowHelpToast(
+              context, "If selected this company will be listed under agents'"),
+          child: Icon(
+            Icons.help_outline,
+            color: kColorOrange,
+          ),
+        ),
+      ],
+    );
+  }
+
+  checkBoxCompanyTenant(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Tenant',
+          style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Checkbox(
+          value: _isCompanyTenant,
+          onChanged: (value) {
+            setState(() {
+              _isCompanyTenant = value;
+              _currentCompanySetTenant = _isCompanyTenant;
+            });
+          },
+        ),
+        SizedBox(
+          width: 1,
+        ),
+        GestureDetector(
+          onTap: () => kShowHelpToast(
+              context, "If selected this company can be assigned to leases'"),
+          child: Icon(
+            Icons.help_outline,
+            color: kColorOrange,
+          ),
+        ),
+        SizedBox(
+          width: 40,
+        ),
+        Text(
+          'Trade',
+          style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        Checkbox(
+          value: _isCompanyTrade,
+          onChanged: (value) {
+            setState(() {
+              _isCompanyTrade = value;
+              _currentCompanySetTrade = _isCompanyTrade;
+            });
+          },
+        ),
+        SizedBox(
+          width: 1,
+        ),
+        GestureDetector(
+          onTap: () => kShowHelpToast(context,
+              "If selected this company will be listed under trades, i.e a supplier'"),
+          child: Icon(
+            Icons.help_outline,
+            color: kColorOrange,
+          ),
+        ),
+      ],
+    );
+  }
+
+  textFormFieldCompanyPostalAddress() {
+    return TextFormField(
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Postal Address',
+          labelStyle: kFieldHeading,
+          hintText: 'postal address'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any insurance policy name, code etc'
+//                          : null,
+      onChanged: (val) => setState(() => _currentCompanyPostalAddress = val),
+    );
+  }
+
+  textFormFieldCompanyWebsite() {
+    return TextFormField(
+      keyboardType: TextInputType.url,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Website', labelStyle: kFieldHeading, hintText: 'website'),
+      validator: (val) =>
+          val.isNotEmpty && !isURL(val) ? 'Please enter valid website' : null,
+      onChanged: (val) => setState(() => _currentCompanyWebsite = val),
+    );
+  }
+
+  textFormFieldCompanyEmail() {
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Email',
+          labelStyle: kFieldHeading,
+          hintText: 'company email eg info@'),
+      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
+          ? 'Please enter a valid email'
+          : null,
+      onChanged: (val) => setState(() => _currentCompanyEmail = val),
+    );
+  }
+
+  textFormFieldCompanyPhone() {
+    return TextFormField(
+      keyboardType: TextInputType.phone,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
+//                      validator: (val) =>
+//                          val.isEmpty ? 'Please enter a phone number' : null,
+      onChanged: (val) => setState(() => _currentCompanyPhone = val),
+    );
+  }
+
+  textFormFieldComment() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Comments',
+          labelStyle: kFieldHeading,
+          hintText: 'more details'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentCompanyComments = val),
+    );
+  }
+
+  textFormFieldCompanyName() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Company Name',
+          labelStyle: kFieldHeading,
+          hintText: 'company name'),
+      validator: (val) => val.isEmpty
+          ? 'Please enter what company/organisation is know as'
+          : null,
+      onChanged: (val) => setState(() => _currentCompanyName = val),
     );
   }
 }

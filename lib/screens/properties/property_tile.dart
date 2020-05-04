@@ -32,68 +32,11 @@ class _PropertyTileState extends State<PropertyTile> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  GestureDetector(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey[50],
-                              offset: Offset(10, 10),
-                              blurRadius: 20,
-                              spreadRadius: 10)
-                        ],
-                        color: Colors.blue,
-                        border: Border.all(width: 0),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      width: 130,
-                      height: 25,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 1, 1, 1),
-                        child: Center(
-                            child: Text(
-                          widget.propertyDetails.propertyName,
-                          maxLines: 1,
-                        )),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditProperty(
-                            propertyUid: widget.propertyDetails.propertyUid,
-                            propertyName: widget.propertyDetails.propertyName,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  _displayPropertyButton(context),
                   SizedBox(
                     height: 0,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 0, 8),
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text('Add a unit'),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddUnit(
-                              propertyUid: widget.propertyDetails.propertyUid,
-                              propertyName: widget.propertyDetails.propertyName,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  _displayAddUnitButton(context),
                 ],
               ),
               SizedBox(
@@ -202,6 +145,71 @@ class _PropertyTileState extends State<PropertyTile> {
           ),
         ),
       ),
+    );
+  }
+
+  _displayAddUnitButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 0, 0, 8),
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text('Add a unit'),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddUnit(
+                propertyUid: widget.propertyDetails.propertyUid,
+                propertyName: widget.propertyDetails.propertyName,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _displayPropertyButton(BuildContext context) {
+    return GestureDetector(
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey[50],
+                offset: Offset(10, 10),
+                blurRadius: 20,
+                spreadRadius: 10)
+          ],
+          color: Colors.blue,
+          border: Border.all(width: 0),
+          borderRadius: BorderRadius.all(
+            Radius.circular(8),
+          ),
+        ),
+        width: 130,
+        height: 25,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(5, 1, 1, 1),
+          child: Center(
+              child: Text(
+            widget.propertyDetails.propertyName,
+            maxLines: 1,
+          )),
+        ),
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditProperty(
+              propertyUid: widget.propertyDetails.propertyUid,
+              propertyName: widget.propertyDetails.propertyName,
+            ),
+          ),
+        );
+      },
     );
   }
 }

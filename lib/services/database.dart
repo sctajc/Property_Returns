@@ -117,6 +117,7 @@ class DatabaseServices {
     bool taskArchived,
     int taskImportance,
     String taskUnitUid,
+    String taskTenantUid,
     DateTime taskDueDateTime,
     Timestamp taskEditedDateTime,
   ) async {
@@ -128,6 +129,7 @@ class DatabaseServices {
         'archived': taskArchived,
         'importance': taskImportance,
         'unitUid': taskUnitUid,
+        'tenantUid': taskTenantUid,
         'dueDateTime': taskDueDateTime,
         'editedDateTime': taskEditedDateTime,
       },
@@ -144,6 +146,7 @@ class DatabaseServices {
     int taskImportance,
     DateTime taskDueDateTime,
     String taskUnitUid,
+    String taskTenantUid,
     Timestamp taskEditedDateTime,
   ) async {
     return await userTaskCollection.document(taskID).updateData(
@@ -155,6 +158,7 @@ class DatabaseServices {
         'importance': taskImportance,
         'dueDateTime': taskDueDateTime,
         'unitUid': taskUnitUid,
+        'tenantUid': taskTenantUid,
         'editedDateTime': taskEditedDateTime,
       },
     );
@@ -178,6 +182,7 @@ class DatabaseServices {
       taskImportance: snapshot.data['importance'] ?? 5,
       taskDueDateTime: snapshot.data['dueDateTime'] ?? DateTime.now(),
       taskUnitUid: snapshot.data['unitUid'] ?? 'none',
+      taskTenantUid: snapshot.data['tenantUid'] ?? 'none',
       taskLastEditedDateTime: snapshot.data['editedDateTime'] ?? DateTime.now(),
     );
   }
@@ -686,6 +691,17 @@ class DatabaseServices {
         .map(_userCompaniesFromSnapshot);
   }
 
+  // get tenant details stream for a given user ordered by company name
+  Stream<List<CompanyDetails>> get userTenants {
+    return userCompanyCollection
+        .where('userUid', isEqualTo: uid)
+        .where('companyArchived', isEqualTo: false)
+        .where('companySetTenant', isEqualTo: true)
+        .orderBy('companyName', descending: false)
+        .snapshots()
+        .map(_userCompaniesFromSnapshot);
+  }
+
   List<CompanyDetails> _userCompaniesFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return CompanyDetails(
@@ -693,6 +709,9 @@ class DatabaseServices {
         userUid: uid,
         companyName: doc.data['companyName'] ?? 'no name',
         companyComment: doc.data['companyComment'] ?? 'no notes',
+        companyPhone: doc.data['companyPhone'],
+        companyEmail: doc.data['companyEmail'],
+        companySetTenant: doc.data['companySetTenant'],
         companyArchived: doc.data['companyArchived'] ?? false,
         companyPostalAddress: doc.data['companyPostalAddress'] ?? 'no address',
         companyRecordLastEdited:
@@ -814,7 +833,7 @@ class DatabaseServices {
         return PersonDetails(
           personUid: doc.documentID,
           userUid: uid,
-          companyUid: doc.data['companyyUid'],
+          companyUid: doc.data['companyUid'],
           personName: doc.data['personName'],
           personRole: doc.data['personRole'],
           personComment: doc.data['personComment'],
