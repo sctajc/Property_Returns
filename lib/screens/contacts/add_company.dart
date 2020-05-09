@@ -24,11 +24,11 @@ class _AddCompanyState extends State<AddCompany> {
 
   // form values
   String _currentCompanyName;
-  String _currentCompanyComments;
-  String _currentCompanyPhone;
-  String _currentCompanyEmail;
-  String _currentCompanyWebsite;
-  String _currentCompanyPostalAddress;
+  String _currentCompanyComments = '';
+  String _currentCompanyPhone = '';
+  String _currentCompanyEmail = '';
+  String _currentCompanyWebsite = '';
+  String _currentCompanyPostalAddress = '';
   bool _currentCompanySetTenant = false;
   bool _currentCompanySetTrade = false;
   bool _currentCompanySetAgent = false;
@@ -126,10 +126,10 @@ class _AddCompanyState extends State<AddCompany> {
                       user.userUid,
                       docRef.documentID,
                       'Reception',
-                      '',
-                      '',
-                      '',
-                      '',
+                      '', // phone
+                      '', // Email
+                      '', // role
+                      '', // comment
                       false,
                       Timestamp.now(),
                       Timestamp.now(),
@@ -244,6 +244,8 @@ class _AddCompanyState extends State<AddCompany> {
 
   textFormFieldCompanyPostalAddress() {
     return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Postal Address',
           labelStyle: kFieldHeading,

@@ -23,8 +23,8 @@ class _AddPersonState extends State<AddPerson> {
 
   // form values
   String _currentPersonName;
-  String _currentPersonPhone;
-  String _currentPersonEmail;
+  String _currentPersonPhone = '';
+  String _currentPersonEmail = '';
   String _currentPersonRole;
   String _currentPersonComment;
 

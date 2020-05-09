@@ -356,10 +356,12 @@ class _AddUnitState extends State<AddUnit> {
 
   _displayUnitLeaseDescription() {
     return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
       decoration: kTextInputDecoration.copyWith(
-          labelText: 'Description',
+          labelText: 'General Address of Premises',
           labelStyle: kFieldHeading,
-          hintText: 'Lease description'),
+          hintText: 'general address of premises as used on lease'),
       validator: (val) => val.isEmpty ? 'Please enter lease description' : null,
       onChanged: (val) => setState(() => _currentUnitLeaseDescription = val),
     );

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       fontFamily: 'Roboto',
       dividerColor: kColorOrange,
       textTheme: TextTheme(
-        display4: TextStyle(
+        headline1: TextStyle(
           fontWeight: FontWeight.bold,
         ),
       ),

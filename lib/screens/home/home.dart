@@ -34,7 +34,11 @@ class Home extends StatelessWidget {
             icon: Icon(Icons.person),
             label: Text('Log out')),
         FlatButton.icon(
-            onPressed: () => Navigator.pushNamed(context, SettingsForm.id),
+//            onPressed: () => Navigator.pushNamed(context, SettingsForm.id), // cant use as need to pass userUid to settings form
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => SettingsForm(
+                      userUid: user.userUid,
+                    ))),
             icon: Icon(Icons.settings),
             label: Text('settings'))
       ],

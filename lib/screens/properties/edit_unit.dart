@@ -23,6 +23,7 @@ class EditUnit extends StatefulWidget {
 
 class _EditUnitState extends State<EditUnit> {
   bool residentialUnit = false;
+  bool _currentUnitRentalValuationDateCancelled = false;
   bool archiveUnit = false;
   final _formKey = GlobalKey<FormState>();
   String areaMeasurementSymbol;
@@ -157,6 +158,10 @@ class _EditUnitState extends State<EditUnit> {
                                       child: SizedBox(
                                         width: 200,
                                         child: DateTimeField(
+                                          onChanged: (val) => val == null
+                                              ? _currentUnitRentalValuationDateCancelled =
+                                                  true
+                                              : null,
 //                                          validator: (val) => val == null
 //                                              ? 'Please enter insurance expiry date'
 //                                              : null,
@@ -210,6 +215,24 @@ class _EditUnitState extends State<EditUnit> {
                         child: Text('Update'),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
+                            // to handle a date from database which is not
+                            // and has not been edited. Has error trying to do
+                            // .toDate() on null
+                            DateTime _tempUnitRentalValuationDate;
+                            if (unitDetails.data.unitRentalValuationDate !=
+                                null) {
+                              _tempUnitRentalValuationDate = unitDetails
+                                  .data.unitRentalValuationDate
+                                  .toDate();
+                            }
+                            // if a date had been entered then user deleted date
+                            if (_currentUnitRentalValuationDateCancelled ==
+                                true) {
+                              print('cancelled');
+                              _currentUnitRentalValuationDate = null;
+                              _tempUnitRentalValuationDate = null;
+                            }
+
                             await DatabaseServices(unitUid: widget.unitUid)
                                 .updatePropertyUnit(
                               user.userUid,
@@ -226,7 +249,7 @@ class _EditUnitState extends State<EditUnit> {
                               _currentUnitRentalValuationAmount ??
                                   unitDetails.data.unitRentalValuationAmount,
                               _currentUnitRentalValuationDate ??
-                                  unitDetails.data.unitRentalValuationDate,
+                                  _tempUnitRentalValuationDate,
                               _currentUnitRentalValuationSource ??
                                   unitDetails.data.unitRentalValuationSource,
                               _currentUnitArchived ??
@@ -443,12 +466,12 @@ class _EditUnitState extends State<EditUnit> {
   _displayUnitLeaseDescriptionField(AsyncSnapshot<UnitDetails> unitDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences,
+      textCapitalization: TextCapitalization.words,
       initialValue: unitDetails.data.unitLeaseDescription,
       decoration: kTextInputDecoration.copyWith(
-          labelText: 'Lease Description',
+          labelText: 'General Address of Premises',
           labelStyle: kFieldHeading,
-          hintText: 'lease description'),
+          hintText: 'general address of premises as used on lease'),
       validator: (val) =>
           val.isEmpty ? 'Please enter a lease description' : null,
       onChanged: (val) => setState(() => _currentUnitLeaseDescription = val),

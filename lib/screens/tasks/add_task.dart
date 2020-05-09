@@ -354,7 +354,6 @@ class _AddTaskState extends State<AddTask> {
                                     setState(() {
                                       _currentPropertySelected =
                                           newPropertySelected;
-                                      print(_currentPropertySelected);
                                     });
                                   },
                                 ),

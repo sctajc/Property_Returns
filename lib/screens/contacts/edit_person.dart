@@ -25,11 +25,11 @@ class _EditPersonState extends State<EditPerson> {
   final _formKey = GlobalKey<FormState>();
 
 // form values
-  String _currentPersonName;
-  String _currentPersonPhone;
-  String _currentPersonEmail;
-  String _currentPersonRole;
-  String _currentPersonComment;
+  String _currentPersonName = 'initialiseName';
+  String _currentPersonPhone = 'InitialisePhone';
+  String _currentPersonEmail = 'initialiseEmail';
+  String _currentPersonRole = 'initialiseRole';
+  String _currentPersonComment = 'initialiseComment';
   bool _currentPersonArchived = false;
 
   @override
@@ -40,6 +40,19 @@ class _EditPersonState extends State<EditPerson> {
           .personByDocumentID,
       builder: (context, personDetails) {
         if (!personDetails.hasData) return Loading();
+
+        if (_currentPersonName == 'initialiseName')
+          _currentPersonName = personDetails.data.personName;
+        if (_currentPersonPhone == 'InitialisePhone')
+          _currentPersonPhone = personDetails.data.personPhone;
+        if (_currentPersonEmail == 'initialiseEmail')
+          _currentPersonEmail = personDetails.data.personEmail;
+        if (_currentPersonRole == 'initialiseRole')
+          _currentPersonRole = personDetails.data.personRole;
+        if (_currentPersonComment == 'initialiseComment')
+          _currentPersonComment = personDetails.data.personComment;
+//        print('_currentPersonPhone after build: $_currentPersonPhone');
+
         return Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
@@ -98,12 +111,11 @@ class _EditPersonState extends State<EditPerson> {
                           .updateCompanyPerson(
                         user.userUid,
                         personDetails.data.companyUid,
-                        _currentPersonName ?? personDetails.data.personName,
-                        _currentPersonPhone ?? personDetails.data.personPhone,
-                        _currentPersonEmail ?? personDetails.data.personEmail,
-                        _currentPersonRole ?? personDetails.data.personRole,
-                        _currentPersonComment ??
-                            personDetails.data.personComment,
+                        _currentPersonName,
+                        _currentPersonPhone,
+                        _currentPersonEmail,
+                        _currentPersonRole,
+                        _currentPersonComment,
                         _currentPersonArchived ??
                             personDetails.data.personArchived,
                         personDetails.data.personRecordCreatedDateTime,
@@ -201,7 +213,7 @@ class _EditPersonState extends State<EditPerson> {
       keyboardType: TextInputType.phone,
       initialValue: personDetails.data.personPhone,
       decoration: kTextInputDecoration.copyWith(
-          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'person'),
+          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
 //                    validator: (val) => val.isEmpty
 //                        ? 'Please enter any property details'
 //                        : null,

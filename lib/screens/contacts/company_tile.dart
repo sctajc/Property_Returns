@@ -29,18 +29,21 @@ class _CompanyTileState extends State<CompanyTile> {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
 
-    widget.companyDetails.companyPhone != null
+    String _tempCompanyComment = widget.companyDetails.companyComment;
+    _tempCompanyComment ??= "";
+
+    widget.companyDetails.companyPhone.length > 1
         ? _numberCompanyPhone.text =
             widget.companyDetails.companyPhone.replaceAll(RegExp(r'\D'), '')
-        : _numberCompanyPhone = null;
-    _numberCompanyPhone != null
+        : _numberCompanyPhone.text = '';
+    _numberCompanyPhone.text.length > 1
         ? _tooltipCompanyPhone = _numberCompanyPhone.text
         : _tooltipCompanyPhone = 'No number';
 
-    widget.companyDetails.companyEmail != null
+    widget.companyDetails.companyEmail.length > 1
         ? _emailCompanyEmail.text = widget.companyDetails.companyEmail
-        : _emailCompanyEmail = null;
-    _emailCompanyEmail != null
+        : _emailCompanyEmail.text = '';
+    _emailCompanyEmail.text.length > 0
         ? _tooltipCompanyEmail = _emailCompanyEmail.text
         : _tooltipCompanyEmail = 'No email';
 
@@ -65,7 +68,7 @@ class _CompanyTileState extends State<CompanyTile> {
                   showPersonsList(user),
                 ],
               ),
-              showCompanyComments(),
+              Text(_tempCompanyComment),
             ],
           ),
         ),
@@ -78,7 +81,7 @@ class _CompanyTileState extends State<CompanyTile> {
         tooltip: _tooltipCompanyEmail,
         icon: Icon(Icons.email),
         color: Colors.lightBlue,
-        onPressed: _emailCompanyEmail != null
+        onPressed: _emailCompanyEmail.text.length > 0
             ? () async {
                 if (await canLaunch('mailto:$_emailCompanyEmail')) {
                   await launch('mailto:$_tooltipCompanyEmail');
@@ -94,14 +97,12 @@ class _CompanyTileState extends State<CompanyTile> {
         tooltip: _tooltipCompanyPhone,
         icon: Icon(Icons.phone),
         color: Colors.lightBlue,
-        onPressed: _numberCompanyPhone != null
+        onPressed: _numberCompanyPhone.text.length > 0
             ? () async {
                 FlutterPhoneDirectCaller.callNumber(_tooltipCompanyPhone);
               }
             : null);
   }
-
-  showCompanyComments() => Text(widget.companyDetails.companyComment);
 
   showPersonsList(User user) {
     return Expanded(
@@ -156,20 +157,20 @@ class _CompanyTileState extends State<CompanyTile> {
                             String _tooltipPersonPhone;
                             String _tooltipPersonEmail;
 
-                            allCompanyPersons.data[index].personPhone != null
+                            allCompanyPersons.data[index].personPhone.length > 0
                                 ? _numberPersonPhone.text = allCompanyPersons
                                     .data[index].personPhone
                                     .replaceAll(RegExp(r'\D'), '')
-                                : _numberPersonPhone = null;
-                            _numberPersonPhone != null
+                                : _numberPersonPhone.text = '';
+                            _numberPersonPhone.text.length > 0
                                 ? _tooltipPersonPhone = _numberPersonPhone.text
                                 : _tooltipPersonPhone = 'No number';
 
-                            allCompanyPersons.data[index].personEmail != null
+                            allCompanyPersons.data[index].personEmail.length > 0
                                 ? _emailPersonEmail.text =
                                     allCompanyPersons.data[index].personEmail
-                                : _emailPersonEmail = null;
-                            _emailPersonEmail != null
+                                : _emailPersonEmail.text = '';
+                            _emailPersonEmail.text.length > 0
                                 ? _tooltipPersonEmail = _emailPersonEmail.text
                                 : _tooltipPersonEmail = 'No email';
                             return Row(
@@ -179,7 +180,7 @@ class _CompanyTileState extends State<CompanyTile> {
                                   icon: Icon(Icons.phone),
                                   tooltip: _tooltipPersonPhone,
                                   color: Colors.lightBlue,
-                                  onPressed: _numberPersonPhone != null
+                                  onPressed: _numberPersonPhone.text.length > 0
                                       ? () async {
                                           FlutterPhoneDirectCaller.callNumber(
                                               _tooltipPersonPhone);
@@ -191,7 +192,7 @@ class _CompanyTileState extends State<CompanyTile> {
                                   icon: Icon(Icons.email),
                                   tooltip: _tooltipPersonEmail,
                                   color: Colors.lightBlue,
-                                  onPressed: _emailPersonEmail != null
+                                  onPressed: _emailPersonEmail.text.length > 0
                                       ? () async {
                                           if (await canLaunch(
                                               'mailto:$_tooltipPersonEmail')) {

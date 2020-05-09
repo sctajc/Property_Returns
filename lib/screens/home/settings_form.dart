@@ -4,9 +4,12 @@ import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/shared/loading.dart';
 import 'package:property_returns/services/database.dart';
 import 'package:property_returns/models/user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SettingsForm extends StatefulWidget {
   static String id = 'setting_form_screen';
+  final String userUid;
+  SettingsForm({this.userUid});
 
   @override
   _SettingsFormState createState() => _SettingsFormState();
@@ -23,6 +26,10 @@ class _SettingsFormState extends State<SettingsForm> {
   String _currentCurrencySymbol;
 
   bool _resultRadioAreaMeasurement;
+
+  bool _currentTasksInGoogleCalendar = false;
+  bool _currentLeaseEventsInGoogleCalendar = false;
+  bool _currentContactsInGoogleContacts = false;
 
   void _handleRadioAreaMeasurementChange(int value) {
     setState(() {
@@ -41,6 +48,23 @@ class _SettingsFormState extends State<SettingsForm> {
       selected: false,
       onSelected: (bool selected) {},
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+//    final user = Provider.of<User>(context); // Provider once again doesn't work
+    Firestore.instance
+        .collection("user_details")
+        .document(widget.userUid)
+        .snapshots()
+        .listen((snapshot) {
+      _currentTasksInGoogleCalendar = snapshot.data['tasksInGoogleCalendar'];
+      _currentLeaseEventsInGoogleCalendar =
+          snapshot.data['leaseEventsInGoogleCalendar'];
+      _currentContactsInGoogleContacts =
+          snapshot.data['contactsInGoogleContacts'];
+    });
   }
 
   @override
@@ -104,6 +128,10 @@ class _SettingsFormState extends State<SettingsForm> {
                     SizedBox(
                       height: 20,
                     ),
+                    switchLinksToGoogle(),
+                    SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
               ),
@@ -136,6 +164,9 @@ class _SettingsFormState extends State<SettingsForm> {
                             userData.taskNotificationDays,
                         _resultRadioAreaMeasurement,
                         _currentCurrencySymbol,
+                        _currentTasksInGoogleCalendar,
+                        _currentLeaseEventsInGoogleCalendar,
+                        _currentContactsInGoogleContacts,
                       );
                       Navigator.pop(context);
                     }
@@ -146,6 +177,52 @@ class _SettingsFormState extends State<SettingsForm> {
           ),
         );
       },
+    );
+  }
+
+  switchLinksToGoogle() {
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Tasks in Google Calendar:',
+              style: kFieldHeading,
+            ),
+            Switch(
+                value: _currentTasksInGoogleCalendar,
+                onChanged: (val) =>
+                    setState(() => _currentTasksInGoogleCalendar = val)),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Lease Events in Google Calendar:',
+              style: kFieldHeading,
+            ),
+            Switch(
+                value: _currentLeaseEventsInGoogleCalendar,
+                onChanged: (val) =>
+                    setState(() => _currentLeaseEventsInGoogleCalendar = val)),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Contacts in Google Contacts:',
+              style: kFieldHeading,
+            ),
+            Switch(
+                value: _currentContactsInGoogleContacts,
+                onChanged: (val) =>
+                    setState(() => _currentContactsInGoogleContacts = val)),
+          ],
+        ),
+      ],
     );
   }
 
@@ -197,7 +274,7 @@ class _SettingsFormState extends State<SettingsForm> {
       child: Column(
         children: <Widget>[
           Text(
-            'Area Measurement (squared): ',
+            'Area Measurement (squared)',
             style: kFieldHeading,
           ),
           Row(

@@ -28,23 +28,29 @@ class _EditCompanyState extends State<EditCompany> {
   final _formKey = GlobalKey<FormState>();
 
   // form values
-  String _currentCompanyName;
-  String _currentCompanyComment;
-  String _currentCompanyPhone;
-  String _currentCompanyEmail;
-  String _currentCompanyWebsite;
-  String _currentCompanyPostalAddress;
+  String _currentCompanyName = 'initialised';
+  String _currentCompanyComment = 'initialised';
+  String _currentCompanyPhone = 'initialised';
+  String _currentCompanyEmail = 'initialised';
+  String _currentCompanyWebsite = 'initialised';
+  String _currentCompanyPostalAddress = 'initialised';
   bool _currentCompanyArchived = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Firestore.instance
         .collection("companies")
         .document(widget.companyUid)
         .snapshots()
         .listen((snapshot) {
+      _currentCompanyName = snapshot.data['companyName'];
+      _currentCompanyComment = snapshot.data['companyComment'];
+      _currentCompanyPhone = snapshot.data['companyPhone'];
+      _currentCompanyEmail = snapshot.data['companyEmail'];
+      _currentCompanyWebsite = snapshot.data['companyWebsite'];
+      _currentCompanyPostalAddress = snapshot.data['companyPostalAddress'];
+
       _setTenant = snapshot.data['companySetTenant'];
       _setTrade = snapshot.data['companySetTrade'];
       _setAgent = snapshot.data['companySetAgent'];
@@ -126,22 +132,16 @@ class _EditCompanyState extends State<EditCompany> {
                       await DatabaseServices(companyUid: widget.companyUid)
                           .updateUserCompany(
                         user.userUid,
-                        _currentCompanyName ?? companyDetails.data.companyName,
-                        _currentCompanyComment ??
-                            companyDetails.data.companyComment,
-                        _currentCompanyPhone ??
-                            companyDetails.data.companyPhone,
-                        _currentCompanyEmail ??
-                            companyDetails.data.companyEmail,
-                        _currentCompanyWebsite ??
-                            companyDetails.data.companyWebsite,
-                        _currentCompanyPostalAddress ??
-                            companyDetails.data.companyPostalAddress,
-                        _setTenant ?? companyDetails.data.companySetTenant,
-                        _setTrade ?? companyDetails.data.companySetTrade,
-                        _setAgent ?? companyDetails.data.companySetAgent,
-                        _currentCompanyArchived ??
-                            companyDetails.data.companyArchived,
+                        _currentCompanyName,
+                        _currentCompanyComment,
+                        _currentCompanyPhone,
+                        _currentCompanyEmail,
+                        _currentCompanyWebsite,
+                        _currentCompanyPostalAddress,
+                        _setTenant,
+                        _setTrade,
+                        _setAgent,
+                        _currentCompanyArchived,
                         companyDetails.data.companyRecordCreatedDateTime,
                         Timestamp.now(),
                       );
@@ -345,6 +345,8 @@ class _EditCompanyState extends State<EditCompany> {
   textFormFieldCompanyPostalAddress(
       AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
       initialValue: companyDetails.data.companyPostalAddress,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Postal Address',

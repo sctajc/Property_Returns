@@ -15,6 +15,7 @@ class EditProperty extends StatefulWidget {
   static String id = 'edit_property_screen';
   final String propertyUid;
   final String propertyName;
+
   EditProperty({this.propertyUid, this.propertyName});
 
   @override
@@ -23,6 +24,9 @@ class EditProperty extends StatefulWidget {
 
 class _EditPropertyState extends State<EditProperty> {
   bool _archiveProperty = false;
+  bool _currentPropertyDatePurchasedCancelled = false;
+  bool _currentPropertyInsuranceExpiryDateCancelled = false;
+  bool _currentPropertyMarketValidationDateCancelled = false;
   final _formKey = GlobalKey<FormState>();
   String _areaMeasurementSymbol;
   String _currencySymbol = '\$';
@@ -144,16 +148,22 @@ class _EditPropertyState extends State<EditProperty> {
                                   child: SizedBox(
                                     width: 200,
                                     child: DateTimeField(
-//                                          validator: (val) => val == null
-//                                              ? 'Please enter a purchased date'
-//                                              : null,
+                                      onChanged: (val) => val == null
+                                          ? _currentPropertyDatePurchasedCancelled =
+                                              true
+                                          : null,
+//                                      validator: (val) => val == null
+////                                          ? _currentPropertyDatePurchased = null
+//                                          ? 'Please enter a purchased date'
+//                                          : null,
                                       initialValue:
                                           _initialPropertyDatePurchased,
                                       //DateTime.now(),
                                       format: DateFormat("E,  MMM d, y"),
                                       onShowPicker:
                                           (context, currentValue) async {
-                                        final date = await showDatePicker(
+                                        final DateTime date =
+                                            await showDatePicker(
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(1950),
@@ -161,9 +171,12 @@ class _EditPropertyState extends State<EditProperty> {
                                         );
                                         if (date != null) {
                                           _currentPropertyDatePurchased = date;
+                                          print('Purchase Date not null');
                                           return _currentPropertyDatePurchased;
                                         } else {
-                                          return currentValue;
+                                          print('Purchase Date is null');
+                                          _currentPropertyDatePurchased = null;
+                                          return _currentPropertyDatePurchased;
                                         }
                                       },
                                     ),
@@ -223,6 +236,10 @@ class _EditPropertyState extends State<EditProperty> {
                                   child: SizedBox(
                                     width: 200,
                                     child: DateTimeField(
+                                      onChanged: (val) => val == null
+                                          ? _currentPropertyInsuranceExpiryDateCancelled =
+                                              true
+                                          : null,
 //                                          validator: (val) => val == null
 //                                              ? 'Please enter insurance expiry date'
 //                                              : null,
@@ -299,6 +316,10 @@ class _EditPropertyState extends State<EditProperty> {
                                   child: SizedBox(
                                     width: 200,
                                     child: DateTimeField(
+                                      onChanged: (val) => val == null
+                                          ? _currentPropertyMarketValidationDateCancelled =
+                                              true
+                                          : null,
 //                                          validator: (val) => val == null
 //                                              ? 'Please enter insurance expiry date'
 //                                              : null,
@@ -318,7 +339,8 @@ class _EditPropertyState extends State<EditProperty> {
                                               date;
                                           return _currentPropertyMarketValuationDate;
                                         } else {
-                                          return currentValue;
+//                                          return currentValue;
+                                          return _initialPropertyMarketValuationDate;
                                         }
                                       },
                                     ),
@@ -354,6 +376,51 @@ class _EditPropertyState extends State<EditProperty> {
                       child: Text('Update'),
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
+                          // to handle a date from database which is not
+                          // and has not been edited. Has error trying to do
+                          // .toDate() on null
+                          DateTime _tempPropertyDatePurchased;
+                          DateTime _tempPropertyInsuranceExpiryDate;
+                          DateTime _tempPropertyMarketValuationDate;
+                          if (propertyDetails.data.propertyDatePurchased !=
+                              null) {
+                            _tempPropertyDatePurchased = propertyDetails
+                                .data.propertyDatePurchased
+                                .toDate();
+                          }
+                          if (propertyDetails
+                                  .data.propertyInsuranceExpiryDate !=
+                              null) {
+                            _tempPropertyInsuranceExpiryDate = propertyDetails
+                                .data.propertyInsuranceExpiryDate
+                                .toDate();
+                          }
+                          if (propertyDetails
+                                  .data.propertyMarketValuationDate !=
+                              null) {
+                            _tempPropertyMarketValuationDate = propertyDetails
+                                .data.propertyMarketValuationDate
+                                .toDate();
+                          }
+
+                          // if a date had been entered then user deleted date
+                          if (_currentPropertyDatePurchasedCancelled == true) {
+                            print('cancelled');
+                            _currentPropertyDatePurchased = null;
+                            _tempPropertyDatePurchased = null;
+                          }
+                          if (_currentPropertyInsuranceExpiryDateCancelled ==
+                              true) {
+                            print('cancelled');
+                            _currentPropertyInsuranceExpiryDate = null;
+                            _tempPropertyInsuranceExpiryDate = null;
+                          }
+                          if (_currentPropertyMarketValidationDateCancelled ==
+                              true) {
+                            print('cancelled');
+                            _currentPropertyMarketValuationDate = null;
+                            _tempPropertyMarketValuationDate = null;
+                          }
                           await DatabaseServices(
                                   propertyUid: widget.propertyUid)
                               .updateUserProperty(
@@ -369,8 +436,7 @@ class _EditPropertyState extends State<EditProperty> {
                             _currentPropertyLandArea ??
                                 propertyDetails.data.propertyLandArea,
                             _currentPropertyDatePurchased ??
-                                propertyDetails.data.propertyDatePurchased
-                                    .toDate(),
+                                _tempPropertyDatePurchased,
                             _currentPropertyRatesBillingCode ??
                                 propertyDetails.data.propertyRatesBillingCode,
                             _currentPropertyInsurancePolicy ??
@@ -378,16 +444,14 @@ class _EditPropertyState extends State<EditProperty> {
                             _currentPropertyInsuranceSource ??
                                 propertyDetails.data.propertyInsuranceSource,
                             _currentPropertyInsuranceExpiryDate ??
-                                propertyDetails.data.propertyInsuranceExpiryDate
-                                    .toDate(),
+                                _tempPropertyInsuranceExpiryDate,
                             _currentPropertyLegalDescription ??
                                 propertyDetails.data.propertyLegalDescription,
                             _currentPropertyMarketValuationAmount ??
                                 propertyDetails
                                     .data.propertyMarketValuationAmount,
                             _currentPropertyMarketValuationDate ??
-                                propertyDetails
-                                    .data.propertyMarketValuationDate,
+                                _tempPropertyMarketValuationDate,
                             _currentPropertyMarketValuationSource ??
                                 propertyDetails
                                     .data.propertyMarketValuationSource,
@@ -497,9 +561,9 @@ class _EditPropertyState extends State<EditProperty> {
     return TextFormField(
       initialValue: propertyDetails.data.propertyLegalDescription,
       decoration: kTextInputDecoration.copyWith(
-          labelText: 'Legal Description',
+          labelText: 'Legal Description of Premises',
           labelStyle: kFieldHeading,
-          hintText: 'legal description'),
+          hintText: 'legal description of premises'),
 //                    validator: (val) => val.isEmpty
 //                        ? 'Please enter property legal description'
 //                        : null,
@@ -607,6 +671,8 @@ class _EditPropertyState extends State<EditProperty> {
 
   _displayPropertyAddressField(AsyncSnapshot<PropertyDetails> propertyDetails) {
     return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
       initialValue: propertyDetails.data.propertyAddress,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Property Address',

@@ -45,11 +45,15 @@ class DatabaseServices {
   // UserDetails (does not include userUid)
   //
   Future updateUserDetails(
-      String userName,
-      int leaseNotificationDays,
-      int taskNotificationDays,
-      bool areaMeasurementM2,
-      String currencySymbol) async {
+    String userName,
+    int leaseNotificationDays,
+    int taskNotificationDays,
+    bool areaMeasurementM2,
+    String currencySymbol,
+    bool tasksInGoogleCalendar,
+    bool leaseEventsInGoogleCalendar,
+    bool contactsInGoogleContacts,
+  ) async {
     return await userDetailsCollection.document(uid).setData(
       {
         'user_name': userName,
@@ -57,6 +61,9 @@ class DatabaseServices {
         'task_notification_days': taskNotificationDays,
         'areaMeasurementM2': areaMeasurementM2,
         'currencySymbol': currencySymbol,
+        'tasksInGoogleCalendar': tasksInGoogleCalendar,
+        'leaseEventsInGoogleCalendar': leaseEventsInGoogleCalendar,
+        'contactsInGoogleContacts': contactsInGoogleContacts,
       },
     );
   }
@@ -103,6 +110,9 @@ class DatabaseServices {
       taskNotificationDays: snapshot.data['task_notification_days'],
       areaMeasurementM2: snapshot.data['areaMeasurementM2'],
       currencySymbol: snapshot.data['currencySymbol'],
+      tasksInGoogleCalendar: snapshot.data['tasksInGoogleCalendar'],
+      leaseEventsInGoogleCalendar: snapshot.data['leaseEventsInGoogleCalendar'],
+      contactsInGoogleContacts: snapshot.data['contactsInGoogleCalendar'],
     );
   }
 
@@ -176,8 +186,8 @@ class DatabaseServices {
     return TaskDetails(
       taskID: snapshot.documentID,
       userUid: uid,
-      taskTitle: snapshot.data['title'] ?? 'no title',
-      taskDetail: snapshot.data['detail'] ?? 'no detail',
+      taskTitle: snapshot.data['title'],
+      taskDetail: snapshot.data['detail'],
       taskArchived: snapshot.data['archived'] ?? false,
       taskImportance: snapshot.data['importance'] ?? 5,
       taskDueDateTime: snapshot.data['dueDateTime'] ?? DateTime.now(),
@@ -246,8 +256,8 @@ class DatabaseServices {
         return TaskDetails(
           taskID: doc.documentID,
           userUid: uid,
-          taskTitle: doc.data['title'] ?? 'no title',
-          taskDetail: doc.data['detail'] ?? 'no detail',
+          taskTitle: doc.data['title'],
+          taskDetail: doc.data['detail'],
           taskArchived: doc.data['archived'] ?? false,
           taskImportance: doc.data['importance'] ?? 5,
           taskDueDateTime: doc.data['dueDateTime'] ?? Timestamp.now(),
@@ -380,26 +390,22 @@ class DatabaseServices {
   PropertyDetails _propertyDetailsFromSnapshot(DocumentSnapshot snapshot) {
     return PropertyDetails(
       userUid: uid,
-      propertyName: snapshot.data['propertyName'] ?? 'no name',
-      propertyNotes: snapshot.data['propertyNotes'] ?? 'no notes',
-      propertyAddress: snapshot.data['propertyAddress'] ?? 'no address',
-      propertyZone: snapshot.data['propertyZone'] ?? 'no zone',
+      propertyName: snapshot.data['propertyName'],
+      propertyNotes: snapshot.data['propertyNotes'],
+      propertyAddress: snapshot.data['propertyAddress'],
+      propertyZone: snapshot.data['propertyZone'],
       propertyLandArea: snapshot.data['propertyLandArea'] ?? 0,
       propertyDatePurchased: snapshot.data['propertyDatePurchased'],
-      propertyRatesBillingCode:
-          snapshot.data['propertyRatesBillingCode'] ?? 'no code',
-      propertyInsurancePolicy:
-          snapshot.data['propertyInsurancePolicy'] ?? 'no policy',
-      propertyInsuranceSource:
-          snapshot.data['propertyInsuranceSource'] ?? 'no source',
+      propertyRatesBillingCode: snapshot.data['propertyRatesBillingCode'],
+      propertyInsurancePolicy: snapshot.data['propertyInsurancePolicy'],
+      propertyInsuranceSource: snapshot.data['propertyInsuranceSource'],
       propertyInsuranceExpiryDate: snapshot.data['propertyInsuranceExpiryDate'],
-      propertyLegalDescription:
-          snapshot.data['propertyLegalDescription'] ?? 'no desc',
+      propertyLegalDescription: snapshot.data['propertyLegalDescription'],
       propertyMarketValuationAmount:
           snapshot.data['propertyMarketValuationAmount'] ?? 0,
       propertyMarketValuationDate: snapshot.data['propertyMarketValuationDate'],
       propertyMarketValuationSource:
-          snapshot.data['propertyMarketValuationSource'] ?? 'no source',
+          snapshot.data['propertyMarketValuationSource'],
       propertyArchived: snapshot.data['propertyArchived'] ?? false,
       propertyRecordCreatedDateTime:
           snapshot.data['propertyRecordCreatedDateTime'],
@@ -422,10 +428,10 @@ class DatabaseServices {
       return PropertyDetails(
         propertyUid: doc.documentID,
         userUid: uid,
-        propertyName: doc.data['propertyName'] ?? 'no name',
-        propertyNotes: doc.data['propertyNotes'] ?? 'no notes',
+        propertyName: doc.data['propertyName'],
+        propertyNotes: doc.data['propertyNotes'],
         propertyArchived: doc.data['archived'] ?? false,
-        propertyAddress: doc.data['propertyAddress'] ?? 'no address',
+        propertyAddress: doc.data['propertyAddress'],
         propertyDatePurchased:
             doc.data['propertyDatePurchased'] ?? Timestamp.now(),
         propertyRecordLastEdited: doc.data['editedDateTime'] ?? Timestamp.now(),
@@ -525,12 +531,11 @@ class DatabaseServices {
       unitUid: snapshot.data['unitUid'],
       propertyUid: snapshot.data['propertyUid'],
       userUid: snapshot.data['userUid'],
-      unitName: snapshot.data['unitName'] ?? 'no name',
-      unitNotes: snapshot.data['unitNotes'] ?? 'no notes',
+      unitName: snapshot.data['unitName'],
+      unitNotes: snapshot.data['unitNotes'],
       unitArea: snapshot.data['unitArea'] ?? 0,
       unitPercentageSplit: snapshot.data['unitPercentageSplit'] ?? 0,
-      unitLeaseDescription:
-          snapshot.data['unitLeaseDescription'] ?? 'no description',
+      unitLeaseDescription: snapshot.data['unitLeaseDescription'],
       unitResidential: snapshot.data['unitResidential'] ?? false,
       unitRentalValuationAmount: snapshot['unitRentalValuationAmount'] ?? 0,
       unitRentalValuationDate: snapshot['unitRentalValuationDate'],
@@ -568,8 +573,8 @@ class DatabaseServices {
           unitUid: doc.documentID,
           userUid: uid,
           propertyUid: doc.data['propertyUid'],
-          unitName: doc.data['unitName'] ?? 'no name',
-          unitNotes: doc.data['unitNotes'] ?? 'no notes',
+          unitName: doc.data['unitName'],
+          unitNotes: doc.data['unitNotes'],
         );
       },
     ).toList();
@@ -707,13 +712,13 @@ class DatabaseServices {
       return CompanyDetails(
         companyUid: doc.documentID,
         userUid: uid,
-        companyName: doc.data['companyName'] ?? 'no name',
-        companyComment: doc.data['companyComment'] ?? 'no notes',
+        companyName: doc.data['companyName'],
+        companyComment: doc.data['companyComment'],
         companyPhone: doc.data['companyPhone'],
         companyEmail: doc.data['companyEmail'],
         companySetTenant: doc.data['companySetTenant'],
         companyArchived: doc.data['companyArchived'] ?? false,
-        companyPostalAddress: doc.data['companyPostalAddress'] ?? 'no address',
+        companyPostalAddress: doc.data['companyPostalAddress'],
         companyRecordLastEdited:
             doc.data['companyRecordLastEdited'] ?? Timestamp.now(),
       );

@@ -413,9 +413,9 @@ class _AddPropertyState extends State<AddProperty> {
   textFormFieldPropertyLegalDescription() {
     return TextFormField(
       decoration: kTextInputDecoration.copyWith(
-          labelText: 'Legal Description',
+          labelText: 'Legal Description of Premises',
           labelStyle: kFieldHeading,
-          hintText: 'legal description'),
+          hintText: 'legal description of premises'),
 //                    validator: (val) => val.isEmpty
 //                        ? 'Please enter property legal description'
 //                        : null,
@@ -509,6 +509,8 @@ class _AddPropertyState extends State<AddProperty> {
 
   textFormFieldPropertyAddress() {
     return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Address', labelStyle: kFieldHeading, hintText: 'address'),
       validator: (val) => val.isEmpty ? 'Please enter property address' : null,
