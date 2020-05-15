@@ -15,6 +15,8 @@ import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/screens/tasks/task_list.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/services/database.dart';
+import 'package:property_returns/screens/leases/lease_list.dart';
+import 'package:property_returns/screens/leases/add_lease.dart';
 
 void main() => runApp(MyApp());
 
@@ -92,6 +94,8 @@ class MyApp extends StatelessWidget {
           AddUnit.id: (context) => AddUnit(),
           AddCompany.id: (context) => AddCompany(),
           CompanyList.id: (context) => CompanyList(),
+          LeaseList.id: (context) => LeaseList(),
+          AddLease.id: (context) => AddLease(),
 //          'tenants': (context) => Tenants(),
 //          'trades': (context) => Trades(),
 //          'agents': (context) => Agents(),

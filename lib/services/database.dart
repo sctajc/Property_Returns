@@ -4,6 +4,7 @@ import 'package:property_returns/models/task_details.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/models/user_details.dart';
 import 'package:property_returns/models/company_details.dart';
+import 'package:property_returns/models/lease_details.dart';
 
 class DatabaseServices {
   final String uid; // user uid
@@ -12,14 +13,21 @@ class DatabaseServices {
   final String unitUid;
   final String companyUid;
   final String personUid;
+  final String leaseUid;
+  final String leaseEventUid;
+  final String leaseEventTypeUid;
 
-  DatabaseServices(
-      {this.uid,
-      this.taskID,
-      this.propertyUid,
-      this.unitUid,
-      this.companyUid,
-      this.personUid});
+  DatabaseServices({
+    this.uid,
+    this.taskID,
+    this.propertyUid,
+    this.unitUid,
+    this.companyUid,
+    this.personUid,
+    this.leaseUid,
+    this.leaseEventUid,
+    this.leaseEventTypeUid,
+  });
 
   // collection reference shorthand
   final CollectionReference userDetailsCollection =
@@ -39,6 +47,15 @@ class DatabaseServices {
 
   final CollectionReference userPersonCollection =
       Firestore.instance.collection('persons');
+
+  final CollectionReference userLeaseCollection =
+      Firestore.instance.collection('leases');
+
+  final CollectionReference userLeaseEventCollection =
+      Firestore.instance.collection('lease_events');
+
+  final CollectionReference userLeaseEventTypeCollection =
+      Firestore.instance.collection('lease_event_types');
 
   //
   //
@@ -518,7 +535,6 @@ class DatabaseServices {
   }
 
   // get unit Details stream for a given unit
-  //TODO why is stream not updating edit field when data changed in firebase
   Stream<UnitDetails> get unitByDocumentID {
     return userUnitCollection
         .document(unitUid)
@@ -659,7 +675,6 @@ class DatabaseServices {
   }
 
 // get property Details stream for a given property
-//TODO why is stream not updating edit field when data changed in firebase
   Stream<CompanyDetails> get companyByDocumentID {
     return userCompanyCollection
         .document(companyUid)
@@ -847,5 +862,285 @@ class DatabaseServices {
         );
       },
     ).toList();
+  }
+
+//
+// **********  Leases (& then Lease Events ) **********
+//
+
+// add a lease
+  Future addUserLease(
+    String userUid,
+    String tenantUid,
+    String unitUid,
+    String leaseBusinessUse,
+    String leaseDefaultInterestRate,
+    String leaseCarParks,
+    String leaseRentPaymentDay,
+    DateTime leaseDateOfLease,
+    String leaseGuarantor,
+    String leaseComment,
+    bool leaseArchived,
+    Timestamp leaseRecordCreatedDateTime,
+    Timestamp leaseRecordLastEdited,
+  ) async {
+    DocumentReference document =
+        userLeaseCollection.document(); //new document is created here
+    await document.setData(
+      {
+        'userUid': userUid,
+        'tenantUid': tenantUid,
+        'unitUid': unitUid,
+        'leaseBusinessUse': leaseBusinessUse,
+        'leaseDefaultInterestRate': leaseDefaultInterestRate,
+        'leaseCarParks': leaseCarParks,
+        'leaseRentPaymentDay': leaseRentPaymentDay,
+        'leaseDateOfLease': leaseDateOfLease,
+        'leaseGuarantor': leaseGuarantor,
+        'leaseComment': leaseComment,
+        'leaseArchived': leaseArchived,
+        'leaseRecordCreatedDateTime': leaseRecordCreatedDateTime,
+        'leaseRecordLastEdited': leaseRecordLastEdited,
+      },
+    );
+    // returns the document after setting the data finishes so in this way,
+    // your docRef must not be null anymore.
+    return document;
+  }
+
+// update a lease
+  Future updateUserLease(
+    String userUid,
+    String tenantUid,
+    String unitUid,
+    String leaseBusinessUse,
+    String leaseDefaultInterestRate,
+    String leaseCarParks,
+    String leaseRentPaymentDay,
+    DateTime leaseDateOfLease,
+    String leaseGuarantor,
+    String leaseComment,
+    bool leaseArchived,
+    Timestamp leaseRecordCreatedDateTime,
+    Timestamp leaseRecordLastEdited,
+  ) async {
+    return await userLeaseCollection.document(leaseUid).updateData(
+      {
+        'userUid': userUid,
+        'tenantUid': tenantUid,
+        'unitUid': unitUid,
+        'leaseBusinessUse': leaseBusinessUse,
+        'leaseDefaultInterestRate': leaseDefaultInterestRate,
+        'leaseCarParks': leaseCarParks,
+        'leaseRentPaymentDay': leaseRentPaymentDay,
+        'leaseDateOfLease': leaseDateOfLease,
+        'leaseGuarantor': leaseGuarantor,
+        'leaseComment': leaseComment,
+        'leaseArchived': leaseArchived,
+        'leaseRecordCreatedDateTime': leaseRecordCreatedDateTime,
+        'leaseRecordLastEdited': leaseRecordLastEdited,
+      },
+    );
+  }
+
+  // get lease Details stream for a given lease
+  Stream<LeaseDetails> get leaseByDocumentID {
+    return userLeaseCollection
+        .document(leaseUid)
+        .snapshots()
+        .map(_leaseDetailsFromSnapshot);
+  }
+
+  LeaseDetails _leaseDetailsFromSnapshot(DocumentSnapshot snapshot) {
+    return LeaseDetails(
+      userUid: uid,
+      tenantUid: snapshot.data['tenantUid'],
+      unitUid: snapshot.data['unitUid'],
+      leaseBusinessUse: snapshot.data['leaseBusinessUse'],
+      leaseDefaultInterestRate: snapshot.data['leaseDefaultInterestRate'],
+      leaseCarParks: snapshot.data['leaseCarParks'],
+      leaseRentPaymentDay: snapshot.data['leaseRentPaymentDay'],
+      leaseDateOfLease: snapshot.data['leaseDateOfLease'],
+      leaseGuarantor: snapshot.data['leaseGuarantor'],
+      leaseComment: snapshot.data['leaseComment'],
+      leaseArchived: snapshot.data['leaseArchived'],
+      leaseRecordCreatedDateTime: snapshot.data['leaseRecordCreatedDateTime'],
+      leaseRecordLastEdited: snapshot.data['leaseRecordLastEdited'],
+    );
+  }
+
+  // get lease details stream for a given user ordered by date
+  Stream<List<LeaseDetails>> get userLeases {
+    return userLeaseCollection
+        .where('userUid', isEqualTo: uid)
+        .where('leaseArchived', isEqualTo: false)
+        .orderBy('leaseDateOfLease', descending: false)
+        .snapshots()
+        .map(_userLeasesFromSnapshot);
+  }
+
+//  // get lease Events details stream for a given user ordered by date
+//  Stream<List<LeaseDetails>> get userTenants {
+//    return userCompanyCollection
+//        .where('userUid', isEqualTo: uid)
+//        .where('companyArchived', isEqualTo: false)
+//        .where('companySetTenant', isEqualTo: true)
+//        .orderBy('companyName', descending: false)
+//        .snapshots()
+//        .map(_userCompaniesFromSnapshot);
+//  }
+
+  List<LeaseDetails> _userLeasesFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return LeaseDetails(
+        leaseUid: doc.documentID,
+        userUid: uid,
+        tenantUid: doc.data['tenantUid'],
+        unitUid: doc.data['unitUid'],
+        leaseBusinessUse: doc.data['leaseBusinessUse'],
+        leaseDefaultInterestRate: doc.data['leaseDefaultInterestRate'],
+        leaseCarParks: doc.data['leaseCarParks'],
+        leaseRentPaymentDay: doc.data['leasePaymentDay'],
+        leaseDateOfLease: doc.data['leaseDateOfLease'],
+        leaseGuarantor: doc.data['leaseGuarantor'],
+        leaseComment: doc.data['leaseComment'],
+        leaseRecordLastEdited:
+            doc.data['leaseRecordLastEdited'] ?? Timestamp.now(),
+      );
+    }).toList();
+  }
+
+//
+//
+//   ******** Lease Events ********
+//
+
+// add a lease event to a lease
+  Future addUserLeaseEvent(
+    String leaseUid,
+    String userUid,
+    String leaseEventType,
+    DateTime leaseEventDate,
+    bool leaseEventHappened,
+    String leaseEventComment,
+    Timestamp leaseEventRecordCreatedDateTime,
+    Timestamp leaseEventRecordLastEdited,
+  ) async {
+    DocumentReference document =
+        userLeaseEventCollection.document(); //new document is created here
+    await document.setData(
+      {
+        'leaseUid': leaseUid,
+        'userUid': userUid,
+        'leaseEventType': leaseEventType,
+        'leaseEventDate': leaseEventDate,
+        'leaseEventHappened': leaseEventHappened,
+        'leaseEventComment': leaseEventComment,
+        'leaseEventRecordCreatedDateTime': leaseEventRecordCreatedDateTime,
+        'leaseEventRecordLastEdited': leaseEventRecordLastEdited,
+      },
+    );
+  }
+
+  // update a lease event
+  Future updateUserLeaseEvent(
+    // String leaseUid,
+    // String userUid,
+    String leaseEventType,
+    DateTime leaseEventDate,
+    bool leaseEventHappened,
+    String leaseEventComment,
+    // Timestamp leaseEventRecordCreatedDateTime,
+    Timestamp leaseEventRecordLastEdited,
+  ) async {
+    return await userLeaseEventCollection.document(leaseEventUid).updateData(
+      {
+        //  'leaseUid': leaseUid,
+        // 'userUid': userUid,
+        'leaseEventType': leaseEventType,
+        'leaseEventDate': leaseEventDate,
+        'leaseEventHappened': leaseEventHappened,
+        'leaseEventComment': leaseEventComment,
+        //  'leaseEventRecordCreatedDateTime': leaseEventRecordCreatedDateTime,
+        'leaseEventRecordLastEdited': leaseEventRecordLastEdited,
+      },
+    );
+  }
+
+  // get lease event Details stream for a given lease event
+  Stream<LeaseEventDetails> get leaseEventByDocumentID {
+    return userLeaseEventCollection
+        .document(leaseEventUid)
+        .snapshots()
+        .map(_leaseEventDetailsFromSnapshot);
+  }
+
+  LeaseEventDetails _leaseEventDetailsFromSnapshot(DocumentSnapshot snapshot) {
+    return LeaseEventDetails(
+      leaseEventUid: snapshot.data['leaseEventUid'],
+      leaseUid: snapshot.data['leaseUid'],
+      userUid: snapshot.data['userUid'],
+      leaseEventType: snapshot.data['leaseEventType'],
+      leaseEventDate: snapshot.data['leaseEventDate'],
+      leaseEventHappened: snapshot.data['leaseEventHappened'],
+      leaseEventComment: snapshot.data['leaseEventComment'],
+      leaseEventRecordCreatedDateTime:
+          snapshot.data['leaseEventRecordCreatedDateTime'],
+      leaseEventRecordLastEdited: snapshot.data['leaseEventRecordLastEdited'],
+    );
+  }
+
+  // get lease event date stream for a given lease ordered by lease event date
+  Stream<List<LeaseEventDetails>> get userLeaseEventsForLease {
+    return userLeaseEventCollection
+        .where('leaseUid', isEqualTo: leaseUid)
+        .orderBy('leaseEventDate', descending: false)
+        .snapshots()
+        .map(_userLeaseEventsFromSnapshot);
+  }
+
+  // get leaseEvent stream for a user
+  Stream<List<LeaseEventDetails>> get allLeaseEventsForUser {
+    return userLeaseEventCollection
+        .where('userUid', isEqualTo: uid)
+        .where('leaseEventArchived', isEqualTo: false)
+        .orderBy('leaseEventDate', descending: false)
+        .snapshots()
+        .map(_userLeaseEventsFromSnapshot);
+  }
+
+  List<LeaseEventDetails> _userLeaseEventsFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map(
+      (doc) {
+        return LeaseEventDetails(
+            leaseEventUid: doc.documentID,
+            userUid: uid,
+            leaseUid: doc.data['leaseUid'],
+            leaseEventType: doc.data['leaseEventType'],
+            leaseEventDate: doc.data['leaseEventDate'],
+            leaseEventHappened: doc.data['leaseEventHappened'],
+            leaseEventComment: doc.data['leaseEventComment']);
+      },
+    ).toList();
+  }
+
+//
+//
+//   ******** Lease Event Types ********
+//
+  // get lease event Type Details stream for a given lease event type
+  Stream<LeaseEventTypeDetails> get leaseEventTypeByDocumentID {
+    return userLeaseEventTypeCollection
+        .document(leaseEventTypeUid)
+        .snapshots()
+        .map(_leaseEventTypeDetailsFromSnapshot);
+  }
+
+  LeaseEventTypeDetails _leaseEventTypeDetailsFromSnapshot(
+      DocumentSnapshot snapshot) {
+    return LeaseEventTypeDetails(
+      leaseEventTypeOrder: snapshot.data['leaseEventTypeUid'],
+      leaseEventTypeName: snapshot.data['leaseEventTypeName'],
+    );
   }
 }

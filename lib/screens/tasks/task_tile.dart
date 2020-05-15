@@ -6,7 +6,6 @@ import 'package:property_returns/models/task_details.dart';
 
 class TaskTile extends StatelessWidget {
   final TaskDetails taskDetails;
-
   TaskTile({this.taskDetails});
 
   @override

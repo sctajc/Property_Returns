@@ -30,11 +30,11 @@ class _AddTaskState extends State<AddTask> {
   String _currentTaskDetail;
   int _currentTaskImportance = 5;
   DateTime _currentTaskDueDateTime = DateTime.now().add(Duration(days: 14));
-  String _currentPropertySelected = 'none';
-  String _currentTenantSelected = 'none';
-  String _currentTradeSelected = 'none';
-  String _currentAgentSelected = 'none';
-  String _currentDocumentSelected = 'none';
+  String _currentTaskPropertySelected = 'none';
+  String _currentTaskTenantSelected = 'none';
+  String _currentTaskTradeSelected = 'none';
+  String _currentTaskAgentSelected = 'none';
+  String _currentTaskDocumentSelected = 'none';
 
   bool _currentTaskArchived = false;
 
@@ -218,7 +218,7 @@ class _AddTaskState extends State<AddTask> {
 //                                        '_tenantCompanyPersonNames: $_sortedTenantCompanyPersonNames');
                                     return DropdownButtonFormField<String>(
                                       isExpanded: true,
-                                      value: _currentTenantSelected,
+                                      value: _currentTaskTenantSelected,
                                       items: _sortedTenantCompanyPersonNames
                                           .map(
                                             (key, value) {
@@ -235,7 +235,7 @@ class _AddTaskState extends State<AddTask> {
                                           .toList(),
                                       onChanged: (String newTenantSelected) {
                                         setState(() {
-                                          _currentTenantSelected =
+                                          _currentTaskTenantSelected =
                                               newTenantSelected;
                                         });
                                       },
@@ -275,7 +275,7 @@ class _AddTaskState extends State<AddTask> {
                                   ).toList(),
                                   onChanged: (String newPropertySelected) {
                                     setState(() {
-                                      _currentPropertySelected =
+                                      _currentTaskPropertySelected =
                                           newPropertySelected;
                                     });
                                   },
@@ -313,9 +313,9 @@ class _AddTaskState extends State<AddTask> {
                                   ).toList(),
                                   onChanged: (String newPropertySelected) {
                                     setState(() {
-                                      _currentPropertySelected =
+                                      _currentTaskPropertySelected =
                                           newPropertySelected;
-                                      print(_currentPropertySelected);
+                                      print(_currentTaskPropertySelected);
                                     });
                                   },
                                 ),
@@ -352,7 +352,7 @@ class _AddTaskState extends State<AddTask> {
                                   ).toList(),
                                   onChanged: (String newPropertySelected) {
                                     setState(() {
-                                      _currentPropertySelected =
+                                      _currentTaskPropertySelected =
                                           newPropertySelected;
                                     });
                                   },
@@ -382,8 +382,8 @@ class _AddTaskState extends State<AddTask> {
                               _currentTaskDetail,
                               _currentTaskArchived,
                               _currentTaskImportance,
-                              _currentPropertySelected,
-                              _currentTenantSelected,
+                              _currentTaskPropertySelected,
+                              _currentTaskTenantSelected,
                               _currentTaskDueDateTime,
                               Timestamp.now(), //_currentEditedDateTime,
                             );
@@ -439,7 +439,7 @@ class _AddTaskState extends State<AddTask> {
               }
               return DropdownButtonFormField<String>(
                 isExpanded: true,
-                value: _currentPropertySelected,
+                value: _currentTaskPropertySelected,
                 items: _propertyUnitNames
                     .map(
                       (key, value) {
@@ -456,7 +456,7 @@ class _AddTaskState extends State<AddTask> {
                     .toList(),
                 onChanged: (String newPropertySelected) {
                   setState(() {
-                    _currentPropertySelected = newPropertySelected;
+                    _currentTaskPropertySelected = newPropertySelected;
                   });
                 },
               );

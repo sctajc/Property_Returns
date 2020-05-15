@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/screens/contacts/company_list.dart';
+import 'package:property_returns/screens/leases/lease_list.dart';
 import 'package:property_returns/screens/properties/property_list.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/services/auth.dart';
@@ -117,20 +118,20 @@ class Home extends StatelessWidget {
               child: Text('Tasks'),
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-            },
-            child: Container(
-              padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-              constraints: BoxConstraints(
-                minHeight: _minHeight,
-                maxHeight: _maxHeight,
-              ),
-              child: Text('Lease events'),
-            ),
-          ),
+//          GestureDetector(
+//            onTap: () {
+////              Navigator.of(context).pop();
+//              Navigator.pushNamed(context, LeaseList.id);
+//            },
+//            child: Container(
+//              padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+//              constraints: BoxConstraints(
+//                minHeight: _minHeight,
+//                maxHeight: _maxHeight,
+//              ),
+//              child: Text('Lease events'),
+//            ),
+//          ),
           Divider(
             height: 5,
           ),
@@ -165,7 +166,12 @@ class Home extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.pushNamed(context, 'test_flutter_markdown_screen');
+//              Navigator.pushNamed(context, LeaseList.id);
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => LeaseList(
+                        userUid: user.userUid,
+                        userName: userData.userName,
+                      )));
             },
             child: Container(
               padding: EdgeInsets.fromLTRB(16, 10, 0, 0),
