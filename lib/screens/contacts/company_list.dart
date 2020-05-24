@@ -19,8 +19,6 @@ class _CompanyListState extends State<CompanyList> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    var _displayEmailIcon = '\u{0E0BE}'; // Email icon
-    var _displayPhoneIcon = '\u{0E0BE}'; // phone icon
 
     // TODO is this a good approach??
     // Used <List<TasksDetails> StreamBuilder here as own list order

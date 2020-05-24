@@ -145,6 +145,8 @@ class DatabaseServices {
     int taskImportance,
     String taskUnitUid,
     String taskTenantUid,
+    String taskTradeUid,
+    String taskAgentUid,
     DateTime taskDueDateTime,
     Timestamp taskEditedDateTime,
   ) async {
@@ -157,6 +159,8 @@ class DatabaseServices {
         'importance': taskImportance,
         'unitUid': taskUnitUid,
         'tenantUid': taskTenantUid,
+        'tradeUid': taskTradeUid,
+        'agentUid': taskAgentUid,
         'dueDateTime': taskDueDateTime,
         'editedDateTime': taskEditedDateTime,
       },
@@ -174,6 +178,8 @@ class DatabaseServices {
     DateTime taskDueDateTime,
     String taskUnitUid,
     String taskTenantUid,
+    String taskTradeUid,
+    String taskAgentUid,
     Timestamp taskEditedDateTime,
   ) async {
     return await userTaskCollection.document(taskID).updateData(
@@ -186,6 +192,8 @@ class DatabaseServices {
         'dueDateTime': taskDueDateTime,
         'unitUid': taskUnitUid,
         'tenantUid': taskTenantUid,
+        'tradeUid': taskTradeUid,
+        'agentUid': taskAgentUid,
         'editedDateTime': taskEditedDateTime,
       },
     );
@@ -210,6 +218,8 @@ class DatabaseServices {
       taskDueDateTime: snapshot.data['dueDateTime'] ?? DateTime.now(),
       taskUnitUid: snapshot.data['unitUid'] ?? 'none',
       taskTenantUid: snapshot.data['tenantUid'] ?? 'none',
+      taskTradeUid: snapshot.data['tradeUid'] ?? 'none',
+      taskAgentUid: snapshot.data['agentUid'] ?? 'none',
       taskLastEditedDateTime: snapshot.data['editedDateTime'] ?? DateTime.now(),
     );
   }
@@ -722,6 +732,28 @@ class DatabaseServices {
         .map(_userCompaniesFromSnapshot);
   }
 
+  // get trade details stream for a given user ordered by company name
+  Stream<List<CompanyDetails>> get userTrades {
+    return userCompanyCollection
+        .where('userUid', isEqualTo: uid)
+        .where('companyArchived', isEqualTo: false)
+        .where('companySetTrade', isEqualTo: true)
+        .orderBy('companyName', descending: false)
+        .snapshots()
+        .map(_userCompaniesFromSnapshot);
+  }
+
+  // get agent details stream for a given user ordered by company name
+  Stream<List<CompanyDetails>> get userAgents {
+    return userCompanyCollection
+        .where('userUid', isEqualTo: uid)
+        .where('companyArchived', isEqualTo: false)
+        .where('companySetAgent', isEqualTo: true)
+        .orderBy('companyName', descending: false)
+        .snapshots()
+        .map(_userCompaniesFromSnapshot);
+  }
+
   List<CompanyDetails> _userCompaniesFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
       return CompanyDetails(
@@ -732,6 +764,8 @@ class DatabaseServices {
         companyPhone: doc.data['companyPhone'],
         companyEmail: doc.data['companyEmail'],
         companySetTenant: doc.data['companySetTenant'],
+        companySetTrade: doc.data['companySetTrade'],
+        companySetAgent: doc.data['companySetAgent'],
         companyArchived: doc.data['companyArchived'] ?? false,
         companyPostalAddress: doc.data['companyPostalAddress'],
         companyRecordLastEdited:
@@ -1050,7 +1084,7 @@ class DatabaseServices {
     DateTime leaseEventDate,
     bool leaseEventHappened,
     String leaseEventComment,
-    // Timestamp leaseEventRecordCreatedDateTime,
+//    Timestamp leaseEventRecordCreatedDateTime,
     Timestamp leaseEventRecordLastEdited,
   ) async {
     return await userLeaseEventCollection.document(leaseEventUid).updateData(
@@ -1061,7 +1095,7 @@ class DatabaseServices {
         'leaseEventDate': leaseEventDate,
         'leaseEventHappened': leaseEventHappened,
         'leaseEventComment': leaseEventComment,
-        //  'leaseEventRecordCreatedDateTime': leaseEventRecordCreatedDateTime,
+//        'leaseEventRecordCreatedDateTime': leaseEventRecordCreatedDateTime,
         'leaseEventRecordLastEdited': leaseEventRecordLastEdited,
       },
     );
@@ -1103,7 +1137,8 @@ class DatabaseServices {
   Stream<List<LeaseEventDetails>> get allLeaseEventsForUser {
     return userLeaseEventCollection
         .where('userUid', isEqualTo: uid)
-        .where('leaseEventArchived', isEqualTo: false)
+//        .where('leaseEventDate', isGreaterThan: Timestamp.now())
+        .where('leaseEventHappened', isEqualTo: false)
         .orderBy('leaseEventDate', descending: false)
         .snapshots()
         .map(_userLeaseEventsFromSnapshot);
@@ -1128,7 +1163,7 @@ class DatabaseServices {
 //
 //   ******** Lease Event Types ********
 //
-  // get lease event Type Details stream for a given lease event type
+  // get lease event Type Details for a given lease event type
   Stream<LeaseEventTypeDetails> get leaseEventTypeByDocumentID {
     return userLeaseEventTypeCollection
         .document(leaseEventTypeUid)
@@ -1142,5 +1177,25 @@ class DatabaseServices {
       leaseEventTypeOrder: snapshot.data['leaseEventTypeUid'],
       leaseEventTypeName: snapshot.data['leaseEventTypeName'],
     );
+  }
+
+  // get all lease event types
+  Stream<List<LeaseEventTypeDetails>> get allLeaseEventTypes {
+    return userLeaseEventTypeCollection
+        .orderBy('leaseEventTypeOrder')
+        .snapshots()
+        .map(_leaseEventTypesDetailsFromSnapshot);
+  }
+
+  List<LeaseEventTypeDetails> _leaseEventTypesDetailsFromSnapshot(
+      QuerySnapshot snapshot) {
+    return snapshot.documents.map(
+      (doc) {
+        return LeaseEventTypeDetails(
+            leaseEventTypeUid: doc.documentID,
+            leaseEventTypeName: doc.data['leaseEventTypeName'],
+            leaseEventTypeOrder: doc.data['leaseEventTypeOrder']);
+      },
+    ).toList();
   }
 }

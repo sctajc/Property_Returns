@@ -475,36 +475,27 @@ class _EditPropertyState extends State<EditProperty> {
   }
 
   _displayPropertyArchiveField(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Archive property?',
-          style: kFieldHeading,
+    return CheckboxListTile(
+      title: Text(
+        'Archive property?',
+        style: kFieldHeading,
+      ),
+      value: _archiveProperty,
+      onChanged: (value) {
+        setState(() {
+          _archiveProperty = value;
+          _currentPropertyArchived = _archiveProperty;
+        });
+      },
+      controlAffinity: ListTileControlAffinity.leading,
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected the property will be removed from your displayed properties. These will normally be properties which are not being managed anymore. These properties can be accessed through 'Properties Archived'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 20,
-        ),
-        Checkbox(
-          value: _archiveProperty,
-          onChanged: (value) {
-            setState(() {
-              _archiveProperty = value;
-              _currentPropertyArchived = _archiveProperty;
-            });
-          },
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(context,
-              "If selected the property will be removed from your displayed properties. These will normally be properties which are not being managed anymore. These properties can be accessed through 'Properties Archived'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 

@@ -3,17 +3,12 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:property_returns/models/company_details.dart';
-import 'package:property_returns/models/property_details.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/services/database.dart';
 import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/shared/loading.dart';
 import 'package:provider/provider.dart';
-import 'package:email_validator/email_validator.dart';
-import 'package:string_validator/string_validator.dart';
 import 'package:property_returns/models/lease_details.dart';
-import 'package:property_returns/shared/constants.dart';
 
 class EditLease extends StatefulWidget {
   static String id = 'edit_lease_screen';
@@ -155,31 +150,31 @@ class _EditLeaseState extends State<EditLease> {
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldLeaseComments(leaseDetails),
+                    _displayLeaseComments(leaseDetails),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldLeaseCarParks(leaseDetails),
+                    _displayLeaseCarParks(leaseDetails),
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldLeaseBusinessUse(leaseDetails),
+                    _displayLeaseBusinessUse(leaseDetails),
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldLeaseDefaultInterestRate(leaseDetails),
+                    _displayDefaultInterestRate(leaseDetails),
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldLeaseGuarantor(leaseDetails),
+                    _displayLeaseGuarantor(leaseDetails),
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldLeaseRentPaymentDay(leaseDetails),
+                    _displayLeaseRentPaymentDay(leaseDetails),
                     SizedBox(
                       height: 1,
                     ),
-                    checkBoxLeaseArchive(context),
+                    _displayLeaseArchive(context),
                     SizedBox(
                       // so keyboard does not hide bottom textfield
                       height: MediaQuery.of(context).viewInsets.bottom,
@@ -243,114 +238,7 @@ class _EditLeaseState extends State<EditLease> {
     );
   }
 
-//  dropDownListLeaseTenant(user) {
-//    return Row(
-//      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//      children: <Widget>[
-//        Flexible(
-//          flex: 1,
-//          child: Text(
-//            'Tenant',
-//            style: kFieldHeading,
-//          ),
-//        ),
-//        SizedBox(
-//          width: 30,
-//        ),
-//        Flexible(
-//            flex: 3,
-//            child: DropdownButtonFormField<String>(
-//              isExpanded: true,
-//              value: _currentLeaseTenantSelected,
-//              items: _mapTenantCompanies
-//                  .map(
-//                    (key, value) {
-//                      return MapEntry(
-//                        key,
-//                        DropdownMenuItem<String>(
-//                          child: Text(value),
-//                          value: key,
-//                        ),
-//                      );
-//                    },
-//                  )
-//                  .values
-//                  .toList(),
-//              onChanged: (String newTenantSelected) {
-//                setState(() {
-//                  _currentLeaseTenantSelected = newTenantSelected;
-//                });
-//              },
-//              validator: (val) =>
-//                  val.contains('none') ? 'Please select lease Tenant' : null,
-//            ))
-//      ],
-//    );
-//  }
-//
-//  dropDownListLeaseProperty(User user) {
-//    return Row(
-//      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//      children: <Widget>[
-//        Flexible(
-//          flex: 1,
-//          child: Text(
-//            'Property',
-//            style: kFieldHeading,
-//          ),
-//        ),
-//        SizedBox(
-//          width: 30,
-//        ),
-//        Flexible(
-//          flex: 3,
-//          child: StreamBuilder<List<UnitDetails>>(
-//            stream: DatabaseServices(uid: user.userUid).allUnitsForUser,
-//            builder: (context, allUserUnits) {
-//              if (!allUserUnits.hasData)
-//                return Loading();
-//              else {
-////                _propertyUnitNames['none'] = 'choose lease property';
-//                for (int i = 0; i < allUserUnits.data.length; i++) {
-//                  _propertyUnitNames[allUserUnits.data[i].unitUid] =
-//                      '${_mapProperties['${allUserUnits.data[i].propertyUid}']} - ${allUserUnits.data[i].unitName}';
-//                }
-//              }
-//              return DropdownButtonFormField<String>(
-//                isExpanded: true,
-//                value: _currentLeasePropertySelected,
-//                items: _propertyUnitNames
-//                    .map(
-//                      (key, value) {
-//                        return MapEntry(
-//                          key,
-//                          DropdownMenuItem<String>(
-//                            child: Text(value),
-//                            value: key,
-//                          ),
-//                        );
-//                      },
-//                    )
-//                    .values
-//                    .toList(),
-//                onChanged: (String newPropertySelected) {
-//                  print('newPropertySelected: $newPropertySelected');
-//                  setState(() {
-//                    _currentLeasePropertySelected = newPropertySelected;
-//                  });
-//                },
-//                validator: (val) => val.contains('none')
-//                    ? 'Please select lease property'
-//                    : null,
-//              );
-//            },
-//          ),
-//        )
-//      ],
-//    );
-//  }
-
-  textFormFieldLeaseComments(AsyncSnapshot<LeaseDetails> leaseDetails) {
+  _displayLeaseComments(AsyncSnapshot<LeaseDetails> leaseDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       initialValue: leaseDetails.data.leaseComment,
@@ -363,45 +251,35 @@ class _EditLeaseState extends State<EditLease> {
     );
   }
 
-  checkBoxLeaseArchive(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          'Archive lease',
-          style: kFieldHeading,
+  _displayLeaseArchive(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Archive lease',
+        style: kFieldHeading,
+      ),
+      value: _archiveLease,
+      onChanged: (value) {
+        setState(() {
+          _archiveLease = value;
+          _currentLeaseArchived = _archiveLease;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(
+            context,
+            "If selected the lease will be removed from your displayed leases. "
+            "These will normally be leases which are expired."
+            " These leases can be accessed through 'Lease Archived'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: _archiveLease,
-          onChanged: (value) {
-            setState(() {
-              _archiveLease = value;
-              _currentLeaseArchived = _archiveLease;
-            });
-          },
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(
-              context,
-              "If selected the lease will be removed from your displayed leases. "
-              "These will normally be leases which are expired."
-              " These leasses can be accessed through 'Lease Archived'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  textFormFieldLeaseGuarantor(AsyncSnapshot<LeaseDetails> leaseDetails) {
+  _displayLeaseGuarantor(AsyncSnapshot<LeaseDetails> leaseDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       initialValue: leaseDetails.data.leaseGuarantor,
@@ -416,8 +294,7 @@ class _EditLeaseState extends State<EditLease> {
     );
   }
 
-  textFormFieldLeaseDefaultInterestRate(
-      AsyncSnapshot<LeaseDetails> leaseDetails) {
+  _displayDefaultInterestRate(AsyncSnapshot<LeaseDetails> leaseDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       initialValue: leaseDetails.data.leaseDefaultInterestRate,
@@ -433,7 +310,7 @@ class _EditLeaseState extends State<EditLease> {
     );
   }
 
-  textFormFieldLeaseBusinessUse(AsyncSnapshot<LeaseDetails> leaseDetails) {
+  _displayLeaseBusinessUse(AsyncSnapshot<LeaseDetails> leaseDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
@@ -449,7 +326,7 @@ class _EditLeaseState extends State<EditLease> {
     );
   }
 
-  textFormFieldLeaseCarParks(AsyncSnapshot<LeaseDetails> leaseDetails) {
+  _displayLeaseCarParks(AsyncSnapshot<LeaseDetails> leaseDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       initialValue: leaseDetails.data.leaseCarParks,
@@ -464,7 +341,7 @@ class _EditLeaseState extends State<EditLease> {
     );
   }
 
-  textFormFieldLeaseRentPaymentDay(AsyncSnapshot<LeaseDetails> leaseDetails) {
+  _displayLeaseRentPaymentDay(AsyncSnapshot<LeaseDetails> leaseDetails) {
     return Container(
       child: Row(
         children: <Widget>[

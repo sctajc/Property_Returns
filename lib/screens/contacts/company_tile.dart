@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:property_returns/models/company_details.dart';
 import 'package:flutter/material.dart';
 import 'package:property_returns/models/user.dart';
@@ -9,7 +10,6 @@ import 'add_person.dart';
 import 'edit_company.dart';
 import 'edit_person.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class CompanyTile extends StatefulWidget {
   final CompanyDetails companyDetails;
@@ -147,9 +147,16 @@ class _CompanyTileState extends State<CompanyTile> {
                                   ' - ' +
                                   allCompanyPersons.data[index].personRole;
                             //TODO should be able to use TextOverflow.ellipse ??
+                            print(
+                                'Media: ${MediaQuery.of(context).size.width}');
+                            int _displayNameLength;
+                            MediaQuery.of(context).size.width < 360
+                                ? _displayNameLength = 20
+                                : _displayNameLength = 30;
                             if (_displayName.length > 30)
-                              _displayName =
-                                  _displayName.substring(0, 27) + '...';
+                              _displayName = _displayName.substring(
+                                      0, _displayNameLength) +
+                                  '...';
                             TextEditingController _numberPersonPhone =
                                 TextEditingController();
                             TextEditingController _emailPersonEmail =
@@ -207,12 +214,13 @@ class _CompanyTileState extends State<CompanyTile> {
                                       : null,
                                   padding: EdgeInsets.all(0),
                                 ),
-                                InkWell(
-                                    child: Text(
-                                      _displayName,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.visible,
-                                      style: TextStyle(fontSize: 15),
+                                GestureDetector(
+                                    child: Container(
+                                      child: Text(
+                                        _displayName,
+//                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                     onTap: () {
                                       Navigator.push(

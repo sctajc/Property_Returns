@@ -271,36 +271,27 @@ class _EditUnitState extends State<EditUnit> {
   }
 
   _displayUnitArchiveField(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Archive unit?',
-          style: kFieldHeading,
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Archive unit?',
+        style: kFieldHeading,
+      ),
+      value: archiveUnit,
+      onChanged: (value) {
+        setState(() {
+          archiveUnit = value;
+          _currentUnitArchived = archiveUnit;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected this unit will be removed from your displayed units for this property. These will normally be units that for some reason don't exist any more. These units can be accessed through 'Units Archived'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 20,
-        ),
-        Checkbox(
-          value: archiveUnit,
-          onChanged: (value) {
-            setState(() {
-              archiveUnit = value;
-              _currentUnitArchived = archiveUnit;
-            });
-          },
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(context,
-              "If selected this unit will be removed from your displayed units for this property. These will normally be units that for some reason don't exist any more. These units can be accessed through 'Units Archived'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -352,36 +343,27 @@ class _EditUnitState extends State<EditUnit> {
   }
 
   _displayUnitResidentialField(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Residential?',
-          style: kFieldHeading,
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Residential?',
+        style: kFieldHeading,
+      ),
+      value: residentialUnit,
+      onChanged: (value) {
+        setState(() {
+          residentialUnit = value;
+          _currentUnitResidential = residentialUnit;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(
+            context, "If selected the unit is residential only'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 20,
-        ),
-        Checkbox(
-          value: residentialUnit,
-          onChanged: (value) {
-            setState(() {
-              residentialUnit = value;
-              _currentUnitResidential = residentialUnit;
-            });
-          },
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(
-              context, "If selected the unit is residential only'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 

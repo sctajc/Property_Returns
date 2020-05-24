@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:property_returns/models/lease_details.dart';
 import 'package:property_returns/models/task_details.dart';
 import 'package:property_returns/screens/authenticate/authenticate.dart';
 import 'package:provider/provider.dart';
@@ -23,11 +24,9 @@ class Wrapper extends StatelessWidget {
           StreamProvider<List<TaskDetails>>(
               create: (_) =>
                   DatabaseServices(uid: user.userUid).userTasksByImportance),
-//          StreamProvider<QuerySnapshot>(
-//              create: (_) => DatabaseServices(uid: user.userUid).allTasks),
-//          StreamProvider<List<PropertyDetails>>(
-//            create: (_) => DatabaseServices(uid: user.userUid).userProperties,
-//          )
+          StreamProvider<List<LeaseEventDetails>>(
+              create: (_) =>
+                  DatabaseServices(uid: user.userUid).allLeaseEventsForUser),
         ],
         child: Home(),
       );

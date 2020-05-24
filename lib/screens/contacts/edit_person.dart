@@ -70,27 +70,27 @@ class _EditPersonState extends State<EditPerson> {
                       SizedBox(
                         height: 10,
                       ),
-                      textFormFieldPersonName(personDetails),
+                      _displayPersonName(personDetails),
                       SizedBox(
                         height: 10,
                       ),
-                      textFormFieldPersonPhone(personDetails),
+                      _displayPersonPhone(personDetails),
                       SizedBox(
                         height: 10,
                       ),
-                      textFormFieldPersonEmail(personDetails),
+                      _displayPersonEmail(personDetails),
                       SizedBox(
                         height: 10,
                       ),
-                      textFormFieldPersonRole(personDetails),
+                      _displayPersonRole(personDetails),
                       SizedBox(
                         height: 10,
                       ),
-                      textFormFieldPersonComment(personDetails),
+                      _displayPersonComment(personDetails),
                       SizedBox(
                         height: 20,
                       ),
-                      checkBoxPersonArchive(context),
+                      _displayPersonArchive(context),
                       SizedBox(
                         // so keyboard does not hide bottom textfield
                         height: MediaQuery.of(context).viewInsets.bottom,
@@ -133,41 +133,32 @@ class _EditPersonState extends State<EditPerson> {
     );
   }
 
-  checkBoxPersonArchive(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Archive person?',
-          style: kFieldHeading,
+  _displayPersonArchive(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Archive person?',
+        style: kFieldHeading,
+      ),
+      value: archivePerson,
+      onChanged: (value) {
+        setState(() {
+          archivePerson = value;
+          _currentPersonArchived = archivePerson;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected this person will be removed from being displayed for this company. These persons can be accessed through 'person Archived'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: archivePerson,
-          onChanged: (value) {
-            setState(() {
-              archivePerson = value;
-              _currentPersonArchived = archivePerson;
-            });
-          },
-        ),
-        SizedBox(
-          width: 1,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(context,
-              "If selected this person will be removed from being displayed for this company. These persons can be accessed through 'person Archived'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  textFormFieldPersonComment(AsyncSnapshot<PersonDetails> personDetails) {
+  _displayPersonComment(AsyncSnapshot<PersonDetails> personDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
@@ -181,7 +172,7 @@ class _EditPersonState extends State<EditPerson> {
     );
   }
 
-  textFormFieldPersonRole(AsyncSnapshot<PersonDetails> personDetails) {
+  _displayPersonRole(AsyncSnapshot<PersonDetails> personDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
@@ -195,7 +186,7 @@ class _EditPersonState extends State<EditPerson> {
     );
   }
 
-  textFormFieldPersonEmail(AsyncSnapshot<PersonDetails> personDetails) {
+  _displayPersonEmail(AsyncSnapshot<PersonDetails> personDetails) {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       initialValue: personDetails.data.personEmail,
@@ -208,7 +199,7 @@ class _EditPersonState extends State<EditPerson> {
     );
   }
 
-  textFormFieldPersonPhone(AsyncSnapshot<PersonDetails> personDetails) {
+  _displayPersonPhone(AsyncSnapshot<PersonDetails> personDetails) {
     return TextFormField(
       keyboardType: TextInputType.phone,
       initialValue: personDetails.data.personPhone,
@@ -221,7 +212,7 @@ class _EditPersonState extends State<EditPerson> {
     );
   }
 
-  textFormFieldPersonName(AsyncSnapshot<PersonDetails> personDetails) {
+  _displayPersonName(AsyncSnapshot<PersonDetails> personDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,

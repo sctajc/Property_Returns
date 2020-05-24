@@ -48,23 +48,23 @@ class _AddPersonState extends State<AddPerson> {
                   SizedBox(
                     height: 10,
                   ),
-                  textFormFieldPersonName(),
+                  _displayPersonName(),
                   SizedBox(
                     height: 10,
                   ),
-                  textFormFieldPersonPhone(),
+                  _displayPersonPhone(),
                   SizedBox(
                     height: 10,
                   ),
-                  textFormFieldPersonEmail(),
+                  _displayPersonEmail(),
                   SizedBox(
                     height: 10,
                   ),
-                  textFormFieldPersonRole(),
+                  _displayPersonRole(),
                   SizedBox(
                     height: 10,
                   ),
-                  textFormFieldPersonComment(),
+                  _displayPersonComment(),
                   SizedBox(
                     height: 10,
                   ),
@@ -105,7 +105,7 @@ class _AddPersonState extends State<AddPerson> {
     );
   }
 
-  textFormFieldPersonComment() {
+  _displayPersonComment() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
@@ -118,7 +118,7 @@ class _AddPersonState extends State<AddPerson> {
     );
   }
 
-  textFormFieldPersonRole() {
+  _displayPersonRole() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
@@ -131,7 +131,7 @@ class _AddPersonState extends State<AddPerson> {
     );
   }
 
-  textFormFieldPersonEmail() {
+  _displayPersonEmail() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       decoration: kTextInputDecoration.copyWith(
@@ -143,7 +143,7 @@ class _AddPersonState extends State<AddPerson> {
     );
   }
 
-  textFormFieldPersonPhone() {
+  _displayPersonPhone() {
     return TextFormField(
       keyboardType: TextInputType.phone,
       decoration: kTextInputDecoration.copyWith(
@@ -155,7 +155,7 @@ class _AddPersonState extends State<AddPerson> {
     );
   }
 
-  textFormFieldPersonName() {
+  _displayPersonName() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,

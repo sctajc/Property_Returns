@@ -65,19 +65,6 @@ class MyApp extends StatelessWidget {
         ProxyProvider<User, DatabaseServices>(
           update: (_, user, __) => DatabaseServices(uid: user?.userUid),
         ),
-//        StreamProvider<UserData>(
-//            create: (_) => DatabaseServices(uid: user.userUid).userData),
-//        StreamProvider<QuerySnapshot>(
-//            create: (_) => DatabaseServices(uid: 'user.userUid').allTasks),
-//        StreamProvider<List<TaskDetails>>(
-//            create: (_) =>
-//                DatabaseServices(uid: 'user.userUid').userTasksByImportance),
-// TODO this should work but ProxyProvider does not work with StreamProvider???
-//      Instead have a StreamBuilder in relevant class (eg AddTask())
-//        StreamProvider<List<PropertyDetails>>(
-//          create: (_) => DatabaseServices(uid: 'UuO2DO0JUVbVD0R1JqIclI7fprF3')
-//              .userProperties,
-//        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

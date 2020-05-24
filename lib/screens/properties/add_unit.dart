@@ -255,36 +255,27 @@ class _AddUnitState extends State<AddUnit> {
   }
 
   _displayUnitResidentialField(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Residential?',
-          style: kFieldHeading,
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Residential?',
+        style: kFieldHeading,
+      ),
+      value: unitResidential,
+      onChanged: (value) {
+        setState(() {
+          unitResidential = value;
+          _currentUnitResidential = unitResidential;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () =>
+            kShowHelpToast(context, "If selected the unit is residential only"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 20,
-        ),
-        Checkbox(
-          value: unitResidential,
-          onChanged: (value) {
-            setState(() {
-              unitResidential = value;
-              _currentUnitResidential = unitResidential;
-            });
-          },
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(
-              context, "If selected the unit is residential only"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 

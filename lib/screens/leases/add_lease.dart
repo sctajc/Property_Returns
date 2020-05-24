@@ -21,12 +21,12 @@ class AddLease extends StatefulWidget {
 class _AddLeaseState extends State<AddLease> {
   final _formKey = GlobalKey<FormState>();
   Map _propertyUnitNames = Map<String, String>();
-  Map<String, String> _mapProperties = {'none': 'choose lease propert'};
-  Map<String, String> _mapTenantCompanies = {'none': 'choose lease tenant'};
+  Map<String, String> _mapProperties = {'none': 'select lease property'};
+  Map<String, String> _mapTenantCompanies = {'none': 'select lease tenant'};
 
   // form values
-  String _currentLeaseTenantSelected = '';
-  String _currentLeasePropertySelected = '';
+  String _currentLeaseTenantSelected = 'none';
+  String _currentLeasePropertySelected = 'none';
   String _currentLeaseBusinessUse = '';
   String _currentLeaseDefaultInterestRate = '';
   String _currentLeaseCarParks = '';
@@ -70,11 +70,11 @@ class _AddLeaseState extends State<AddLease> {
                         SizedBox(
                           height: 10,
                         ),
-                        dropDownListLeaseTenant(),
+                        _displayLeaseTenant(),
                         SizedBox(
                           height: 10,
                         ),
-                        dropDownListLeaseProperty(user),
+                        _displayLeaseProperty(user),
                         SizedBox(
                           height: 10,
                         ),
@@ -145,27 +145,27 @@ class _AddLeaseState extends State<AddLease> {
                         SizedBox(
                           height: 10,
                         ),
-                        textFormFieldLeaseComment(),
+                        _displayLeaseComment(),
                         SizedBox(
                           height: 10,
                         ),
-                        textFormFieldLeaseCarParks(),
+                        _displayLeaseCarParks(),
                         SizedBox(
                           height: 10,
                         ),
-                        textFormFieldLeaseBusinessUse(),
+                        _displayLeaseBusinessUse(),
                         SizedBox(
                           height: 10,
                         ),
-                        textFormFieldLeaseDefaultInterestRate(),
+                        _displayLeaseDefaultInterestRate(),
                         SizedBox(
                           height: 10,
                         ),
-                        textFormFieldLeaseGuarantor(),
+                        _displayLeaseGuarantor(),
                         SizedBox(
                           height: 10,
                         ),
-                        textFormFieldLeaseRentPaymentDay(),
+                        _displayLeaseRentPaymentDay(),
                         SizedBox(
                           // so keyboard does not hide bottom textfield
                           height: MediaQuery.of(context).viewInsets.bottom,
@@ -237,7 +237,7 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  dropDownListLeaseTenant() {
+  _displayLeaseTenant() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -282,7 +282,7 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  textFormFieldLeaseRentPaymentDay() {
+  _displayLeaseRentPaymentDay() {
     return Container(
       child: Row(
         children: <Widget>[
@@ -317,7 +317,7 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  textFormFieldLeaseCarParks() {
+  _displayLeaseCarParks() {
     return TextFormField(
       keyboardType: TextInputType.text,
       decoration: kTextInputDecoration.copyWith(
@@ -328,7 +328,7 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  textFormFieldLeaseDefaultInterestRate() {
+  _displayLeaseDefaultInterestRate() {
     return TextFormField(
       keyboardType: TextInputType.text,
       decoration: kTextInputDecoration.copyWith(
@@ -343,7 +343,7 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  textFormFieldLeaseBusinessUse() {
+  _displayLeaseBusinessUse() {
     return TextFormField(
       keyboardType: TextInputType.text,
       decoration: kTextInputDecoration.copyWith(
@@ -356,7 +356,7 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  textFormFieldLeaseComment() {
+  _displayLeaseComment() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
@@ -371,7 +371,7 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  textFormFieldLeaseGuarantor() {
+  _displayLeaseGuarantor() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
@@ -386,7 +386,7 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  dropDownListLeaseProperty(User user) {
+  _displayLeaseProperty(User user) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[

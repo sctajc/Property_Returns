@@ -106,29 +106,29 @@ class _SettingsFormState extends State<SettingsForm> {
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldSettingsName(userData),
+                    _displaySettingsName(userData),
                     SizedBox(
                       height: 20,
                     ),
-                    sliderTextSettingsTaskNotification(userData),
-                    sliderSliderSettingsTaskNotification(userData),
+                    _displayTaskNotificationDays(userData),
+                    _displayTaskNotificationSlider(userData),
                     SizedBox(
                       height: 20,
                     ),
-                    sliderTextSettingsLeaseNotification(userData),
-                    sliderSliderSettingsLeaseNotification(userData),
+                    _displayLeaseNotificationDays(userData),
+                    _displayLeaseNotificationSlider(userData),
                     SizedBox(
                       height: 20,
                     ),
-                    radioSettingsAreaSymbol(),
+                    _displaySettingsAreaSymbol(),
                     SizedBox(
                       height: 20,
                     ),
-                    choiceChipSettingsCurrencySymbol(),
+                    _displayCurrencySymbol(),
                     SizedBox(
                       height: 20,
                     ),
-                    switchLinksToGoogle(),
+                    _displayLinksToGoogle(),
                     SizedBox(
                       height: 20,
                     ),
@@ -180,53 +180,44 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 
-  switchLinksToGoogle() {
+  _displayLinksToGoogle() {
     return Column(
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Tasks in Google Calendar:',
-              style: kFieldHeading,
-            ),
-            Switch(
-                value: _currentTasksInGoogleCalendar,
-                onChanged: (val) =>
-                    setState(() => _currentTasksInGoogleCalendar = val)),
-          ],
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            'Tasks in Google Calendar:',
+            style: kFieldHeading,
+          ),
+          value: _currentTasksInGoogleCalendar,
+          onChanged: (val) =>
+              setState(() => _currentTasksInGoogleCalendar = val),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Lease Events in Google Calendar:',
-              style: kFieldHeading,
-            ),
-            Switch(
-                value: _currentLeaseEventsInGoogleCalendar,
-                onChanged: (val) =>
-                    setState(() => _currentLeaseEventsInGoogleCalendar = val)),
-          ],
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            'Lease Events in Google Calendar:',
+            style: kFieldHeading,
+          ),
+          value: _currentLeaseEventsInGoogleCalendar,
+          onChanged: (val) =>
+              setState(() => _currentLeaseEventsInGoogleCalendar = val),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Contacts in Google Contacts:',
-              style: kFieldHeading,
-            ),
-            Switch(
-                value: _currentContactsInGoogleContacts,
-                onChanged: (val) =>
-                    setState(() => _currentContactsInGoogleContacts = val)),
-          ],
-        ),
+        CheckboxListTile(
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            'Contacts in Google Contacts:',
+            style: kFieldHeading,
+          ),
+          value: _currentContactsInGoogleContacts,
+          onChanged: (val) =>
+              setState(() => _currentContactsInGoogleContacts = val),
+        )
       ],
     );
   }
 
-  choiceChipSettingsCurrencySymbol() {
+  _displayCurrencySymbol() {
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -269,7 +260,7 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 
-  radioSettingsAreaSymbol() {
+  _displaySettingsAreaSymbol() {
     return Container(
       child: Column(
         children: <Widget>[
@@ -304,7 +295,7 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 
-  sliderSliderSettingsLeaseNotification(UserData userData) {
+  _displayLeaseNotificationSlider(UserData userData) {
     return Slider(
       min: 0,
       max: 100,
@@ -318,7 +309,7 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 
-  sliderTextSettingsLeaseNotification(UserData userData) {
+  _displayLeaseNotificationDays(UserData userData) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -338,7 +329,7 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 
-  sliderSliderSettingsTaskNotification(UserData userData) {
+  _displayTaskNotificationSlider(UserData userData) {
     return Slider(
       min: 0,
       max: 100,
@@ -351,7 +342,7 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 
-  sliderTextSettingsTaskNotification(UserData userData) {
+  _displayTaskNotificationDays(UserData userData) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -371,7 +362,7 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 
-  textFormFieldSettingsName(UserData userData) {
+  _displaySettingsName(UserData userData) {
     return TextFormField(
       keyboardType: TextInputType.text,
       initialValue: userData.userName,

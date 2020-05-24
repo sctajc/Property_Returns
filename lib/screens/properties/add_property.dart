@@ -67,23 +67,23 @@ class _AddPropertyState extends State<AddProperty> {
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldPropertyName(),
+                    _displayPropertyName(),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldPropertyDetails(),
+                    _displayPropertyDetails(),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldPropertyAddress(),
+                    _displayPropertyAddress(),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldPropertyZone(),
+                    _displayPropertyZone(),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldPropertyLandArea(),
+                    _displayPropertyLandArea(),
                     // date property purchased
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,15 +147,15 @@ class _AddPropertyState extends State<AddProperty> {
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldPropertyRatesCode(),
+                    _displayPropertyRatesCode(),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldPropertyInsurancePolicy(),
+                    _displayPropertyInsurancePolicy(),
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldPropertyInsuranceSource(),
+                    _displayPropertyInsuranceSource(),
                     // insurance expiry date
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,11 +224,11 @@ class _AddPropertyState extends State<AddProperty> {
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldPropertyLegalDescription(),
+                    _displayPropertyLegalDescription(),
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldPropertyMarketValuation(),
+                    _displayPropertyMarketValuation(),
                     // market valuation date
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -297,7 +297,7 @@ class _AddPropertyState extends State<AddProperty> {
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldPropertyMarketValuationSource(),
+                    _displayPropertyMarketValuationSource(),
                     SizedBox(
                       // so keyboard does not hide bottom textfield
                       height: MediaQuery.of(context).viewInsets.bottom,
@@ -365,7 +365,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyMarketValuationSource() {
+  _displayPropertyMarketValuationSource() {
     return TextFormField(
 //                initialValue: 'initial description',
       decoration: kTextInputDecoration.copyWith(
@@ -380,7 +380,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyMarketValuation() {
+  _displayPropertyMarketValuation() {
     return Row(
       children: <Widget>[
         Text(
@@ -410,7 +410,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyLegalDescription() {
+  _displayPropertyLegalDescription() {
     return TextFormField(
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Legal Description of Premises',
@@ -424,7 +424,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyInsuranceSource() {
+  _displayPropertyInsuranceSource() {
     return TextFormField(
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Insurance Company',
@@ -437,7 +437,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyInsurancePolicy() {
+  _displayPropertyInsurancePolicy() {
     return TextFormField(
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Insurance Policy',
@@ -450,7 +450,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyRatesCode() {
+  _displayPropertyRatesCode() {
     return TextFormField(
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Rates Billing Code',
@@ -463,7 +463,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyLandArea() {
+  _displayPropertyLandArea() {
     return Row(
       children: <Widget>[
         Column(
@@ -495,7 +495,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyZone() {
+  _displayPropertyZone() {
     return TextFormField(
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Zoning',
@@ -507,7 +507,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyAddress() {
+  _displayPropertyAddress() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
@@ -518,7 +518,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyDetails() {
+  _displayPropertyDetails() {
     return TextFormField(
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Details',
@@ -531,7 +531,7 @@ class _AddPropertyState extends State<AddProperty> {
     );
   }
 
-  textFormFieldPropertyName() {
+  _displayPropertyName() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,

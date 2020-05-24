@@ -59,10 +59,12 @@ class LeaseEventDetails {
 }
 
 class LeaseEventTypeDetails {
+  final String leaseEventTypeUid;
   final int leaseEventTypeOrder;
   final String leaseEventTypeName;
 
   LeaseEventTypeDetails({
+    this.leaseEventTypeUid,
     this.leaseEventTypeOrder,
     this.leaseEventTypeName,
   });

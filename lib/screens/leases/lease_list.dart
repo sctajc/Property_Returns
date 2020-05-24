@@ -9,7 +9,6 @@ import 'package:property_returns/shared/loading.dart';
 import 'package:property_returns/screens/leases/lease_tile.dart';
 import 'package:property_returns/models/lease_details.dart';
 import 'package:property_returns/screens/leases/add_lease.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LeaseList extends StatefulWidget {
   static String id = 'lease_list_screen';
@@ -152,7 +151,8 @@ class _LeaseListState extends State<LeaseList> {
           context,
           // TODO should be able to display icons here??
           'A lease between ${widget.userName.toUpperCase()} and a tenant (as established in contacts).  '
-          ' '),
+          ' A green date means has not yet happened. A grey date means has happened. '
+          'a red date means has not happened but date has passed.'),
       icon: Icon(Icons.help),
       label: Text('Help'),
     );

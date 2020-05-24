@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:property_returns/models/property_details.dart';
 import 'package:property_returns/screens/tasks/add_task.dart';
 import 'package:property_returns/services/database.dart';
 import 'package:property_returns/shared/constants.dart';

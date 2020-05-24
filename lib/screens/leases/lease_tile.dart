@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:property_returns/models/company_details.dart';
 import 'package:flutter/material.dart';
 import 'package:property_returns/models/lease_details.dart';
 import 'package:property_returns/models/property_details.dart';
@@ -12,11 +11,12 @@ import 'package:property_returns/services/database.dart';
 import 'package:property_returns/shared/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'add_lease_event.dart';
 import 'edit_lease.dart';
+import 'edit_lease_event.dart';
 
 class LeaseTile extends StatefulWidget {
   final LeaseDetails leaseDetails;
-
   LeaseTile({this.leaseDetails});
 
   @override
@@ -140,30 +140,44 @@ class _LeaseTileState extends State<LeaseTile> {
                     child: Scrollbar(
                       child: Container(
                         height: allLeaseEvents.data.length.ceilToDouble() > 4
-                            ? 100
+                            ? 120
                             : 70,
                         child: ListView.builder(
                           shrinkWrap: true,
                           itemExtent: 20,
                           itemCount: allLeaseEvents.data.length,
                           itemBuilder: (context, index) {
-                            Color _color =
+                            Color _textColor =
+                                allLeaseEvents.data[index].leaseEventHappened
+                                    ? Colors.grey[600]
+                                    : Colors.green[900];
+                            if (allLeaseEvents.data[index].leaseEventHappened ==
+                                    false &&
+                                allLeaseEvents.data[index].leaseEventDate
+                                    .toDate()
+                                    .isBefore(DateTime.now())) {
+                              _textColor = Colors.red[900];
+                            }
+                            Color _buttonColor =
                                 allLeaseEvents.data[index].leaseEventHappened
                                     ? Colors.grey[50]
                                     : Colors.green[50];
+                            if (allLeaseEvents.data[index].leaseEventHappened ==
+                                    false &&
+                                allLeaseEvents.data[index].leaseEventDate
+                                    .toDate()
+                                    .isBefore(DateTime.now())) {
+                              _buttonColor = Colors.red[50];
+                            }
                             Text _leaseEventDate = Text(
                               DateFormat('E, LLL d, y').format(allLeaseEvents
                                   .data[index].leaseEventDate
                                   .toDate()),
                               style: TextStyle(
                                 fontSize: 15,
-                                color: allLeaseEvents
-                                        .data[index].leaseEventHappened
-                                    ? Colors.grey[600]
-                                    : Colors.green[900],
+                                color: _textColor,
                               ),
                             );
-
                             return StreamBuilder<LeaseEventTypeDetails>(
                                 stream: DatabaseServices(
                                         leaseEventTypeUid: allLeaseEvents
@@ -172,7 +186,7 @@ class _LeaseTileState extends State<LeaseTile> {
                                 builder:
                                     (context, leaseEventTypeForLeaseEvent) {
                                   if (!leaseEventTypeForLeaseEvent.hasData)
-                                    return const Text('Loading');
+                                    return Loading(); //const Text('Loading');
                                   String _leaseEventTypeName =
                                       leaseEventTypeForLeaseEvent
                                           .data.leaseEventTypeName;
@@ -189,7 +203,7 @@ class _LeaseTileState extends State<LeaseTile> {
                                                     blurRadius: 20,
                                                     spreadRadius: 10)
                                               ],
-                                              color: _color,
+                                              color: _buttonColor,
                                               border: Border.all(width: 0),
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(8),
@@ -227,15 +241,14 @@ class _LeaseTileState extends State<LeaseTile> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-//                                          builder: (context) => EditLeaseEvent(
-//                                            companyName:
-//                                                widget.leaseDetails.tenantUid,
-//                                            personUid: allCompanyPersons
-//                                                .data[index].personUid,
-//                                            personName: allCompanyPersons
-//                                                .data[index].personName,
-//                                          ),
-                                            ),
+                                          builder: (context) => EditLeaseEvent(
+                                            leaseEventUid: allLeaseEvents
+                                                .data[index].leaseEventUid,
+                                            tenantName: _leaseTenantName,
+                                            propertyName:
+                                                _leasePropertyUnitName,
+                                          ),
+                                        ),
                                       );
                                     },
                                   );
@@ -256,12 +269,12 @@ class _LeaseTileState extends State<LeaseTile> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-//                          builder: (context) => AddLeaseEvent(
-//                            companyUid: widget.leaseDetails.tenantUid,
-//                            companyName: widget.leaseDetails.companyName,
-//                            defaultPersonName: 'Reception',
-//                          ),
-                            ),
+                          builder: (context) => AddLeaseEvent(
+                            leaseUid: widget.leaseDetails.leaseUid,
+                            leaseTenantName: _leaseTenantName,
+                            leasePropertyName: _leasePropertyUnitName,
+                          ),
+                        ),
                       );
                     },
                   );
@@ -287,11 +300,12 @@ class _LeaseTileState extends State<LeaseTile> {
             Navigator.push(
               context,
               MaterialPageRoute(
-//                builder: (context) => AddLeaseEvent(
-//                  companyUid: widget.leaseDetails.tenantUid,
-//                  companyName: widget.leaseDetails.companyName,
-//                ),
-                  ),
+                builder: (context) => AddLeaseEvent(
+                  leaseUid: widget.leaseDetails.leaseUid,
+                  leaseTenantName: _leaseTenantName,
+                  leasePropertyName: _leasePropertyUnitName,
+                ),
+              ),
             );
           },
         ),

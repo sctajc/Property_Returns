@@ -53,38 +53,36 @@ class _AddCompanyState extends State<AddCompany> {
                 SizedBox(
                   height: 10,
                 ),
-                textFormFieldCompanyName(),
+                _displayCompanyName(),
                 SizedBox(
                   height: 10,
                 ),
-                textFormFieldComment(),
+                _displayComment(),
                 SizedBox(
                   height: 10,
                 ),
-                textFormFieldCompanyPhone(),
+                _displayCompanyPhone(),
                 SizedBox(
                   height: 10,
                 ),
-                textFormFieldCompanyEmail(),
+                _displayCompanyEmail(),
                 SizedBox(
                   height: 10,
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                textFormFieldCompanyWebsite(),
+                _displayCompanyWebsite(),
                 SizedBox(
                   height: 10,
                 ),
-                textFormFieldCompanyPostalAddress(),
+                _displayCompanyPostalAddress(),
                 SizedBox(
                   height: 20,
                 ),
-                checkBoxCompanyTenant(context),
-                SizedBox(
-                  height: 1,
-                ),
-                checkBoxCompanyAgent(context),
+                _displayCompanyTenant(context),
+                _displayCompanyTrade(context),
+                _displayCompanyAgent(context),
                 SizedBox(
                   width: 20,
                 ),
@@ -126,10 +124,14 @@ class _AddCompanyState extends State<AddCompany> {
                       user.userUid,
                       docRef.documentID,
                       'Reception',
-                      '', // phone
-                      '', // Email
-                      '', // role
-                      '', // comment
+                      '',
+                      // phone
+                      '',
+                      // Email
+                      '',
+                      // role
+                      '',
+                      // comment
                       false,
                       Timestamp.now(),
                       Timestamp.now(),
@@ -144,105 +146,82 @@ class _AddCompanyState extends State<AddCompany> {
     );
   }
 
-  checkBoxCompanyAgent(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Agent  ',
-          style: kFieldHeading,
+  _displayCompanyAgent(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Agent  ',
+        style: kFieldHeading,
+      ),
+      value: _isCompanyAgent,
+      onChanged: (value) {
+        setState(() {
+          _isCompanyAgent = value;
+          _currentCompanySetAgent = _isCompanyAgent;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(
+            context, "If selected this company will be listed under agents'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: _isCompanyAgent,
-          onChanged: (value) {
-            setState(() {
-              _isCompanyAgent = value;
-              _currentCompanySetAgent = _isCompanyAgent;
-            });
-          },
-        ),
-        SizedBox(
-          width: 1,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(
-              context, "If selected this company will be listed under agents'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  checkBoxCompanyTenant(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Tenant',
-          style: kFieldHeading,
+  _displayCompanyTenant(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Tenant',
+        style: kFieldHeading,
+      ),
+      value: _isCompanyTenant,
+      onChanged: (value) {
+        setState(() {
+          _isCompanyTenant = value;
+          _currentCompanySetTenant = _isCompanyTenant;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(
+            context, "If selected this company can be assigned to leases'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: _isCompanyTenant,
-          onChanged: (value) {
-            setState(() {
-              _isCompanyTenant = value;
-              _currentCompanySetTenant = _isCompanyTenant;
-            });
-          },
-        ),
-        SizedBox(
-          width: 1,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(
-              context, "If selected this company can be assigned to leases'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-        SizedBox(
-          width: 40,
-        ),
-        Text(
-          'Trade',
-          style: kFieldHeading,
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: _isCompanyTrade,
-          onChanged: (value) {
-            setState(() {
-              _isCompanyTrade = value;
-              _currentCompanySetTrade = _isCompanyTrade;
-            });
-          },
-        ),
-        SizedBox(
-          width: 1,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(context,
-              "If selected this company will be listed under trades, i.e a supplier'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  textFormFieldCompanyPostalAddress() {
+  _displayCompanyTrade(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Trade',
+        style: kFieldHeading,
+      ),
+      value: _isCompanyTrade,
+      onChanged: (value) {
+        setState(() {
+          _isCompanyTrade = value;
+          _currentCompanySetTrade = _isCompanyTrade;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected this company will be listed under trades, i.e a supplier'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
+        ),
+      ),
+    );
+  }
+
+  _displayCompanyPostalAddress() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
@@ -257,7 +236,7 @@ class _AddCompanyState extends State<AddCompany> {
     );
   }
 
-  textFormFieldCompanyWebsite() {
+  _displayCompanyWebsite() {
     return TextFormField(
       keyboardType: TextInputType.url,
       decoration: kTextInputDecoration.copyWith(
@@ -268,7 +247,7 @@ class _AddCompanyState extends State<AddCompany> {
     );
   }
 
-  textFormFieldCompanyEmail() {
+  _displayCompanyEmail() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       decoration: kTextInputDecoration.copyWith(
@@ -282,7 +261,7 @@ class _AddCompanyState extends State<AddCompany> {
     );
   }
 
-  textFormFieldCompanyPhone() {
+  _displayCompanyPhone() {
     return TextFormField(
       keyboardType: TextInputType.phone,
       decoration: kTextInputDecoration.copyWith(
@@ -293,7 +272,7 @@ class _AddCompanyState extends State<AddCompany> {
     );
   }
 
-  textFormFieldComment() {
+  _displayComment() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
@@ -308,7 +287,7 @@ class _AddCompanyState extends State<AddCompany> {
     );
   }
 
-  textFormFieldCompanyName() {
+  _displayCompanyName() {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,

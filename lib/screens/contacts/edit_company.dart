@@ -82,36 +82,34 @@ class _EditCompanyState extends State<EditCompany> {
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldCompanyName(companyDetails),
+                    _displayCompanyName(companyDetails),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldCompanyComment(companyDetails),
+                    _displayCompanyComment(companyDetails),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldCompanyPhone(companyDetails),
+                    _displayCompanyPhone(companyDetails),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldCompanyEmail(companyDetails),
+                    _displayCompanyEmail(companyDetails),
                     SizedBox(
                       height: 10,
                     ),
-                    textFormFieldCompanyWebsite(companyDetails),
+                    _displayCompanyWebsite(companyDetails),
                     SizedBox(
                       height: 20,
                     ),
-                    textFormFieldCompanyPostalAddress(companyDetails),
+                    _displayCompanyPostalAddress(companyDetails),
+                    _displayCompanyTenant(context),
+                    _displayCompanyTrade(context),
+                    _displayCompanyAgent(context),
                     SizedBox(
-                      height: 20,
+                      child: Text('----------'),
                     ),
-                    checkBoxCompanyTenant(context),
-                    SizedBox(
-                      height: 1,
-                    ),
-                    checkBoxCompanyAgent(context),
-                    checkBoxCompanyArchive(context),
+                    _displayCompanyArchive(context),
                     SizedBox(
                       // so keyboard does not hide bottom textfield
                       height: MediaQuery.of(context).viewInsets.bottom,
@@ -157,7 +155,7 @@ class _EditCompanyState extends State<EditCompany> {
     );
   }
 
-  textFormFieldCompanyName(AsyncSnapshot<CompanyDetails> companyDetails) {
+  _displayCompanyName(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
@@ -172,7 +170,7 @@ class _EditCompanyState extends State<EditCompany> {
     );
   }
 
-  textFormFieldCompanyComment(AsyncSnapshot<CompanyDetails> companyDetails) {
+  _displayCompanyComment(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
@@ -188,7 +186,7 @@ class _EditCompanyState extends State<EditCompany> {
     );
   }
 
-  textFormFieldCompanyPhone(AsyncSnapshot<CompanyDetails> companyDetails) {
+  _displayCompanyPhone(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.phone,
       initialValue: companyDetails.data.companyPhone,
@@ -200,7 +198,7 @@ class _EditCompanyState extends State<EditCompany> {
     );
   }
 
-  textFormFieldCompanyEmail(AsyncSnapshot<CompanyDetails> companyDetails) {
+  _displayCompanyEmail(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       initialValue: companyDetails.data.companyEmail,
@@ -213,137 +211,104 @@ class _EditCompanyState extends State<EditCompany> {
     );
   }
 
-  checkBoxCompanyArchive(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Archive company',
-          style: kFieldHeading,
+  _displayCompanyArchive(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Archive company',
+        style: kFieldHeading,
+      ),
+      value: _archiveCompany,
+      onChanged: (value) {
+        setState(() {
+          _archiveCompany = value;
+          _currentCompanyArchived = _archiveCompany;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected the company will be removed from your displayed companies. These will normally be companies which are not required anymore. These companies can be accessed through 'Companies Archived'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: _archiveCompany,
-          onChanged: (value) {
-            setState(() {
-              _archiveCompany = value;
-              _currentCompanyArchived = _archiveCompany;
-            });
-          },
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(context,
-              "If selected the company will be removed from your displayed companies. These will normally be companies which are not required anymore. These companies can be accessed through 'Companies Archived'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  checkBoxCompanyAgent(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Agent  ',
-          style: kFieldHeading,
+  _displayCompanyAgent(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Agent  ',
+        style: kFieldHeading,
+      ),
+      value: _setAgent,
+      onChanged: (value) {
+        setState(() {
+          _setAgent = value;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected the company will be available in your displayed agents"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: _setAgent,
-          onChanged: (value) {
-            setState(() {
-              _setAgent = value;
-            });
-          },
-        ),
-        SizedBox(
-          width: 1,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(context,
-              "If selected the company will be available in your displayed agents"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  checkBoxCompanyTenant(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Tenant',
-          style: kFieldHeading,
+  _displayCompanyTenant(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Tenant',
+        style: kFieldHeading,
+      ),
+      value: _setTenant,
+      onChanged: (value) {
+        setState(() {
+          _setTenant = value;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected the company will be available to form leases'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
         ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: _setTenant,
-          onChanged: (value) {
-            setState(() {
-              _setTenant = value;
-            });
-          },
-        ),
-        SizedBox(
-          width: 1,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(context,
-              "If selected the company will be available to form leases'"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-        SizedBox(
-          width: 40,
-        ),
-        Text(
-          'Trade',
-          style: kFieldHeading,
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        Checkbox(
-          value: _setTrade,
-          onChanged: (value) {
-            setState(() {
-              _setTrade = value;
-            });
-          },
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        GestureDetector(
-          onTap: () => kShowHelpToast(context,
-              "If selected the company will be available in your displayed trades"),
-          child: Icon(
-            Icons.help_outline,
-            color: kColorOrange,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
-  textFormFieldCompanyPostalAddress(
-      AsyncSnapshot<CompanyDetails> companyDetails) {
+  _displayCompanyTrade(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Trade',
+        style: kFieldHeading,
+      ),
+      value: _setTrade,
+      onChanged: (value) {
+        setState(() {
+          _setTrade = value;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected the company will be available in your displayed trades"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
+        ),
+      ),
+    );
+  }
+
+  _displayCompanyPostalAddress(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.words,
@@ -359,7 +324,7 @@ class _EditCompanyState extends State<EditCompany> {
     );
   }
 
-  textFormFieldCompanyWebsite(AsyncSnapshot<CompanyDetails> companyDetails) {
+  _displayCompanyWebsite(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.url,
       initialValue: companyDetails.data.companyWebsite,

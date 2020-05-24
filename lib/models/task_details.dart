@@ -9,6 +9,8 @@ class TaskDetails {
   final int taskImportance;
   final String taskUnitUid;
   final String taskTenantUid;
+  final String taskTradeUid;
+  final String taskAgentUid;
   final Timestamp taskDueDateTime;
   final Timestamp taskLastEditedDateTime;
 
@@ -21,6 +23,8 @@ class TaskDetails {
       this.taskImportance,
       this.taskUnitUid,
       this.taskTenantUid,
+      this.taskTradeUid,
+      this.taskAgentUid,
       this.taskDueDateTime,
       this.taskLastEditedDateTime});
 }
