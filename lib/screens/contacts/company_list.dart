@@ -57,10 +57,10 @@ class _CompanyListState extends State<CompanyList> {
                           children: <Widget>[
                             Expanded(
                               child: Text(
-                                "Contacts will mostly be companies. But can be any organisation.    "
+                                "Contacts will mostly be companies. But can be any organisation. "
                                 "Either you have not entered any contacts or they have been archived. "
                                 "Use the 'plus' button below right to add contacts. "
-                                "If you wish to revisit companies which have been archived go back to main menu and select 'Companies archived' near the bottom",
+                                "If you wish to revisit companies which have been archived go back to main menu and select 'Companies archived'.",
                                 style: TextStyle(
                                     color: kColorOrange, fontSize: 20),
                               ),

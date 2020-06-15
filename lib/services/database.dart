@@ -1137,7 +1137,6 @@ class DatabaseServices {
   Stream<List<LeaseEventDetails>> get allLeaseEventsForUser {
     return userLeaseEventCollection
         .where('userUid', isEqualTo: uid)
-//        .where('leaseEventDate', isGreaterThan: Timestamp.now())
         .where('leaseEventHappened', isEqualTo: false)
         .orderBy('leaseEventDate', descending: false)
         .snapshots()

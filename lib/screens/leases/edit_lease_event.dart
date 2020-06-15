@@ -28,7 +28,7 @@ class _EditLeaseEventState extends State<EditLeaseEvent> {
   String _initialLeaseEventComment;
 
   final _formKey = GlobalKey<FormState>();
-  Map<String, String> _mapLeaseEventTypes = {'none': 'Select Event'};
+  Map<String, String> _mapLeaseEventTypes = {'none': "SELECT EVENT"};
 
   // form values
   String _currentLeaseEventType;
@@ -224,7 +224,7 @@ class _EditLeaseEventState extends State<EditLeaseEvent> {
     return TextFormField(
       initialValue: _initialLeaseEventComment,
       keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      textCapitalization: TextCapitalization.sentences,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Comment',
           labelStyle: kFieldHeading,

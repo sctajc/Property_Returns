@@ -64,23 +64,26 @@ class Home extends StatelessWidget {
           DrawerHeader(
             decoration: BoxDecoration(color: kColorBlue),
             child: ListView(
-              shrinkWrap: true,
               children: <Widget>[
                 Image.asset(
                   'assets/property_returns_logo_drawn.png',
+                  alignment: Alignment.topLeft,
+                  height: 70,
+                  width: 100,
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                 Text(
                   userData.userName ?? '',
-                  style: kHeading.copyWith(fontSize: 18),
+                  style: kHeading.copyWith(fontSize: 15),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 30,
+                  width: 50,
                   child: Text(
                     user.userEmail,
-                    style: kHeading.copyWith(fontSize: 18),
+                    style: kHeading.copyWith(fontSize: 15),
                   ),
                 ),
               ],

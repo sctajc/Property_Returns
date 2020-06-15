@@ -38,8 +38,8 @@ class _PropertyListState extends State<PropertyList> {
                 FlatButton.icon(
                   onPressed: () => kShowHelpToast(
                       context,
-                      'A unit is a defined area within a property available for individual renting. '
-                      ' Property may be let as one single unit, or may contain many lettable areas.'),
+                      'A property is usually a building, or collection of buildings at one address. A unit is a defined area within a property available for individual leasing. '
+                      ' Property may contain one single unit, or may contain many lettable areas (units). If a tenant takes more than one unit in a property this maybe on one lease, or a separate lease for each unit.'),
                   icon: Icon(Icons.help),
                   label: Text('Help'),
                 ),
@@ -65,7 +65,7 @@ class _PropertyListState extends State<PropertyList> {
                             child: Text(
                               "Either you have not entered any properties or all your properties have been archived. "
                               "Use the 'plus' button below right to add properties. "
-                              "If you wish to revisit properties which have been archived go back to main menu and select 'Properties archived' near the bottom",
+                              "If you wish to revisit properties which have been archived go back to main menu and select 'Properties archived'.",
                               style:
                                   TextStyle(color: kColorOrange, fontSize: 20),
                             ),

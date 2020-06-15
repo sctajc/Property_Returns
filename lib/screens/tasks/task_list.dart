@@ -111,9 +111,9 @@ class _TaskListState extends State<TaskList> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            "Either you have not entered any tasks or all your tasks have been archived. "
+                            "Either you have not entered any tasks or all your tasks have been completed (archived). "
                             "Use the 'plus' button below right to add tasks. "
-                            "If you wish to revisit tasks which have been completed (archived) go back tyo main menu and select 'Tasks archived' near the bottom",
+                            "If you wish to revisit tasks which have been archived go back to main menu and select 'Tasks archived' near the bottom",
                             style: TextStyle(color: kColorOrange, fontSize: 20),
                           ),
                         ),

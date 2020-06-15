@@ -448,6 +448,18 @@ class _AddTaskState extends State<AddTask> {
       title: Text(
         'Add a new task',
       ),
+      actions: <Widget>[
+        FlatButton.icon(
+          onPressed: () => kShowHelpToast(
+              context,
+              'The default Due Date is two weeks from now. '
+              ' Slide Importance to the right if very important. '
+              'Both a Title & Details must be entered. '
+              ' Will show Property, Tenants etc only if they have been set up.'),
+          icon: Icon(Icons.help),
+          label: Text('Help'),
+        )
+      ],
     );
   }
 
@@ -535,12 +547,14 @@ class _AddTaskState extends State<AddTask> {
 
   _displayTaskDetails() {
     return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.sentences,
       maxLines: 3,
       decoration: kTextInputDecoration.copyWith(
           hintText: 'more details',
           labelStyle: kFieldHeading,
           labelText: 'Details'),
-      validator: (val) => val.isEmpty ? 'Please enter task details' : null,
+      validator: (val) => val.isEmpty ? 'Please enter more details' : null,
       onChanged: (val) => setState(() => _currentTaskDetail = val),
     );
   }
@@ -554,7 +568,7 @@ class _AddTaskState extends State<AddTask> {
           labelStyle: kFieldHeading,
           labelText: 'Title'),
       validator: (val) =>
-          val.isEmpty ? 'Please enter a brief task description' : null,
+          val.isEmpty ? 'Please enter a very brief description' : null,
       onChanged: (val) => setState(() => _currentTaskTitle = val),
     );
   }

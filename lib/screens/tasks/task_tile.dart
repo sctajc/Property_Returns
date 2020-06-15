@@ -45,10 +45,10 @@ class TaskTile extends StatelessWidget {
                 color: _color,
                 border: Border.all(width: 0),
                 borderRadius: BorderRadius.all(
-                  Radius.circular(8),
+                  Radius.circular(3),
                 ),
               ),
-              width: 130,
+              width: 140,
               height: 20,
               child: Center(child: _textLine),
             ),

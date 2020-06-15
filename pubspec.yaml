@@ -5,7 +5,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.4.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -20,7 +20,7 @@ dependencies:
   intl: ^0.16.1
   flushbar:
   font_awesome_flutter: ^8.8.1
-  flutter_markdown: ^0.3.5
+  flutter_markdown: ^0.4.1
   currency_pickers: ^1.0.6
   flutter_phone_direct_caller: ^1.0.1
   email_validator: ^1.0.4
@@ -28,6 +28,7 @@ dependencies:
   flutter_email_sender: ^3.0.1  # for creating and sending an email
   url_launcher: ^5.4.5          # for opening the email client to write and send email
   google_fonts: ^1.0.0
+  rxdart: ^0.24.1
 
 dev_dependencies:
   pedantic: ^1.8.0+1

@@ -8,15 +8,17 @@ import 'package:property_returns/models/user.dart';
 import 'package:property_returns/screens/contacts/edit_company.dart';
 import 'package:property_returns/screens/properties/edit_unit.dart';
 import 'package:property_returns/services/database.dart';
+import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/shared/loading.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'add_lease_event.dart';
 import 'edit_lease.dart';
 import 'edit_lease_event.dart';
+import 'package:property_returns/models/company_details.dart';
 
 class LeaseTile extends StatefulWidget {
   final LeaseDetails leaseDetails;
+
   LeaseTile({this.leaseDetails});
 
   @override
@@ -31,91 +33,91 @@ class _LeaseTileState extends State<LeaseTile> {
   String _leasePropertyUnitName = '';
 
   @override
-  void initState() {
-    super.initState();
-    Firestore.instance
-        .collection("companies")
-        .document(widget.leaseDetails.tenantUid)
-        .snapshots()
-        .listen((snapshot) {
-      _leaseTenantName = snapshot.data['companyName'];
-    });
-
-    Firestore.instance
-        .collection("units")
-        .document(widget.leaseDetails.unitUid)
-        .snapshots()
-        .listen((snapshot) {
-      _leaseUnitName = snapshot.data['unitName'];
-      _leaseUnitPropertyUid = snapshot.data['propertyUid'];
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return StreamBuilder<PropertyDetails>(
-        stream: DatabaseServices(propertyUid: _leaseUnitPropertyUid)
-            .propertyByDocumentID,
-        builder: (context, userCompany) {
-          if (!userCompany.hasData) return Loading();
-          _leasePropertyName = userCompany.data.propertyName;
-          _leasePropertyUnitName = '$_leasePropertyName - $_leaseUnitName';
-          return Card(
-            elevation: 5,
-            margin: EdgeInsets.all(2),
-            child: Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            showTenantButton(context),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            showPropertyButton(context),
-                          ],
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        showEditLeaseButton(context),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        showLeaseEventList(user),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          width: 260,
+    return StreamBuilder<CompanyDetails>(
+        stream: DatabaseServices(companyUid: widget.leaseDetails.tenantUid)
+            .companyByDocumentID,
+        builder: (context, userTenant) {
+          if (!userTenant.hasData) return Loading();
+          _leaseTenantName = userTenant.data.companyName;
+          return StreamBuilder<UnitDetails>(
+              stream: DatabaseServices(unitUid: widget.leaseDetails.unitUid)
+                  .unitByDocumentID,
+              builder: (context, userUnit) {
+                if (!userUnit.hasData) return Loading();
+                _leaseUnitName = userUnit.data.unitName;
+                _leaseUnitPropertyUid = userUnit.data.propertyUid;
+                return StreamBuilder<PropertyDetails>(
+                    stream: DatabaseServices(propertyUid: _leaseUnitPropertyUid)
+                        .propertyByDocumentID,
+                    builder: (context, userCompany) {
+                      if (!userCompany.hasData) return Loading();
+                      _leasePropertyName = userCompany.data.propertyName;
+                      _leasePropertyUnitName =
+                          '$_leasePropertyName - $_leaseUnitName';
+                      {
+                        return Card(
+                          elevation: 5,
+                          margin: EdgeInsets.all(2),
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-                            child: Text(
-                              widget.leaseDetails.leaseComment,
-                              maxLines: 4,
+                            padding: const EdgeInsets.all(3.0),
+                            child: Container(
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Column(
+                                        children: <Widget>[
+                                          showTenantButton(context),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          showPropertyButton(context),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      showEditLeaseButton(context),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      showLeaseEventList(user),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        width: 260,
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 8, 0, 8),
+                                          child: Text(
+                                            widget.leaseDetails.leaseComment,
+                                            maxLines: 4,
+                                          ),
+                                        ),
+                                      ),
+                                      showAddLeaseEventButton(context),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        showAddLeaseEventButton(context),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+                        );
+                      }
+                    });
+              });
         });
   }
 
@@ -123,6 +125,7 @@ class _LeaseTileState extends State<LeaseTile> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
+          color: kColorCardChildren,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Colors.blue),
         ),
@@ -136,15 +139,14 @@ class _LeaseTileState extends State<LeaseTile> {
                 if (!allLeaseEvents.hasData) return const Text('Loading');
                 if (allLeaseEvents.data.length > 0) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8),
                     child: Scrollbar(
                       child: Container(
                         height: allLeaseEvents.data.length.ceilToDouble() > 4
                             ? 120
-                            : 70,
+                            : 90,
                         child: ListView.builder(
-                          shrinkWrap: true,
-                          itemExtent: 20,
+                          itemExtent: 28,
                           itemCount: allLeaseEvents.data.length,
                           itemBuilder: (context, index) {
                             Color _textColor =
@@ -206,18 +208,20 @@ class _LeaseTileState extends State<LeaseTile> {
                                               color: _buttonColor,
                                               border: Border.all(width: 0),
                                               borderRadius: BorderRadius.all(
-                                                Radius.circular(8),
+                                                Radius.circular(3),
                                               ),
                                             ),
-                                            width: 130,
+                                            width: 140,
+                                            height: 20,
                                             child: Center(
                                               child: _leaseEventDate,
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 10,
+                                            width: 5,
                                           ),
                                           Expanded(
+                                            flex: 2,
                                             child: Text(
                                               _leaseEventTypeName,
                                               textAlign: TextAlign.left,
@@ -225,15 +229,16 @@ class _LeaseTileState extends State<LeaseTile> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 10,
+                                            width: 5,
                                           ),
                                           Expanded(
+                                              flex: 1,
                                               child: Text(
-                                            allLeaseEvents
-                                                .data[index].leaseEventComment,
-                                            textAlign: TextAlign.left,
-                                            overflow: TextOverflow.ellipsis,
-                                          ))
+                                                allLeaseEvents.data[index]
+                                                    .leaseEventComment,
+                                                textAlign: TextAlign.left,
+                                                overflow: TextOverflow.ellipsis,
+                                              ))
                                         ],
                                       ),
                                     ),

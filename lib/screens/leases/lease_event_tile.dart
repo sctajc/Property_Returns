@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:property_returns/models/company_details.dart';
 import 'package:property_returns/models/lease_details.dart';
 import 'package:property_returns/models/property_details.dart';
@@ -11,6 +12,7 @@ import 'package:property_returns/shared/loading.dart';
 
 class LeaseEventTile extends StatelessWidget {
   final LeaseEventDetails leaseEventDetails;
+
   LeaseEventTile({this.leaseEventDetails});
 
   @override
@@ -88,7 +90,6 @@ class LeaseEventTile extends StatelessWidget {
                                   _propertyName =
                                       '$_unitName - ${property.data.propertyName}';
                                   return Container(
-//                                    height: 100,
                                     child: Column(
                                       children: <Widget>[
                                         Row(
@@ -105,11 +106,11 @@ class LeaseEventTile extends StatelessWidget {
                                                 color: _buttonColor,
                                                 border: Border.all(width: 0),
                                                 borderRadius: BorderRadius.all(
-                                                  Radius.circular(8),
+                                                  Radius.circular(3),
                                                 ),
                                               ),
-                                              width: 130,
-                                              height: 20,
+                                              width: 150,
+                                              height: 25,
                                               child: Center(
                                                   child: _leaseEventDate),
                                             ),
@@ -134,23 +135,33 @@ class LeaseEventTile extends StatelessWidget {
                                               child: Text(
                                                 '$_tenantName @ $_propertyName',
                                                 overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Text(
-                                                leaseEventDetails
-                                                    .leaseEventComment,
-                                                overflow: TextOverflow.ellipsis,
+                                        leaseEventDetails
+                                                    .leaseEventComment.length >
+                                                1
+                                            ? Row(
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Text(
+                                                      leaseEventDetails
+                                                          .leaseEventComment,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : SizedBox(
+                                                height: 0,
                                               ),
-                                            ),
-                                          ],
-                                        ),
                                         SizedBox(
-                                          height: 15,
+                                          height: 5,
                                         ),
                                       ],
                                     ),

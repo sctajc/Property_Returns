@@ -105,7 +105,7 @@ class _LeaseListState extends State<LeaseList> {
                                                     " and Tenants (as selected in Contacts). "
                                                     "Either you have not entered any leases or they have been archived. "
                                                     "Use the 'plus' button below right to add leases. "
-                                                    "If you wish to revisit leases which have been archived go back to main menu and select 'Leases archived' near the bottom",
+                                                    "If you wish to revisit leases which have been archived go back to main menu and select 'Leases archived'.",
                                                 style: TextStyle(
                                                   color: Colors.orange,
                                                 ),

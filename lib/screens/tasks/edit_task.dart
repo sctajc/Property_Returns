@@ -103,13 +103,11 @@ class _EditTaskState extends State<EditTask> {
                                             SizedBox(
                                               height: 10,
                                             ),
-                                            _displayTaskTitleField(
-                                                tasksDetails),
+                                            _displayTaskTitle(tasksDetails),
                                             SizedBox(
                                               height: 10,
                                             ),
-                                            _displayTaskDetailsField(
-                                                tasksDetails),
+                                            _displayTaskDetails(tasksDetails),
                                             SizedBox(
                                               height: 10,
                                             ),
@@ -490,22 +488,22 @@ class _EditTaskState extends State<EditTask> {
     );
   }
 
-  _displayTaskTitleField(TaskDetails tasksDetails) {
+  _displayTaskTitle(TaskDetails tasksDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
       initialValue: tasksDetails.taskTitle,
       decoration: kTextInputDecoration.copyWith(
-          labelText: 'Short Title',
+          labelText: 'Title',
           labelStyle: kFieldHeading,
           hintText: 'short title'),
       validator: (val) =>
-          val.isEmpty ? 'Please enter a brief task description' : null,
+          val.isEmpty ? 'Please enter a very brief description' : null,
       onChanged: (val) => setState(() => _currentTaskTitle = val),
     );
   }
 
-  _displayTaskDetailsField(TaskDetails tasksDetails) {
+  _displayTaskDetails(TaskDetails tasksDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
       textCapitalization: TextCapitalization.sentences,
@@ -515,7 +513,7 @@ class _EditTaskState extends State<EditTask> {
           labelText: 'Details',
           labelStyle: kFieldHeading,
           hintText: 'more details'),
-      validator: (val) => val.isEmpty ? 'Please enter task details' : null,
+      validator: (val) => val.isEmpty ? 'Please enter more details' : null,
       onChanged: (val) => setState(() => _currentTaskDetail = val),
     );
   }

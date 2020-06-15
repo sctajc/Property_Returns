@@ -6,6 +6,7 @@ import 'package:property_returns/screens/properties/add_unit.dart';
 import 'package:property_returns/screens/properties/edit_property.dart';
 import 'package:property_returns/screens/properties/edit_unit.dart';
 import 'package:property_returns/services/database.dart';
+import 'package:property_returns/shared/constants.dart';
 import 'package:provider/provider.dart';
 
 class PropertyTile extends StatefulWidget {
@@ -45,6 +46,7 @@ class _PropertyTileState extends State<PropertyTile> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
+                    color: kColorCardChildren,
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(color: Colors.blue),
                   ),

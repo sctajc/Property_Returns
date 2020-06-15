@@ -4,6 +4,7 @@ import 'package:property_returns/models/company_details.dart';
 import 'package:flutter/material.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/services/database.dart';
+import 'package:property_returns/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'add_person.dart';
@@ -108,6 +109,7 @@ class _CompanyTileState extends State<CompanyTile> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
+          color: kColorCardChildren,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(color: Colors.blue),
         ),
@@ -147,8 +149,6 @@ class _CompanyTileState extends State<CompanyTile> {
                                   ' - ' +
                                   allCompanyPersons.data[index].personRole;
                             //TODO should be able to use TextOverflow.ellipse ??
-                            print(
-                                'Media: ${MediaQuery.of(context).size.width}');
                             int _displayNameLength;
                             MediaQuery.of(context).size.width < 360
                                 ? _displayNameLength = 20

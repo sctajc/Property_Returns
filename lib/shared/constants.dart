@@ -16,7 +16,9 @@ const kTextInputDecoration = InputDecoration(
 );
 
 const kColorOrange = Color(0xfffda400);
+const kColorOrangeBold = Color(0xffbe7000);
 const kColorBlue = Color(0xff1691e6);
+const kColorCardChildren = Color(0xffF0F0F0);
 const kHeading =
     TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: kColorOrange);
 const kFieldHeading =

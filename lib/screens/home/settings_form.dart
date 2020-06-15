@@ -70,7 +70,7 @@ class _SettingsFormState extends State<SettingsForm> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    //TODO why will final userData = Provider.of<UserData>(context) not work?
+
     return StreamBuilder<UserData>(
       stream: DatabaseServices(uid: user.userUid).userData,
       builder: (context, snapshot) {
@@ -129,6 +129,31 @@ class _SettingsFormState extends State<SettingsForm> {
                       height: 20,
                     ),
                     _displayLinksToGoogle(),
+                    FlatButton(
+                      child: Text(
+                        'About',
+                        style: kFieldHeading,
+                      ),
+                      onPressed: () {
+                        showAboutDialog(
+                          applicationVersion: 'Version 0.5.4',
+                          applicationLegalese:
+                              'This application is used at your own risk. No guarantees',
+                          context: context,
+                          children: [
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Image.asset(
+                              'assets/property_returns_logo_drawn.png',
+                              alignment: Alignment.topLeft,
+                              height: 70,
+                              width: 100,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                     SizedBox(
                       height: 20,
                     ),

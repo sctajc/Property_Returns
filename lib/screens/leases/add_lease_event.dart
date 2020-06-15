@@ -26,7 +26,7 @@ class AddLeaseEvent extends StatefulWidget {
 class _AddLeaseEventState extends State<AddLeaseEvent> {
   bool leaseEventHappened = false;
   final _formKey = GlobalKey<FormState>();
-  Map<String, String> _mapLeaseEventTypes = {'none': 'Select Event'};
+  Map<String, String> _mapLeaseEventTypes = {'none': 'SELECT EVENT'};
 
   // form values
   String _currentLeaseEventType = 'none';
@@ -187,7 +187,7 @@ class _AddLeaseEventState extends State<AddLeaseEvent> {
   _displayLeaseEventComment() {
     return TextFormField(
       keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
+      textCapitalization: TextCapitalization.sentences,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Comment',
           labelStyle: kFieldHeading,

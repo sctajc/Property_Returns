@@ -241,6 +241,7 @@ class _EditLeaseState extends State<EditLease> {
   _displayLeaseComments(AsyncSnapshot<LeaseDetails> leaseDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.sentences,
       initialValue: leaseDetails.data.leaseComment,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Comment', labelStyle: kFieldHeading, hintText: 'comment'),

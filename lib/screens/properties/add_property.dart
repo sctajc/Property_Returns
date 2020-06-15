@@ -520,6 +520,8 @@ class _AddPropertyState extends State<AddProperty> {
 
   _displayPropertyDetails() {
     return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.sentences,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Details',
           labelStyle: kFieldHeading,

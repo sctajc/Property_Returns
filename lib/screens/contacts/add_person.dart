@@ -12,6 +12,7 @@ class AddPerson extends StatefulWidget {
   final String companyUid;
   final String companyName;
   final String defaultPersonName;
+
   AddPerson({this.companyUid, this.companyName, this.defaultPersonName});
 
   @override
@@ -20,6 +21,12 @@ class AddPerson extends StatefulWidget {
 
 class _AddPersonState extends State<AddPerson> {
   final _formKey = GlobalKey<FormState>();
+
+  // TODO extract company url for second part of email after @
+//  static final regExp = RegExp(
+//      r'\b(?!www\.)(?!http:\/\/www\.)(?:[0-9A-Za-z][0-9A-Za-z-]{0,62})(?:\.(?:[0-9A-Za-z][0-9A-Za-z-]{0,62}))*(?:\.?|\b)');
+//  var exampleDomain = 'www.jamesgroup.co.nz';
+//  var exampleEmailDomain = regExp.firstMatch('www.jamesgroup.co.nz');
 
   // form values
   String _currentPersonName;
@@ -133,13 +140,14 @@ class _AddPersonState extends State<AddPerson> {
 
   _displayPersonEmail() {
     return TextFormField(
+      initialValue: _currentPersonEmail,
       keyboardType: TextInputType.emailAddress,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Email', labelStyle: kFieldHeading, hintText: 'email'),
       validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
           ? 'Please enter a valid email'
           : null,
-      onChanged: (val) => setState(() => _currentPersonEmail = val),
+      onChanged: (val) => setState(() => _currentPersonEmail = val ?? ''),
     );
   }
 

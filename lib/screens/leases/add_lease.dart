@@ -21,8 +21,8 @@ class AddLease extends StatefulWidget {
 class _AddLeaseState extends State<AddLease> {
   final _formKey = GlobalKey<FormState>();
   Map _propertyUnitNames = Map<String, String>();
-  Map<String, String> _mapProperties = {'none': 'select lease property'};
-  Map<String, String> _mapTenantCompanies = {'none': 'select lease tenant'};
+  Map<String, String> _mapProperties = {'none': 'SELECT LEASE PROPERTY'};
+  Map<String, String> _mapTenantCompanies = {'none': 'SELECT LEASE TENANT'};
 
   // form values
   String _currentLeaseTenantSelected = 'none';
@@ -31,7 +31,7 @@ class _AddLeaseState extends State<AddLease> {
   String _currentLeaseDefaultInterestRate = '';
   String _currentLeaseCarParks = '';
   String _currentLeaseRentPaymentDay = '1';
-  DateTime _currentLeaseDateOfLease;
+  DateTime _currentLeaseDateOfLease = DateTime.now();
   String _currentLeaseGuarantor;
   String _currentLeaseComment = '';
 
@@ -203,8 +203,8 @@ class _AddLeaseState extends State<AddLease> {
                           await DatabaseServices().addUserLeaseEvent(
                             docRef.documentID,
                             user.userUid,
-                            'wsAYKJiTwuS8UhRuxK5u', // leave event type
-                            null, // lease commencement date
+                            'wsAYKJiTwuS8UhRuxK5u', // lease event commencement type
+                            Timestamp.now().toDate(), // lease commencement date
                             false, // happened
                             '', // comment
                             Timestamp.now(),
@@ -214,8 +214,8 @@ class _AddLeaseState extends State<AddLease> {
                           await DatabaseServices().addUserLeaseEvent(
                             docRef.documentID,
                             user.userUid,
-                            'uc9aT7Y8VPvgMrOe06o2', // lease final Expiry date
-                            null, // lease commencement date
+                            'uc9aT7Y8VPvgMrOe06o2', // lease event type 'final Expiry'
+                            Timestamp.now().toDate(), // lease commencement date
                             false, // happened
                             '', // comment
                             Timestamp.now(),
@@ -288,6 +288,7 @@ class _AddLeaseState extends State<AddLease> {
         children: <Widget>[
           Expanded(
             child: TextFormField(
+              initialValue: '1st month',
               keyboardType: TextInputType.text,
               textCapitalization: TextCapitalization.words,
               decoration: kTextInputDecoration.copyWith(
@@ -332,7 +333,7 @@ class _AddLeaseState extends State<AddLease> {
     return TextFormField(
       keyboardType: TextInputType.text,
       decoration: kTextInputDecoration.copyWith(
-          labelText: 'Dafault Interest Rate',
+          labelText: 'Default Interest Rate',
           labelStyle: kFieldHeading,
           hintText: 'default interest rate'),
 //      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
@@ -374,7 +375,7 @@ class _AddLeaseState extends State<AddLease> {
   _displayLeaseGuarantor() {
     return TextFormField(
       keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences,
+      textCapitalization: TextCapitalization.words,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Guarantor',
           labelStyle: kFieldHeading,
@@ -408,7 +409,7 @@ class _AddLeaseState extends State<AddLease> {
               if (!allUserUnits.hasData)
                 return Loading();
               else {
-                _propertyUnitNames['none'] = 'choose lease property';
+                _propertyUnitNames['none'] = 'SELECT LEASE PROPERTY';
                 for (int i = 0; i < allUserUnits.data.length; i++) {
                   _propertyUnitNames[allUserUnits.data[i].unitUid] =
                       '${_mapProperties['${allUserUnits.data[i].propertyUid}']} - ${allUserUnits.data[i].unitName}';
