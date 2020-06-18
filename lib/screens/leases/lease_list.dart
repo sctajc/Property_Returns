@@ -56,11 +56,6 @@ class _LeaseListState extends State<LeaseList> {
                         appBar: AppBar(
                           title: Text('Leases'),
                           actions: <Widget>[
-                            FlatButton.icon(
-                              onPressed: () => null,
-                              icon: Icon(Icons.search),
-                              label: Text(''),
-                            ),
                             showLeaseAppBarHelp(context),
                           ],
                         ),

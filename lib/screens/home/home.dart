@@ -143,39 +143,6 @@ class Home extends StatelessWidget {
             height: 20,
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-              },
-              child: Text('List Tenants'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-              },
-              child: Text('List Trades'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-              },
-              child: Text('List Agents'),
-            ),
-          ),
-          Divider(
-            height: 20,
-          ),
-          Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
             child: GestureDetector(
               onTap: () {
@@ -184,6 +151,9 @@ class Home extends StatelessWidget {
               },
               child: Text('Property Summary'),
             ),
+          ),
+          Divider(
+            height: 20,
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(16, 8, 8, 8),

@@ -712,10 +712,43 @@ class DatabaseServices {
   }
 
 // get company details stream for a given user ordered by company name
-  Stream<List<CompanyDetails>> get userCompanies {
+  Stream<List<CompanyDetails>> get userCompaniesAll {
     return userCompanyCollection
         .where('userUid', isEqualTo: uid)
         .where('companyArchived', isEqualTo: false)
+        .orderBy('companyName', descending: false)
+        .snapshots()
+        .map(_userCompaniesFromSnapshot);
+  }
+
+  // get tenant company details stream for a given user ordered by company name
+  Stream<List<CompanyDetails>> get userCompaniesTenants {
+    return userCompanyCollection
+        .where('userUid', isEqualTo: uid)
+        .where('companyArchived', isEqualTo: false)
+        .where('companySetTenant', isEqualTo: true)
+        .orderBy('companyName', descending: false)
+        .snapshots()
+        .map(_userCompaniesFromSnapshot);
+  }
+
+// get trade company details stream for a given user ordered by company name
+  Stream<List<CompanyDetails>> get userCompaniesTrades {
+    return userCompanyCollection
+        .where('userUid', isEqualTo: uid)
+        .where('companyArchived', isEqualTo: false)
+        .where('companySetTrade', isEqualTo: true)
+        .orderBy('companyName', descending: false)
+        .snapshots()
+        .map(_userCompaniesFromSnapshot);
+  }
+
+  // get agent company details stream for a given user ordered by company name
+  Stream<List<CompanyDetails>> get userCompaniesAgents {
+    return userCompanyCollection
+        .where('userUid', isEqualTo: uid)
+        .where('companyArchived', isEqualTo: false)
+        .where('companySetAgent', isEqualTo: true)
         .orderBy('companyName', descending: false)
         .snapshots()
         .map(_userCompaniesFromSnapshot);

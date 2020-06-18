@@ -62,12 +62,9 @@ class _TaskListState extends State<TaskList> {
 //              title: Text(userProperties[1].propertyName),
             actions: <Widget>[
               FlatButton.icon(
-                  onPressed: () => null,
-                  icon: Icon(Icons.search),
-                  label: Text('')),
-              FlatButton.icon(
-                  onPressed: () {
-                    setState(() {
+                onPressed: () {
+                  setState(
+                    () {
                       switch (_displayOrder) {
                         case DisplayOrder.dueDateFirst:
                           _displayOrder = DisplayOrder.dueDateLast;
@@ -82,16 +79,18 @@ class _TaskListState extends State<TaskList> {
                           _displayOrder = DisplayOrder.dueDateFirst;
                           break;
                       }
-                    });
-                  },
-                  icon: (_displayOrder == DisplayOrder.dueDateFirst ||
-                          _displayOrder == DisplayOrder.importanceHighest)
-                      ? Icon(Icons.arrow_downward)
-                      : Icon(Icons.arrow_upward),
-                  label: (_displayOrder == DisplayOrder.dueDateFirst ||
-                          _displayOrder == DisplayOrder.dueDateLast)
-                      ? Text('Date')
-                      : Text('Importance')),
+                    },
+                  );
+                },
+                icon: (_displayOrder == DisplayOrder.dueDateFirst ||
+                        _displayOrder == DisplayOrder.importanceHighest)
+                    ? Icon(Icons.arrow_downward)
+                    : Icon(Icons.arrow_upward),
+                label: (_displayOrder == DisplayOrder.dueDateFirst ||
+                        _displayOrder == DisplayOrder.dueDateLast)
+                    ? Text('Date')
+                    : Text('Importance'),
+              ),
             ],
           ),
           body: Padding(

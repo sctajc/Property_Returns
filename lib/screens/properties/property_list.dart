@@ -31,11 +31,6 @@ class _PropertyListState extends State<PropertyList> {
               title: Text('Properties'),
               actions: <Widget>[
                 FlatButton.icon(
-                  onPressed: () => null,
-                  icon: Icon(Icons.search),
-                  label: Text(''),
-                ),
-                FlatButton.icon(
                   onPressed: () => kShowHelpToast(
                       context,
                       'A property is usually a building, or collection of buildings at one address. A unit is a defined area within a property available for individual leasing. '

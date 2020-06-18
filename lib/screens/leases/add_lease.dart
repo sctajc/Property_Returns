@@ -125,7 +125,7 @@ class _AddLeaseState extends State<AddLease> {
                                         final date = await showDatePicker(
                                           context: context,
                                           initialDate: DateTime.now(),
-                                          firstDate: DateTime(2010),
+                                          firstDate: DateTime(1950),
                                           lastDate: DateTime(2100),
                                         );
                                         if (date != null) {
