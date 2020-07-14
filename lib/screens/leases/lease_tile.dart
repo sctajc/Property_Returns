@@ -295,7 +295,7 @@ class _LeaseTileState extends State<LeaseTile> {
   showAddLeaseEventButton(BuildContext context) {
     return Flexible(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 8),
+        padding: const EdgeInsets.fromLTRB(5, 0, 0, 8),
         child: RaisedButton(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

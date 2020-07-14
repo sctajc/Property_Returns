@@ -21,11 +21,18 @@ class EditCompany extends StatefulWidget {
 }
 
 class _EditCompanyState extends State<EditCompany> {
+  final _formKey = GlobalKey<FormState>();
+  final FocusNode _companyNameFocusNode = FocusNode();
+  final FocusNode _companyCommentsFocusNode = FocusNode();
+  final FocusNode _companyPhoneFocusNode = FocusNode();
+  final FocusNode _companyEmailFocusNode = FocusNode();
+  final FocusNode _companyWebsiteFocusNode = FocusNode();
+  final FocusNode _companyPostalAddressFocusNode = FocusNode();
+
   bool _archiveCompany = false;
   bool _setTenant = false;
   bool _setTrade = false;
   bool _setAgent = false;
-  final _formKey = GlobalKey<FormState>();
 
   // form values
   String _currentCompanyName = 'initialised';
@@ -158,6 +165,8 @@ class _EditCompanyState extends State<EditCompany> {
   _displayCompanyName(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyNameFocusNode,
       textCapitalization: TextCapitalization.words,
       initialValue: companyDetails.data.companyName,
       decoration: kTextInputDecoration.copyWith(
@@ -167,12 +176,19 @@ class _EditCompanyState extends State<EditCompany> {
       validator: (val) =>
           val.isEmpty ? 'Please enter the company is know as' : null,
       onChanged: (val) => setState(() => _currentCompanyName = val),
+      onEditingComplete: _companyNameEditingComplete,
     );
+  }
+
+  void _companyNameEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyCommentsFocusNode);
   }
 
   _displayCompanyComment(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyCommentsFocusNode,
       textCapitalization: TextCapitalization.sentences,
       initialValue: companyDetails.data.companyComment,
       decoration: kTextInputDecoration.copyWith(
@@ -183,24 +199,38 @@ class _EditCompanyState extends State<EditCompany> {
 //                        ? 'Please enter any property details'
 //                        : null,
       onChanged: (val) => setState(() => _currentCompanyComment = val),
+      onEditingComplete: _companyCommentEditingComplete,
     );
+  }
+
+  void _companyCommentEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyPhoneFocusNode);
   }
 
   _displayCompanyPhone(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.phone,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyPhoneFocusNode,
       initialValue: companyDetails.data.companyPhone,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
 //                      validator: (val) =>
 //                          val.isEmpty ? 'Please enter phone number' : null,
       onChanged: (val) => setState(() => _currentCompanyPhone = val),
+      onEditingComplete: _companyPhoneEditingComplete,
     );
+  }
+
+  void _companyPhoneEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyEmailFocusNode);
   }
 
   _displayCompanyEmail(AsyncSnapshot<CompanyDetails> companyDetails) {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyEmailFocusNode,
       initialValue: companyDetails.data.companyEmail,
       decoration: kTextInputDecoration.copyWith(
           labelText: 'Email', labelStyle: kFieldHeading, hintText: 'email'),
@@ -208,55 +238,48 @@ class _EditCompanyState extends State<EditCompany> {
           ? 'Please enter a valid email'
           : null,
       onChanged: (val) => setState(() => _currentCompanyEmail = val),
+      onEditingComplete: _companyEmailEditingComplete,
     );
   }
 
-  _displayCompanyArchive(BuildContext context) {
-    return CheckboxListTile(
-      controlAffinity: ListTileControlAffinity.leading,
-      title: Text(
-        'Archive company',
-        style: kFieldHeading,
-      ),
-      value: _archiveCompany,
-      onChanged: (value) {
-        setState(() {
-          _archiveCompany = value;
-          _currentCompanyArchived = _archiveCompany;
-        });
-      },
-      secondary: GestureDetector(
-        onTap: () => kShowHelpToast(context,
-            "If selected the company will be removed from your displayed companies. These will normally be companies which are not required anymore. These companies can be accessed through 'Companies Archived'"),
-        child: Icon(
-          Icons.help_outline,
-          color: kColorOrange,
-        ),
-      ),
+  void _companyEmailEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyWebsiteFocusNode);
+  }
+
+  _displayCompanyWebsite(AsyncSnapshot<CompanyDetails> companyDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.url,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyWebsiteFocusNode,
+      initialValue: companyDetails.data.companyWebsite,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Website', labelStyle: kFieldHeading, hintText: 'website'),
+      validator: (val) =>
+          val.isNotEmpty && !isURL(val) ? 'Please enter valid website' : null,
+      onChanged: (val) => setState(() => _currentCompanyWebsite = val),
+      onEditingComplete: _companyWebsiteEditingComplete,
     );
   }
 
-  _displayCompanyAgent(BuildContext context) {
-    return CheckboxListTile(
-      controlAffinity: ListTileControlAffinity.leading,
-      title: Text(
-        'Agent  ',
-        style: kFieldHeading,
-      ),
-      value: _setAgent,
-      onChanged: (value) {
-        setState(() {
-          _setAgent = value;
-        });
-      },
-      secondary: GestureDetector(
-        onTap: () => kShowHelpToast(context,
-            "If selected the company will be available in your displayed agents"),
-        child: Icon(
-          Icons.help_outline,
-          color: kColorOrange,
-        ),
-      ),
+  void _companyWebsiteEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyPostalAddressFocusNode);
+  }
+
+  _displayCompanyPostalAddress(AsyncSnapshot<CompanyDetails> companyDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.done,
+      focusNode: _companyPostalAddressFocusNode,
+      textCapitalization: TextCapitalization.words,
+      initialValue: companyDetails.data.companyPostalAddress,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Postal Address',
+          labelStyle: kFieldHeading,
+          hintText: 'postal address'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any insurance policy name, code etc'
+//                          : null,
+      onChanged: (val) => setState(() => _currentCompanyPostalAddress = val),
     );
   }
 
@@ -308,31 +331,52 @@ class _EditCompanyState extends State<EditCompany> {
     );
   }
 
-  _displayCompanyPostalAddress(AsyncSnapshot<CompanyDetails> companyDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      initialValue: companyDetails.data.companyPostalAddress,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Postal Address',
-          labelStyle: kFieldHeading,
-          hintText: 'postal address'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any insurance policy name, code etc'
-//                          : null,
-      onChanged: (val) => setState(() => _currentCompanyPostalAddress = val),
+  _displayCompanyAgent(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Other  ',
+        style: kFieldHeading,
+      ),
+      value: _setAgent,
+      onChanged: (value) {
+        setState(() {
+          _setAgent = value;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected the company will be available in your displayed Others"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
+        ),
+      ),
     );
   }
 
-  _displayCompanyWebsite(AsyncSnapshot<CompanyDetails> companyDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.url,
-      initialValue: companyDetails.data.companyWebsite,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Website', labelStyle: kFieldHeading, hintText: 'website'),
-      validator: (val) =>
-          val.isNotEmpty && !isURL(val) ? 'Please enter valid website' : null,
-      onChanged: (val) => setState(() => _currentCompanyWebsite = val),
+  _displayCompanyArchive(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Archive company',
+        style: kFieldHeading,
+      ),
+      value: _archiveCompany,
+      onChanged: (value) {
+        setState(() {
+          _archiveCompany = value;
+          _currentCompanyArchived = _archiveCompany;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected the company will be removed from your displayed companies. These will normally be companies which are not required anymore. These companies can be accessed through 'Companies Archived'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
+        ),
+      ),
     );
   }
 }

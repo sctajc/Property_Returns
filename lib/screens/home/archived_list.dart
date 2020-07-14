@@ -6,45 +6,45 @@ import 'package:property_returns/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/models/user.dart';
 import 'package:property_returns/shared/loading.dart';
-import 'company_tile.dart';
+import 'package:property_returns/screens/contacts/company_tile.dart';
 
 enum DisplayOrder {
-  all,
-  tenants,
-  trades,
-  agents,
+  tasks,
+  properties,
+  units,
+  leases,
 }
 
-class CompanyList extends StatefulWidget {
-  static String id = 'company_list_screen';
+class ArchivedList extends StatefulWidget {
+  static String id = 'archived_list_screen';
 
   @override
-  _CompanyListState createState() => _CompanyListState();
+  _ArchivedListState createState() => _ArchivedListState();
 }
 
-class _CompanyListState extends State<CompanyList> {
-  DisplayOrder _displayOrder = DisplayOrder.all;
+class _ArchivedListState extends State<ArchivedList> {
+  DisplayOrder _displayOrder = DisplayOrder.tasks;
   var _databaseServicesDisplayOrder;
-  String _displayLabel = 'All';
+  String _displayLabel = 'Tasks';
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
 
     switch (_displayOrder) {
-      case DisplayOrder.all:
+      case DisplayOrder.tasks:
         _databaseServicesDisplayOrder =
             DatabaseServices(uid: user.userUid).userCompaniesAll;
         break;
-      case DisplayOrder.tenants:
+      case DisplayOrder.properties:
         _databaseServicesDisplayOrder =
             DatabaseServices(uid: user.userUid).userCompaniesTenants;
         break;
-      case DisplayOrder.trades:
+      case DisplayOrder.units:
         _databaseServicesDisplayOrder =
             DatabaseServices(uid: user.userUid).userCompaniesTrades;
         break;
-      case DisplayOrder.agents:
+      case DisplayOrder.leases:
         _databaseServicesDisplayOrder =
             DatabaseServices(uid: user.userUid).userCompaniesAgents;
         break;
@@ -60,7 +60,7 @@ class _CompanyListState extends State<CompanyList> {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                'Contacts',
+                'Archived',
                 style: TextStyle(
                   fontSize: 18,
                 ),
@@ -72,21 +72,21 @@ class _CompanyListState extends State<CompanyList> {
                     setState(
                       () {
                         switch (_displayOrder) {
-                          case DisplayOrder.all:
-                            _displayOrder = DisplayOrder.tenants;
-                            _displayLabel = 'Tenants';
+                          case DisplayOrder.tasks:
+                            _displayOrder = DisplayOrder.properties;
+                            _displayLabel = 'Tasks';
                             break;
-                          case DisplayOrder.tenants:
-                            _displayOrder = DisplayOrder.trades;
-                            _displayLabel = 'Trades';
+                          case DisplayOrder.properties:
+                            _displayOrder = DisplayOrder.units;
+                            _displayLabel = 'Properties';
                             break;
-                          case DisplayOrder.trades:
-                            _displayOrder = DisplayOrder.agents;
-                            _displayLabel = 'Others';
+                          case DisplayOrder.units:
+                            _displayOrder = DisplayOrder.leases;
+                            _displayLabel = 'Units';
                             break;
-                          case DisplayOrder.agents:
-                            _displayOrder = DisplayOrder.all;
-                            _displayLabel = 'All';
+                          case DisplayOrder.leases:
+                            _displayOrder = DisplayOrder.tasks;
+                            _displayLabel = 'Leases';
                             break;
                         }
                       },
@@ -144,8 +144,8 @@ class _CompanyListState extends State<CompanyList> {
       onPressed: () => kShowHelpToast(
           context,
           // TODO should be able to display icons here??
-          'A company could be any organisation. Long press icons to see phone number and email address. '
-          'Short press icons to phone or email. '),
+          'Select whatever to un archive. '
+          'Should be possible. '),
       icon: Icon(Icons.help),
       label: Text('Help'),
     );

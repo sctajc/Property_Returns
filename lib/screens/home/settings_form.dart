@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/shared/loading.dart';
@@ -89,6 +90,7 @@ class _SettingsFormState extends State<SettingsForm> {
         if (_currentCurrencySymbol == null) {
           _currentCurrencySymbol = userData.currencySymbol;
         }
+
         return Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
@@ -129,31 +131,7 @@ class _SettingsFormState extends State<SettingsForm> {
                       height: 20,
                     ),
                     _displayLinksToGoogle(),
-                    FlatButton(
-                      child: Text(
-                        'About',
-                        style: kFieldHeading,
-                      ),
-                      onPressed: () {
-                        showAboutDialog(
-                          applicationVersion: 'Version 0.5.4',
-                          applicationLegalese:
-                              'This application is used at your own risk. No guarantees',
-                          context: context,
-                          children: [
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Image.asset(
-                              'assets/property_returns_logo_drawn.png',
-                              alignment: Alignment.topLeft,
-                              height: 70,
-                              width: 100,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                    _displayAbout(context),
                     SizedBox(
                       height: 20,
                     ),
@@ -251,12 +229,17 @@ class _SettingsFormState extends State<SettingsForm> {
             'Currency Symbol',
             style: kFieldHeading,
           ),
+          SizedBox(
+            height: 10,
+          ),
           Wrap(
             spacing: 8,
             children: List<Widget>.generate(
               currencies.length,
               (int index) {
                 return ChoiceChip(
+                  selectedColor: Colors.blueGrey[200],
+                  backgroundColor: Colors.lightBlue[50],
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(8),
@@ -264,8 +247,7 @@ class _SettingsFormState extends State<SettingsForm> {
                   ),
                   label: Text(
                     currencies[index],
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100),
                   ),
                   selected: (currencies[index] == _currentCurrencySymbol)
                       ? true
@@ -336,19 +318,21 @@ class _SettingsFormState extends State<SettingsForm> {
 
   _displayLeaseNotificationDays(UserData userData) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
+        SizedBox(
+          width: 20,
+        ),
         Text(
-          'Lease Notification: ',
+          'Lease Notification days:',
           style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 20,
         ),
         Text(
           '${_currentLeaseNotificationDays ?? userData.leaseNotificationDays} ',
           style: kInputText.copyWith(fontSize: 18),
-        ),
-        Text(
-          'days',
-          style: kFieldHeading,
         ),
       ],
     );
@@ -358,8 +342,7 @@ class _SettingsFormState extends State<SettingsForm> {
     return Slider(
       min: 0,
       max: 100,
-//                        label:
-//                            '${_currentTaskNotificationDays ?? userData.taskNotificationDays}',
+//      label: '${_currentTaskNotificationDays ?? userData.taskNotificationDays}',
       value: (_currentTaskNotificationDays ?? userData.taskNotificationDays)
           .toDouble(),
       onChanged: (newVal) =>
@@ -369,19 +352,21 @@ class _SettingsFormState extends State<SettingsForm> {
 
   _displayTaskNotificationDays(UserData userData) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
+        SizedBox(
+          width: 20,
+        ),
         Text(
-          'Task Notification: ',
+          'Task Notification days:',
           style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 20,
         ),
         Text(
           '${_currentTaskNotificationDays ?? userData.taskNotificationDays} ',
           style: kInputText.copyWith(fontSize: 18),
-        ),
-        Text(
-          'days',
-          style: kFieldHeading,
         ),
       ],
     );
@@ -389,12 +374,44 @@ class _SettingsFormState extends State<SettingsForm> {
 
   _displaySettingsName(UserData userData) {
     return TextFormField(
+//      inputFormatters: [
+//        // allow only letters, numbers & spaces
+//        WhitelistingTextInputFormatter(RegExp(r"[a-zA-z0-9]+|\s")),
+//      ],
       keyboardType: TextInputType.text,
       initialValue: userData.userName,
       decoration: kTextInputDecoration.copyWith(
           hintText: 'name', labelStyle: kFieldHeading, labelText: 'Known as'),
       validator: (val) => val.isEmpty ? 'Please enter your name' : null,
       onChanged: (val) => setState(() => _currentName = val),
+    );
+  }
+
+  _displayAbout(BuildContext context) {
+    return FlatButton(
+      child: Text(
+        'About',
+        style: kFieldHeading,
+      ),
+      onPressed: () {
+        showAboutDialog(
+          applicationVersion: 'Version 0.5.4',
+          applicationLegalese:
+              'This application is used at your own risk. No guarantees',
+          context: context,
+          children: [
+            SizedBox(
+              height: 15,
+            ),
+            Image.asset(
+              'assets/property_returns_logo_drawn.png',
+              alignment: Alignment.topLeft,
+              height: 70,
+              width: 100,
+            ),
+          ],
+        );
+      },
     );
   }
 }

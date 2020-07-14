@@ -9,6 +9,7 @@ import 'package:property_returns/screens/home/settings_form.dart';
 import 'package:property_returns/shared/constants.dart';
 import 'package:property_returns/screens/home/home_page.dart';
 import 'package:property_returns/screens/tasks/task_list.dart';
+import 'package:property_returns/screens/home/archived_list.dart';
 import 'package:property_returns/shared/loading.dart';
 
 class Home extends StatelessWidget {
@@ -23,7 +24,7 @@ class Home extends StatelessWidget {
 
     // display log out & settings buttons
     var appBar = AppBar(
-      elevation: 0,
+      elevation: 10,
       actions: <Widget>[
         FlatButton.icon(
             onPressed: () async {
@@ -152,47 +153,14 @@ class Home extends StatelessWidget {
               child: Text('Property Summary'),
             ),
           ),
-          Divider(
-            height: 20,
-          ),
           Padding(
             padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
+                Navigator.pushNamed(context, ArchivedList.id);
               },
-              child: Text('Tasks Archived'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-              },
-              child: Text('Properties Archived'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-              },
-              child: Text('Units Archived'),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
-              },
-              child: Text('Past lease Events'),
+              child: Text('Archived'),
             ),
           ),
           Divider(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:property_returns/models/property_details.dart';
@@ -20,6 +21,9 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _taskTitleFocusNode = FocusNode();
+  final FocusNode _taskDetailsFocusNode = FocusNode();
+
   Map _propertyUnitNames = Map<String, String>();
   Map<String, String> _mapProperties = {'none': 'none'};
   Map _tenantCompanyPersonNames = Map<String, String>();
@@ -77,7 +81,7 @@ class _AddTaskState extends State<AddTask> {
                           }
                           return Scaffold(
                             resizeToAvoidBottomPadding: false,
-                            appBar: buildAppBar(),
+                            appBar: _buildAppBar(),
                             body: SingleChildScrollView(
                               child: Padding(
                                 padding: EdgeInsets.all(15),
@@ -204,39 +208,169 @@ class _AddTaskState extends State<AddTask> {
                               ),
                             ),
                             bottomNavigationBar: BottomAppBar(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  RaisedButton(
-                                    child: Text('Add'),
-                                    onPressed: () async {
-                                      if (_formKey.currentState.validate()) {
-                                        await DatabaseServices().addUserTask(
-                                          user.userUid,
-                                          _currentTaskTitle,
-                                          _currentTaskDetail,
-                                          _currentTaskArchived,
-                                          _currentTaskImportance,
-                                          _currentTaskPropertySelected,
-                                          _currentTaskTenantSelected,
-                                          _currentTaskTradeSelected,
-                                          _currentTaskAgentSelected,
-                                          _currentTaskDueDateTime,
-                                          Timestamp
-                                              .now(), //_currentEditedDateTime,
-                                        );
-                                        Navigator.pop(context);
-                                      }
-                                    },
-                                  )
-                                ],
-                              ),
+                              child: AddButtonAndSave(
+                                  formKey: _formKey,
+                                  user: user,
+                                  currentTaskTitle: _currentTaskTitle,
+                                  currentTaskDetail: _currentTaskDetail,
+                                  currentTaskArchived: _currentTaskArchived,
+                                  currentTaskImportance: _currentTaskImportance,
+                                  currentTaskPropertySelected:
+                                      _currentTaskPropertySelected,
+                                  currentTaskTenantSelected:
+                                      _currentTaskTenantSelected,
+                                  currentTaskTradeSelected:
+                                      _currentTaskTradeSelected,
+                                  currentTaskAgentSelected:
+                                      _currentTaskAgentSelected,
+                                  currentTaskDueDateTime:
+                                      _currentTaskDueDateTime),
                             ),
                           );
                         });
                   });
             });
       },
+    );
+  }
+
+  _buildAppBar() {
+    return AppBar(
+      title: Text(
+        'Add a new task',
+      ),
+      actions: <Widget>[
+        FlatButton.icon(
+          onPressed: () => kShowHelpToast(
+              context,
+              'The default Due Date is two weeks from now. '
+              ' Slide Importance to the right if very important. '
+              'Both a Title & Details must be entered. '
+              ' Will show Property, Tenants etc only if they have been set up.'),
+          icon: Icon(Icons.help),
+          label: Text('Help'),
+        )
+      ],
+    );
+  }
+
+  _displayTaskTitle() {
+    return TextFormField(
+      autofocus: true,
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _taskTitleFocusNode,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: kTextInputDecoration.copyWith(
+          hintText: 'short title',
+          labelStyle: kFieldHeading,
+          labelText: 'Title'),
+      validator: (val) =>
+          val.isEmpty ? 'Please enter a very brief description' : null,
+      onChanged: (val) => setState(() => _currentTaskTitle = val),
+      onEditingComplete: _taskTitleEditingComplete,
+    );
+  }
+
+  void _taskTitleEditingComplete() {
+    FocusScope.of(context).requestFocus(_taskDetailsFocusNode);
+  }
+
+  _displayTaskDetails() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.done,
+      focusNode: _taskDetailsFocusNode,
+      textCapitalization: TextCapitalization.sentences,
+      maxLines: 3,
+      decoration: kTextInputDecoration.copyWith(
+          hintText: 'more details',
+          labelStyle: kFieldHeading,
+          labelText: 'Details'),
+      validator: (val) => val.isEmpty ? 'Please enter more details' : null,
+      onChanged: (val) => setState(() => _currentTaskDetail = val),
+    );
+  }
+
+  _displayTaskImportance() {
+    return Row(
+      children: <Widget>[
+        Text(
+          'Importance',
+          style: kFieldHeading,
+        ),
+        Slider(
+          label: _currentTaskImportance.toString(),
+          divisions: 9,
+          min: 1,
+          max: 10,
+          value: (_currentTaskImportance ?? 5).toDouble(),
+          onChanged: (val) => setState(
+            () => _currentTaskImportance = val.round(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _displayTaskProperty(User user) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Flexible(
+          flex: 1,
+          child: Text(
+            'Property',
+            style: kFieldHeading,
+          ),
+        ),
+        SizedBox(
+          width: 30,
+        ),
+        Flexible(
+          flex: 3,
+          child: StreamBuilder<List<UnitDetails>>(
+            stream: DatabaseServices(uid: user.userUid).allUnitsForUser,
+            builder: (context, allUserUnits) {
+              if (!allUserUnits.hasData)
+                return Loading();
+              else {
+                _propertyUnitNames['none'] = 'none';
+                for (int i = 0; i < allUserUnits.data.length; i++) {
+                  _propertyUnitNames[allUserUnits.data[i].unitUid] =
+                      '${_mapProperties['${allUserUnits.data[i].propertyUid}']} - ${allUserUnits.data[i].unitName}';
+                  // TODO is this a good way to fudge a SQL like join?
+                  //  getting property name and unit names into one map from Firestore
+                  // ie ('unitUid', 'George St - RHS front warehouse')
+                }
+              }
+              return DropdownButtonFormField<String>(
+                isExpanded: true,
+                value: _currentTaskPropertySelected,
+                items: _propertyUnitNames
+                    .map(
+                      (key, value) {
+                        return MapEntry(
+                          key,
+                          DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: key,
+                          ),
+                        );
+                      },
+                    )
+                    .values
+                    .toList(),
+                onChanged: (String newPropertySelected) {
+                  setState(() {
+                    _currentTaskPropertySelected = newPropertySelected;
+                  });
+                },
+              );
+            },
+          ),
+        )
+      ],
     );
   }
 
@@ -442,134 +576,73 @@ class _AddTaskState extends State<AddTask> {
       ],
     );
   }
+}
 
-  buildAppBar() {
-    return AppBar(
-      title: Text(
-        'Add a new task',
-      ),
-      actions: <Widget>[
-        FlatButton.icon(
-          onPressed: () => kShowHelpToast(
-              context,
-              'The default Due Date is two weeks from now. '
-              ' Slide Importance to the right if very important. '
-              'Both a Title & Details must be entered. '
-              ' Will show Property, Tenants etc only if they have been set up.'),
-          icon: Icon(Icons.help),
-          label: Text('Help'),
-        )
-      ],
-    );
-  }
+class AddButtonAndSave extends StatelessWidget {
+  const AddButtonAndSave({
+    Key key,
+    @required GlobalKey<FormState> formKey,
+    @required this.user,
+    @required String currentTaskTitle,
+    @required String currentTaskDetail,
+    @required bool currentTaskArchived,
+    @required int currentTaskImportance,
+    @required String currentTaskPropertySelected,
+    @required String currentTaskTenantSelected,
+    @required String currentTaskTradeSelected,
+    @required String currentTaskAgentSelected,
+    @required DateTime currentTaskDueDateTime,
+  })  : _formKey = formKey,
+        _currentTaskTitle = currentTaskTitle,
+        _currentTaskDetail = currentTaskDetail,
+        _currentTaskArchived = currentTaskArchived,
+        _currentTaskImportance = currentTaskImportance,
+        _currentTaskPropertySelected = currentTaskPropertySelected,
+        _currentTaskTenantSelected = currentTaskTenantSelected,
+        _currentTaskTradeSelected = currentTaskTradeSelected,
+        _currentTaskAgentSelected = currentTaskAgentSelected,
+        _currentTaskDueDateTime = currentTaskDueDateTime,
+        super(key: key);
 
-  _displayTaskProperty(User user) {
+  final GlobalKey<FormState> _formKey;
+  final User user;
+  final String _currentTaskTitle;
+  final String _currentTaskDetail;
+  final bool _currentTaskArchived;
+  final int _currentTaskImportance;
+  final String _currentTaskPropertySelected;
+  final String _currentTaskTenantSelected;
+  final String _currentTaskTradeSelected;
+  final String _currentTaskAgentSelected;
+  final DateTime _currentTaskDueDateTime;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Flexible(
-          flex: 1,
-          child: Text(
-            'Property',
-            style: kFieldHeading,
-          ),
-        ),
-        SizedBox(
-          width: 30,
-        ),
-        Flexible(
-          flex: 3,
-          child: StreamBuilder<List<UnitDetails>>(
-            stream: DatabaseServices(uid: user.userUid).allUnitsForUser,
-            builder: (context, allUserUnits) {
-              if (!allUserUnits.hasData)
-                return Loading();
-              else {
-                _propertyUnitNames['none'] = 'none';
-                for (int i = 0; i < allUserUnits.data.length; i++) {
-                  _propertyUnitNames[allUserUnits.data[i].unitUid] =
-                      '${_mapProperties['${allUserUnits.data[i].propertyUid}']} - ${allUserUnits.data[i].unitName}';
-                  // TODO is this a good way to fudge a SQL like join?
-                  //  getting property name and unit names into one map from Firestore
-                  // ie ('unitUid', 'George St - RHS front warehouse')
-                }
-              }
-              return DropdownButtonFormField<String>(
-                isExpanded: true,
-                value: _currentTaskPropertySelected,
-                items: _propertyUnitNames
-                    .map(
-                      (key, value) {
-                        return MapEntry(
-                          key,
-                          DropdownMenuItem<String>(
-                            child: Text(value),
-                            value: key,
-                          ),
-                        );
-                      },
-                    )
-                    .values
-                    .toList(),
-                onChanged: (String newPropertySelected) {
-                  setState(() {
-                    _currentTaskPropertySelected = newPropertySelected;
-                  });
-                },
+        RaisedButton(
+          child: Text('Add'),
+          onPressed: () async {
+            if (_formKey.currentState.validate()) {
+              await DatabaseServices().addUserTask(
+                user.userUid,
+                _currentTaskTitle,
+                _currentTaskDetail,
+                _currentTaskArchived,
+                _currentTaskImportance,
+                _currentTaskPropertySelected,
+                _currentTaskTenantSelected,
+                _currentTaskTradeSelected,
+                _currentTaskAgentSelected,
+                _currentTaskDueDateTime,
+                Timestamp.now(), //_currentEditedDateTime,
               );
-            },
-          ),
+              Navigator.pop(context);
+            }
+          },
         )
       ],
-    );
-  }
-
-  _displayTaskImportance() {
-    return Row(
-      children: <Widget>[
-        Text(
-          'Importance',
-          style: kFieldHeading,
-        ),
-        Slider(
-          label: _currentTaskImportance.toString(),
-          divisions: 9,
-          min: 1,
-          max: 10,
-          value: (_currentTaskImportance ?? 5).toDouble(),
-          onChanged: (val) => setState(
-            () => _currentTaskImportance = val.round(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  _displayTaskDetails() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences,
-      maxLines: 3,
-      decoration: kTextInputDecoration.copyWith(
-          hintText: 'more details',
-          labelStyle: kFieldHeading,
-          labelText: 'Details'),
-      validator: (val) => val.isEmpty ? 'Please enter more details' : null,
-      onChanged: (val) => setState(() => _currentTaskDetail = val),
-    );
-  }
-
-  _displayTaskTitle() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: kTextInputDecoration.copyWith(
-          hintText: 'short title',
-          labelStyle: kFieldHeading,
-          labelText: 'Title'),
-      validator: (val) =>
-          val.isEmpty ? 'Please enter a very brief description' : null,
-      onChanged: (val) => setState(() => _currentTaskTitle = val),
     );
   }
 }

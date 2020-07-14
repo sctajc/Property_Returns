@@ -24,6 +24,8 @@ class EditTask extends StatefulWidget {
 class _EditTaskState extends State<EditTask> {
   bool _archiveTask = false;
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _taskTitleFocusNode = FocusNode();
+  final FocusNode _taskDetailsFocusNode = FocusNode();
 
   Map _propertyUnitNames = Map<String, String>();
   Map<String, String> _mapProperties = {'none': 'none'};
@@ -141,8 +143,8 @@ class _EditTaskState extends State<EditTask> {
                                                                       .taskDueDateTime
                                                                       .toDate(),
                                                               firstDate:
-                                                                  DateTime
-                                                                      .now(),
+                                                                  DateTime(
+                                                                      2000),
                                                               lastDate:
                                                                   DateTime(
                                                                       2100));
@@ -273,213 +275,6 @@ class _EditTaskState extends State<EditTask> {
     );
   }
 
-  _displayTaskAgent(User user, TaskDetails tasksDetails) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Flexible(
-          flex: 1,
-          child: Text(
-            'Agent',
-            style: kFieldHeading,
-          ),
-        ),
-        SizedBox(
-          width: 30,
-        ),
-        Flexible(
-          flex: 3,
-          child: StreamBuilder<List<PersonDetails>>(
-            stream: DatabaseServices(uid: user.userUid).allPersonsForUser,
-            builder: (context, allUserPersons) {
-              if (!allUserPersons.hasData)
-                return Loading();
-              else {
-                _agentCompanyPersonNames['none'] = ' none';
-                for (int i = 0; i < allUserPersons.data.length; i++) {
-                  if ((_mapAgentCompanies[
-                          '${allUserPersons.data[i].companyUid}']) !=
-                      null) {
-                    _agentCompanyPersonNames[allUserPersons.data[i].personUid] =
-                        '${_mapAgentCompanies['${allUserPersons.data[i].companyUid}']} - ${allUserPersons.data[i].personName}';
-                  }
-
-                  // TODO is this a good way to fudge a SQL like join?
-                  //  getting property name and unit names into one map from Firestore
-                  // ie ('unitUid', 'George St - RHS front warehouse')
-                }
-              }
-              Map _sortedAgentCompanyPersonNames = Map.fromEntries(
-                  _agentCompanyPersonNames.entries.toList()
-                    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
-              return DropdownButtonFormField<String>(
-                isExpanded: true,
-                value: _currentAgentSelected ?? tasksDetails.taskAgentUid,
-                items: _sortedAgentCompanyPersonNames
-                    .map(
-                      (key, value) {
-                        return MapEntry(
-                          key,
-                          DropdownMenuItem<String>(
-                            child: Text(value),
-                            value: key,
-                          ),
-                        );
-                      },
-                    )
-                    .values
-                    .toList(),
-                onChanged: (String newAgentSelected) {
-                  setState(() {
-                    _currentAgentSelected = newAgentSelected;
-                  });
-                },
-              );
-            },
-          ),
-        )
-      ],
-    );
-  }
-
-  _displayTaskTrade(User user, TaskDetails tasksDetails) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Flexible(
-          flex: 1,
-          child: Text(
-            'Trade',
-            style: kFieldHeading,
-          ),
-        ),
-        SizedBox(
-          width: 30,
-        ),
-        Flexible(
-          flex: 3,
-          child: StreamBuilder<List<PersonDetails>>(
-            stream: DatabaseServices(uid: user.userUid).allPersonsForUser,
-            builder: (context, allUserPersons) {
-              if (!allUserPersons.hasData)
-                return Loading();
-              else {
-                _tradeCompanyPersonNames['none'] = ' none';
-                for (int i = 0; i < allUserPersons.data.length; i++) {
-                  if ((_mapTradeCompanies[
-                          '${allUserPersons.data[i].companyUid}']) !=
-                      null) {
-                    _tradeCompanyPersonNames[allUserPersons.data[i].personUid] =
-                        '${_mapTradeCompanies['${allUserPersons.data[i].companyUid}']} - ${allUserPersons.data[i].personName}';
-                  }
-                  // TODO is this a good way to fudge a SQL like join?
-                  //  getting property name and unit names into one map from Firestore
-                  // ie ('unitUid', 'George St - RHS front warehouse')
-                }
-              }
-              Map _sortedTradeCompanyPersonNames = Map.fromEntries(
-                  _tradeCompanyPersonNames.entries.toList()
-                    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
-              return DropdownButtonFormField<String>(
-                isExpanded: true,
-                value: _currentTradeSelected ?? tasksDetails.taskTradeUid,
-                items: _sortedTradeCompanyPersonNames
-                    .map(
-                      (key, value) {
-                        return MapEntry(
-                          key,
-                          DropdownMenuItem<String>(
-                            child: Text(value),
-                            value: key,
-                          ),
-                        );
-                      },
-                    )
-                    .values
-                    .toList(),
-                onChanged: (String newTradeSelected) {
-                  setState(() {
-                    _currentTradeSelected = newTradeSelected;
-                  });
-                },
-              );
-            },
-          ),
-        )
-      ],
-    );
-  }
-
-  _displayTaskTenant(User user, TaskDetails tasksDetails) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Flexible(
-          flex: 1,
-          child: Text(
-            'Tenant',
-            style: kFieldHeading,
-          ),
-        ),
-        SizedBox(
-          width: 30,
-        ),
-        Flexible(
-          flex: 3,
-          child: StreamBuilder<List<PersonDetails>>(
-            stream: DatabaseServices(uid: user.userUid).allPersonsForUser,
-            builder: (context, allUserPersons) {
-              if (!allUserPersons.hasData)
-                return Loading();
-              else {
-                _tenantCompanyPersonNames['none'] = ' none';
-                for (int i = 0; i < allUserPersons.data.length; i++) {
-                  if ((_mapTenantCompanies[
-                          '${allUserPersons.data[i].companyUid}']) !=
-                      null) {
-                    _tenantCompanyPersonNames[
-                            allUserPersons.data[i].personUid] =
-                        '${_mapTenantCompanies['${allUserPersons.data[i].companyUid}']} - ${allUserPersons.data[i].personName}';
-                  }
-
-                  // TODO is this a good way to fudge a SQL like join?
-                  //  getting property name and unit names into one map from Firestore
-                  // ie ('unitUid', 'George St - RHS front warehouse')
-                }
-              }
-              Map _sortedTenantCompanyPersonNames = Map.fromEntries(
-                  _tenantCompanyPersonNames.entries.toList()
-                    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
-              return DropdownButtonFormField<String>(
-                isExpanded: true,
-                value: _currentTenantSelected ?? tasksDetails.taskTenantUid,
-                items: _sortedTenantCompanyPersonNames
-                    .map(
-                      (key, value) {
-                        return MapEntry(
-                          key,
-                          DropdownMenuItem<String>(
-                            child: Text(value),
-                            value: key,
-                          ),
-                        );
-                      },
-                    )
-                    .values
-                    .toList(),
-                onChanged: (String newTenantSelected) {
-                  setState(() {
-                    _currentTenantSelected = newTenantSelected;
-                  });
-                },
-              );
-            },
-          ),
-        )
-      ],
-    );
-  }
-
   _buildAppBar() {
     return AppBar(
       title: Text(
@@ -491,6 +286,8 @@ class _EditTaskState extends State<EditTask> {
   _displayTaskTitle(TaskDetails tasksDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _taskTitleFocusNode,
       textCapitalization: TextCapitalization.sentences,
       initialValue: tasksDetails.taskTitle,
       decoration: kTextInputDecoration.copyWith(
@@ -500,12 +297,19 @@ class _EditTaskState extends State<EditTask> {
       validator: (val) =>
           val.isEmpty ? 'Please enter a very brief description' : null,
       onChanged: (val) => setState(() => _currentTaskTitle = val),
+      onEditingComplete: _taskTitleEditingComplete,
     );
+  }
+
+  void _taskTitleEditingComplete() {
+    FocusScope.of(context).requestFocus(_taskDetailsFocusNode);
   }
 
   _displayTaskDetails(TaskDetails tasksDetails) {
     return TextFormField(
       keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.done,
+      focusNode: _taskDetailsFocusNode,
       textCapitalization: TextCapitalization.sentences,
       maxLines: 3,
       initialValue: tasksDetails.taskDetail,
@@ -596,6 +400,213 @@ class _EditTaskState extends State<EditTask> {
                 onChanged: (String newPropertySelected) {
                   setState(() {
                     _currentPropertySelected = newPropertySelected;
+                  });
+                },
+              );
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  _displayTaskTenant(User user, TaskDetails tasksDetails) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Flexible(
+          flex: 1,
+          child: Text(
+            'Tenant',
+            style: kFieldHeading,
+          ),
+        ),
+        SizedBox(
+          width: 30,
+        ),
+        Flexible(
+          flex: 3,
+          child: StreamBuilder<List<PersonDetails>>(
+            stream: DatabaseServices(uid: user.userUid).allPersonsForUser,
+            builder: (context, allUserPersons) {
+              if (!allUserPersons.hasData)
+                return Loading();
+              else {
+                _tenantCompanyPersonNames['none'] = ' none';
+                for (int i = 0; i < allUserPersons.data.length; i++) {
+                  if ((_mapTenantCompanies[
+                          '${allUserPersons.data[i].companyUid}']) !=
+                      null) {
+                    _tenantCompanyPersonNames[
+                            allUserPersons.data[i].personUid] =
+                        '${_mapTenantCompanies['${allUserPersons.data[i].companyUid}']} - ${allUserPersons.data[i].personName}';
+                  }
+
+                  // TODO is this a good way to fudge a SQL like join?
+                  //  getting property name and unit names into one map from Firestore
+                  // ie ('unitUid', 'George St - RHS front warehouse')
+                }
+              }
+              Map _sortedTenantCompanyPersonNames = Map.fromEntries(
+                  _tenantCompanyPersonNames.entries.toList()
+                    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
+              return DropdownButtonFormField<String>(
+                isExpanded: true,
+                value: _currentTenantSelected ?? tasksDetails.taskTenantUid,
+                items: _sortedTenantCompanyPersonNames
+                    .map(
+                      (key, value) {
+                        return MapEntry(
+                          key,
+                          DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: key,
+                          ),
+                        );
+                      },
+                    )
+                    .values
+                    .toList(),
+                onChanged: (String newTenantSelected) {
+                  setState(() {
+                    _currentTenantSelected = newTenantSelected;
+                  });
+                },
+              );
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  _displayTaskTrade(User user, TaskDetails tasksDetails) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Flexible(
+          flex: 1,
+          child: Text(
+            'Trade',
+            style: kFieldHeading,
+          ),
+        ),
+        SizedBox(
+          width: 30,
+        ),
+        Flexible(
+          flex: 3,
+          child: StreamBuilder<List<PersonDetails>>(
+            stream: DatabaseServices(uid: user.userUid).allPersonsForUser,
+            builder: (context, allUserPersons) {
+              if (!allUserPersons.hasData)
+                return Loading();
+              else {
+                _tradeCompanyPersonNames['none'] = ' none';
+                for (int i = 0; i < allUserPersons.data.length; i++) {
+                  if ((_mapTradeCompanies[
+                          '${allUserPersons.data[i].companyUid}']) !=
+                      null) {
+                    _tradeCompanyPersonNames[allUserPersons.data[i].personUid] =
+                        '${_mapTradeCompanies['${allUserPersons.data[i].companyUid}']} - ${allUserPersons.data[i].personName}';
+                  }
+                  // TODO is this a good way to fudge a SQL like join?
+                  //  getting property name and unit names into one map from Firestore
+                  // ie ('unitUid', 'George St - RHS front warehouse')
+                }
+              }
+              Map _sortedTradeCompanyPersonNames = Map.fromEntries(
+                  _tradeCompanyPersonNames.entries.toList()
+                    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
+              return DropdownButtonFormField<String>(
+                isExpanded: true,
+                value: _currentTradeSelected ?? tasksDetails.taskTradeUid,
+                items: _sortedTradeCompanyPersonNames
+                    .map(
+                      (key, value) {
+                        return MapEntry(
+                          key,
+                          DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: key,
+                          ),
+                        );
+                      },
+                    )
+                    .values
+                    .toList(),
+                onChanged: (String newTradeSelected) {
+                  setState(() {
+                    _currentTradeSelected = newTradeSelected;
+                  });
+                },
+              );
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  _displayTaskAgent(User user, TaskDetails tasksDetails) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Flexible(
+          flex: 1,
+          child: Text(
+            'Agent',
+            style: kFieldHeading,
+          ),
+        ),
+        SizedBox(
+          width: 30,
+        ),
+        Flexible(
+          flex: 3,
+          child: StreamBuilder<List<PersonDetails>>(
+            stream: DatabaseServices(uid: user.userUid).allPersonsForUser,
+            builder: (context, allUserPersons) {
+              if (!allUserPersons.hasData)
+                return Loading();
+              else {
+                _agentCompanyPersonNames['none'] = ' none';
+                for (int i = 0; i < allUserPersons.data.length; i++) {
+                  if ((_mapAgentCompanies[
+                          '${allUserPersons.data[i].companyUid}']) !=
+                      null) {
+                    _agentCompanyPersonNames[allUserPersons.data[i].personUid] =
+                        '${_mapAgentCompanies['${allUserPersons.data[i].companyUid}']} - ${allUserPersons.data[i].personName}';
+                  }
+
+                  // TODO is this a good way to fudge a SQL like join?
+                  //  getting property name and unit names into one map from Firestore
+                  // ie ('unitUid', 'George St - RHS front warehouse')
+                }
+              }
+              Map _sortedAgentCompanyPersonNames = Map.fromEntries(
+                  _agentCompanyPersonNames.entries.toList()
+                    ..sort((e1, e2) => e1.value.compareTo(e2.value)));
+              return DropdownButtonFormField<String>(
+                isExpanded: true,
+                value: _currentAgentSelected ?? tasksDetails.taskAgentUid,
+                items: _sortedAgentCompanyPersonNames
+                    .map(
+                      (key, value) {
+                        return MapEntry(
+                          key,
+                          DropdownMenuItem<String>(
+                            child: Text(value),
+                            value: key,
+                          ),
+                        );
+                      },
+                    )
+                    .values
+                    .toList(),
+                onChanged: (String newAgentSelected) {
+                  setState(() {
+                    _currentAgentSelected = newAgentSelected;
                   });
                 },
               );

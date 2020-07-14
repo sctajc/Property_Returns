@@ -48,7 +48,7 @@ flutter:
     - assets/
     - assets/icon/property_returns_logo.png
 
-  fonts:
-   - family: Roboto
-     fonts:
-       - asset: fonts/Roboto/Roboto-Regular.ttf
+#  fonts:
+#   - family: Roboto
+#     fonts:
+#       - asset: fonts/Roboto/Roboto-Regular.ttf

@@ -21,6 +21,11 @@ class AddPerson extends StatefulWidget {
 
 class _AddPersonState extends State<AddPerson> {
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _personNameFocusNode = FocusNode();
+  final FocusNode _personPhoneFocusNode = FocusNode();
+  final FocusNode _personEmailFocusNode = FocusNode();
+  final FocusNode _personRoleFocusNode = FocusNode();
+  final FocusNode _personCommentFocusNode = FocusNode();
 
   // TODO extract company url for second part of email after @
 //  static final regExp = RegExp(
@@ -112,60 +117,12 @@ class _AddPersonState extends State<AddPerson> {
     );
   }
 
-  _displayPersonComment() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Comment', labelStyle: kFieldHeading, hintText: 'comment'),
-//                          validator: (val) => val.isEmpty
-//                              ? 'Please enter who supplied the rental valuation'
-//                              : null,
-      onChanged: (val) => setState(() => _currentPersonComment = val),
-    );
-  }
-
-  _displayPersonRole() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Role', labelStyle: kFieldHeading, hintText: 'role'),
-//                          validator: (val) => val.isEmpty
-//                              ? 'Please enter who supplied the rental valuation'
-//                              : null,
-      onChanged: (val) => setState(() => _currentPersonRole = val),
-    );
-  }
-
-  _displayPersonEmail() {
-    return TextFormField(
-      initialValue: _currentPersonEmail,
-      keyboardType: TextInputType.emailAddress,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Email', labelStyle: kFieldHeading, hintText: 'email'),
-      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
-          ? 'Please enter a valid email'
-          : null,
-      onChanged: (val) => setState(() => _currentPersonEmail = val ?? ''),
-    );
-  }
-
-  _displayPersonPhone() {
-    return TextFormField(
-      keyboardType: TextInputType.phone,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-      onChanged: (val) => setState(() => _currentPersonPhone = val),
-    );
-  }
-
   _displayPersonName() {
     return TextFormField(
+      autofocus: true,
       keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _personNameFocusNode,
       textCapitalization: TextCapitalization.words,
       initialValue: widget.defaultPersonName,
       decoration: kTextInputDecoration.copyWith(
@@ -175,6 +132,85 @@ class _AddPersonState extends State<AddPerson> {
       validator: (val) =>
           val.isEmpty ? 'Please enter what this person is know by' : null,
       onChanged: (val) => setState(() => _currentPersonName = val),
+      onEditingComplete: _personNameEditingComplete,
+    );
+  }
+
+  void _personNameEditingComplete() {
+    FocusScope.of(context).requestFocus(_personPhoneFocusNode);
+  }
+
+  _displayPersonPhone() {
+    return TextFormField(
+      keyboardType: TextInputType.phone,
+      textInputAction: TextInputAction.next,
+      focusNode: _personPhoneFocusNode,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentPersonPhone = val),
+      onEditingComplete: _personPhoneEditingComplete,
+    );
+  }
+
+  void _personPhoneEditingComplete() {
+    FocusScope.of(context).requestFocus(_personEmailFocusNode);
+  }
+
+  _displayPersonEmail() {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      focusNode: _personEmailFocusNode,
+      initialValue: _currentPersonEmail,
+      keyboardType: TextInputType.emailAddress,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Email', labelStyle: kFieldHeading, hintText: 'email'),
+      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
+          ? 'Please enter a valid email'
+          : null,
+      onChanged: (val) => setState(() => _currentPersonEmail = val ?? ''),
+      onEditingComplete: _personEmailEditingComplete,
+    );
+  }
+
+  void _personEmailEditingComplete() {
+    FocusScope.of(context).requestFocus(_personRoleFocusNode);
+  }
+
+  _displayPersonRole() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _personRoleFocusNode,
+      textCapitalization: TextCapitalization.words,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Role', labelStyle: kFieldHeading, hintText: 'role'),
+//                          validator: (val) => val.isEmpty
+//                              ? 'Please enter who supplied the rental valuation'
+//                              : null,
+      onChanged: (val) => setState(() => _currentPersonRole = val),
+      onEditingComplete: _personRoleEditingComplete,
+    );
+  }
+
+  void _personRoleEditingComplete() {
+    FocusScope.of(context).requestFocus(_personCommentFocusNode);
+  }
+
+  _displayPersonComment() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.done,
+      focusNode: _personCommentFocusNode,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Comment', labelStyle: kFieldHeading, hintText: 'comment'),
+//                          validator: (val) => val.isEmpty
+//                              ? 'Please enter who supplied the rental valuation'
+//                              : null,
+      onChanged: (val) => setState(() => _currentPersonComment = val),
     );
   }
 }

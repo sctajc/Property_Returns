@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:property_returns/screens/home/archived_list.dart';
 import 'package:property_returns/screens/home/settings_form.dart';
 import 'package:property_returns/screens/properties/add_property.dart';
 import 'package:property_returns/screens/properties/add_unit.dart';
@@ -24,15 +26,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var themeData = ThemeData(
+      primaryTextTheme: GoogleFonts.solwayTextTheme(
+        Theme.of(context).textTheme,
+      ),
       primaryColor: kColorBlue,
       accentColor: kColorOrange,
-      fontFamily: 'Roboto',
       dividerColor: kColorOrange,
-      textTheme: TextTheme(
-        headline1: TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      textTheme: GoogleFonts.solwayTextTheme(Theme.of(context).textTheme),
+//      textTheme: TextTheme(
+//        headline1: GoogleFonts.solway(fontSize: 14),
+//        headline2: GoogleFonts.solway(fontSize: 14),
+//        headline3: GoogleFonts.solway(fontSize: 14),
+//        headline4: GoogleFonts.solway(fontSize: 14),
+//        headline5: GoogleFonts.solway(fontSize: 14),
+//        headline6: GoogleFonts.solway(fontSize: 14),
+//        subtitle1: GoogleFonts.solway(fontSize: 14),
+//        subtitle2: GoogleFonts.solway(fontSize: 14),
+//        bodyText1: GoogleFonts.solway(fontSize: 14),
+//        bodyText2: GoogleFonts.solway(fontSize: 14),
+//        caption: GoogleFonts.solway(fontSize: 14),
+//        button: GoogleFonts.solway(fontSize: 14),
+//      ),
       sliderTheme: SliderThemeData(
         thumbColor: kColorOrange,
         activeTrackColor: kColorOrange,
@@ -75,7 +89,6 @@ class MyApp extends StatelessWidget {
           TaskList.id: (context) => TaskList(),
           AddTask.id: (context) => AddTask(),
           EditTask.id: (context) => EditTask(),
-//          'lease_events': (context) => LeaseEvents(),
           PropertyList.id: (context) => PropertyList(),
           AddProperty.id: (context) => AddProperty(),
           AddUnit.id: (context) => AddUnit(),
@@ -83,9 +96,7 @@ class MyApp extends StatelessWidget {
           CompanyList.id: (context) => CompanyList(),
           LeaseList.id: (context) => LeaseList(),
           AddLease.id: (context) => AddLease(),
-//          'tenants': (context) => Tenants(),
-//          'trades': (context) => Trades(),
-//          'agents': (context) => Agents(),
+          ArchivedList.id: (context) => ArchivedList(),
           TestMarkdown.id: (context) => TestMarkdown(),
         },
       ),

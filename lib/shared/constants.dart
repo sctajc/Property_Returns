@@ -19,12 +19,11 @@ const kColorOrange = Color(0xfffda400);
 const kColorOrangeBold = Color(0xffbe7000);
 const kColorBlue = Color(0xff1691e6);
 const kColorCardChildren = Color(0xffF0F0F0);
-const kHeading =
-    TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: kColorOrange);
+const kHeading = TextStyle(fontWeight: FontWeight.bold, color: kColorOrange);
 const kFieldHeading =
-    TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: kColorOrange);
+    TextStyle(fontWeight: FontWeight.normal, color: kColorOrange);
 const kInputText =
-    TextStyle(fontSize: 20, fontWeight: FontWeight.normal, color: Colors.black);
+    TextStyle(fontWeight: FontWeight.normal, color: Colors.black);
 
 // display FlushBar (toast, snackBar)
 void kShowHelpToast(context, String message) {

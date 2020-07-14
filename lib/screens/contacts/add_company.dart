@@ -17,10 +17,17 @@ class AddCompany extends StatefulWidget {
 }
 
 class _AddCompanyState extends State<AddCompany> {
+  final _formKey = GlobalKey<FormState>();
+  final FocusNode _companyNameFocusNode = FocusNode();
+  final FocusNode _companyCommentsFocusNode = FocusNode();
+  final FocusNode _companyPhoneFocusNode = FocusNode();
+  final FocusNode _companyEmailFocusNode = FocusNode();
+  final FocusNode _companyWebsiteFocusNode = FocusNode();
+  final FocusNode _companyPostalAddressFocusNode = FocusNode();
+
   bool _isCompanyTenant = false;
   bool _isCompanyTrade = false;
   bool _isCompanyAgent = false;
-  final _formKey = GlobalKey<FormState>();
 
   // form values
   String _currentCompanyName;
@@ -57,7 +64,7 @@ class _AddCompanyState extends State<AddCompany> {
                 SizedBox(
                   height: 10,
                 ),
-                _displayComment(),
+                _displayCompanyComment(),
                 SizedBox(
                   height: 10,
                 ),
@@ -146,28 +153,122 @@ class _AddCompanyState extends State<AddCompany> {
     );
   }
 
-  _displayCompanyAgent(BuildContext context) {
-    return CheckboxListTile(
-      controlAffinity: ListTileControlAffinity.leading,
-      title: Text(
-        'Agent  ',
-        style: kFieldHeading,
-      ),
-      value: _isCompanyAgent,
-      onChanged: (value) {
-        setState(() {
-          _isCompanyAgent = value;
-          _currentCompanySetAgent = _isCompanyAgent;
-        });
-      },
-      secondary: GestureDetector(
-        onTap: () => kShowHelpToast(
-            context, "If selected this company will be listed under agents'"),
-        child: Icon(
-          Icons.help_outline,
-          color: kColorOrange,
-        ),
-      ),
+  _displayCompanyName() {
+    return TextFormField(
+      autofocus: true,
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyNameFocusNode,
+      textCapitalization: TextCapitalization.words,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Company Name',
+          labelStyle: kFieldHeading,
+          hintText: 'company name'),
+      validator: (val) => val.isEmpty
+          ? 'Please enter what company/organisation is know as'
+          : null,
+      onChanged: (val) => setState(() => _currentCompanyName = val),
+      onEditingComplete: _companyNameEditingComplete,
+    );
+  }
+
+  void _companyNameEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyCommentsFocusNode);
+  }
+
+  _displayCompanyComment() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyCommentsFocusNode,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Comments',
+          labelStyle: kFieldHeading,
+          hintText: 'more details'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentCompanyComments = val),
+      onEditingComplete: _companyCommentEditingComplete,
+    );
+  }
+
+  void _companyCommentEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyPhoneFocusNode);
+  }
+
+  _displayCompanyPhone() {
+    return TextFormField(
+      keyboardType: TextInputType.phone,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyPhoneFocusNode,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
+//                      validator: (val) =>
+//                          val.isEmpty ? 'Please enter a phone number' : null,
+      onChanged: (val) => setState(() => _currentCompanyPhone = val),
+      onEditingComplete: _companyPhoneEditingComplete,
+    );
+  }
+
+  void _companyPhoneEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyEmailFocusNode);
+  }
+
+  _displayCompanyEmail() {
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyEmailFocusNode,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Email',
+          labelStyle: kFieldHeading,
+          hintText: 'company email eg info@'),
+      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
+          ? 'Please enter a valid email'
+          : null,
+      onChanged: (val) => setState(() => _currentCompanyEmail = val),
+      onEditingComplete: _companyEmailEditingComplete,
+    );
+  }
+
+  void _companyEmailEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyWebsiteFocusNode);
+  }
+
+  _displayCompanyWebsite() {
+    return TextFormField(
+      keyboardType: TextInputType.url,
+      textInputAction: TextInputAction.next,
+      focusNode: _companyWebsiteFocusNode,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Website', labelStyle: kFieldHeading, hintText: 'website'),
+      validator: (val) =>
+          val.isNotEmpty && !isURL(val) ? 'Please enter valid website' : null,
+      onChanged: (val) => setState(() => _currentCompanyWebsite = val),
+      onEditingComplete: _companyWebsiteEditingComplete,
+    );
+  }
+
+  void _companyWebsiteEditingComplete() {
+    FocusScope.of(context).requestFocus(_companyPostalAddressFocusNode);
+  }
+
+  _displayCompanyPostalAddress() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.done,
+      focusNode: _companyPostalAddressFocusNode,
+      textCapitalization: TextCapitalization.words,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Postal Address',
+          labelStyle: kFieldHeading,
+          hintText: 'postal address'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any insurance policy name, code etc'
+//                          : null,
+      onChanged: (val) => setState(() => _currentCompanyPostalAddress = val),
     );
   }
 
@@ -221,84 +322,28 @@ class _AddCompanyState extends State<AddCompany> {
     );
   }
 
-  _displayCompanyPostalAddress() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Postal Address',
-          labelStyle: kFieldHeading,
-          hintText: 'postal address'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any insurance policy name, code etc'
-//                          : null,
-      onChanged: (val) => setState(() => _currentCompanyPostalAddress = val),
-    );
-  }
-
-  _displayCompanyWebsite() {
-    return TextFormField(
-      keyboardType: TextInputType.url,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Website', labelStyle: kFieldHeading, hintText: 'website'),
-      validator: (val) =>
-          val.isNotEmpty && !isURL(val) ? 'Please enter valid website' : null,
-      onChanged: (val) => setState(() => _currentCompanyWebsite = val),
-    );
-  }
-
-  _displayCompanyEmail() {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Email',
-          labelStyle: kFieldHeading,
-          hintText: 'company email eg info@'),
-      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
-          ? 'Please enter a valid email'
-          : null,
-      onChanged: (val) => setState(() => _currentCompanyEmail = val),
-    );
-  }
-
-  _displayCompanyPhone() {
-    return TextFormField(
-      keyboardType: TextInputType.phone,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
-//                      validator: (val) =>
-//                          val.isEmpty ? 'Please enter a phone number' : null,
-      onChanged: (val) => setState(() => _currentCompanyPhone = val),
-    );
-  }
-
-  _displayComment() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Comments',
-          labelStyle: kFieldHeading,
-          hintText: 'more details'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-      onChanged: (val) => setState(() => _currentCompanyComments = val),
-    );
-  }
-
-  _displayCompanyName() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Company Name',
-          labelStyle: kFieldHeading,
-          hintText: 'company name'),
-      validator: (val) => val.isEmpty
-          ? 'Please enter what company/organisation is know as'
-          : null,
-      onChanged: (val) => setState(() => _currentCompanyName = val),
+  _displayCompanyAgent(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Other  ',
+        style: kFieldHeading,
+      ),
+      value: _isCompanyAgent,
+      onChanged: (value) {
+        setState(() {
+          _isCompanyAgent = value;
+          _currentCompanySetAgent = _isCompanyAgent;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(
+            context, "If selected this company will be listed under Others'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
+        ),
+      ),
     );
   }
 }

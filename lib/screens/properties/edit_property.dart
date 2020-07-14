@@ -23,11 +23,23 @@ class EditProperty extends StatefulWidget {
 }
 
 class _EditPropertyState extends State<EditProperty> {
+  final _formKey = GlobalKey<FormState>();
+  final FocusNode _propertyNameFocusNode = FocusNode();
+  final FocusNode _propertyDetailsFocusNode = FocusNode();
+  final FocusNode _propertyAddressFocusNode = FocusNode();
+  final FocusNode _propertyZoningFocusNode = FocusNode();
+  final FocusNode _propertyLandAreaFocusNode = FocusNode();
+  final FocusNode _propertyRatesBillingCodeFocusNode = FocusNode();
+  final FocusNode _propertyInsurancePolicyFocusNode = FocusNode();
+  final FocusNode _propertyInsuranceCompanyFocusNode = FocusNode();
+  final FocusNode _propertyLegalDescriptionFocusNode = FocusNode();
+  final FocusNode _propertyMarketValuationFocusNode = FocusNode();
+  final FocusNode _propertyMarketValuationAgentFocusNode = FocusNode();
+
   bool _archiveProperty = false;
   bool _currentPropertyDatePurchasedCancelled = false;
   bool _currentPropertyInsuranceExpiryDateCancelled = false;
   bool _currentPropertyMarketValidationDateCancelled = false;
-  final _formKey = GlobalKey<FormState>();
   String _areaMeasurementSymbol;
   String _currencySymbol = '\$';
 
@@ -101,19 +113,19 @@ class _EditPropertyState extends State<EditProperty> {
                         SizedBox(
                           height: 10,
                         ),
-                        _displayPropertyNotesField(propertyDetails),
+                        _displayPropertyDetails(propertyDetails),
                         SizedBox(
                           height: 10,
                         ),
-                        _displayPropertyAddressField(propertyDetails),
+                        _displayPropertyAddress(propertyDetails),
                         SizedBox(
                           height: 10,
                         ),
-                        _displayPropertyZoneField(propertyDetails),
+                        _displayPropertyZone(propertyDetails),
                         SizedBox(
                           height: 10,
                         ),
-                        _displayPropertyAreaField(propertyDetails),
+                        _displayPropertyLandArea(propertyDetails),
                         // display date purchased
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -189,15 +201,15 @@ class _EditPropertyState extends State<EditProperty> {
                         SizedBox(
                           height: 10,
                         ),
-                        _displayPropertyRatesBillingCodeField(propertyDetails),
+                        _displayPropertyRatesBillingCode(propertyDetails),
                         SizedBox(
                           height: 20,
                         ),
-                        _displayPropertyInsurancePolicyField(propertyDetails),
+                        _displayPropertyInsurancePolicy(propertyDetails),
                         SizedBox(
                           height: 20,
                         ),
-                        _displayPropertyInsuranceSourceField(propertyDetails),
+                        _displayPropertyInsuranceSource(propertyDetails),
                         // display insurance expiry date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -272,12 +284,11 @@ class _EditPropertyState extends State<EditProperty> {
                         SizedBox(
                           height: 20,
                         ),
-                        _displayPropertyLegalDescriptionField(propertyDetails),
+                        _displayPropertyLegalDescription(propertyDetails),
                         SizedBox(
                           height: 20,
                         ),
-                        _displayPropertyMarketValuationAmountField(
-                            propertyDetails),
+                        _displayPropertyMarketValuationAmount(propertyDetails),
                         // display market valuation date
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -353,12 +364,11 @@ class _EditPropertyState extends State<EditProperty> {
                         SizedBox(
                           height: 20,
                         ),
-                        _displayPropertyMarketValuationSourceField(
-                            propertyDetails),
+                        _displayPropertyMarketValuationSource(propertyDetails),
                         SizedBox(
                           height: 20,
                         ),
-                        _displayPropertyArchiveField(context),
+                        _displayPropertyArchive(context),
                         SizedBox(
                           // so keyboard does not hide bottom textfield
                           height: MediaQuery.of(context).viewInsets.bottom,
@@ -474,7 +484,285 @@ class _EditPropertyState extends State<EditProperty> {
     );
   }
 
-  _displayPropertyArchiveField(BuildContext context) {
+  _displayPropertyNameField(AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _propertyNameFocusNode,
+      textCapitalization: TextCapitalization.words,
+      initialValue: propertyDetails.data.propertyName,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Property Name',
+          labelStyle: kFieldHeading,
+          hintText: 'property name'),
+      validator: (val) =>
+          val.isEmpty ? 'Please enter what property is know as' : null,
+      onChanged: (val) => setState(() => _currentPropertyName = val),
+      onEditingComplete: _propertyNameEditingComplete,
+    );
+  }
+
+  void _propertyNameEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyDetailsFocusNode);
+  }
+
+  _displayPropertyDetails(AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _propertyDetailsFocusNode,
+      textCapitalization: TextCapitalization.sentences,
+      initialValue: propertyDetails.data.propertyNotes,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Details',
+          labelStyle: kFieldHeading,
+          hintText: 'more details'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentPropertyNotes = val),
+      onEditingComplete: _propertyDetailsEditingComplete,
+    );
+  }
+
+  void _propertyDetailsEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyAddressFocusNode);
+  }
+
+  _displayPropertyAddress(AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textCapitalization: TextCapitalization.words,
+      textInputAction: TextInputAction.next,
+      focusNode: _propertyAddressFocusNode,
+      initialValue: propertyDetails.data.propertyAddress,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Property Address',
+          labelStyle: kFieldHeading,
+          hintText: 'address'),
+      validator: (val) => val.isEmpty ? 'Please enter property address' : null,
+      onChanged: (val) => setState(() => _currentPropertyAddress = val),
+      onEditingComplete: _propertyAddressEditingComplete,
+    );
+  }
+
+  void _propertyAddressEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyZoningFocusNode);
+  }
+
+  _displayPropertyZone(AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      focusNode: _propertyZoningFocusNode,
+      initialValue: propertyDetails.data.propertyZone,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Property Zoning',
+          labelStyle: kFieldHeading,
+          hintText: 'property zoning'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter any property zone' : null,
+      onChanged: (val) => setState(() => _currentPropertyZone = val),
+      onEditingComplete: _propertyZoneEditingComplete,
+    );
+  }
+
+  void _propertyZoneEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyLandAreaFocusNode);
+  }
+
+  _displayPropertyLandArea(AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return Row(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Text(
+              _areaMeasurementSymbol,
+              style: kFieldHeading,
+            ),
+          ],
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Expanded(
+          child: TextFormField(
+            textInputAction: TextInputAction.next,
+            focusNode: _propertyLandAreaFocusNode,
+            inputFormatters: [
+              WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}")),
+            ],
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            initialValue: propertyDetails.data.propertyLandArea.toString(),
+            decoration: kTextInputDecoration.copyWith(
+                labelText: 'Land Area',
+                labelStyle: kFieldHeading,
+                hintText: 'land area'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter land area' : null,
+//                  validator: (val) => val.isNotEmpty? ,
+            onChanged: (val) => setState(
+              () => _currentPropertyLandArea = double.parse(val),
+            ),
+            onEditingComplete: _propertyLandAreaEditingComplete,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _propertyLandAreaEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyRatesBillingCodeFocusNode);
+  }
+
+  _displayPropertyRatesBillingCode(
+      AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      focusNode: _propertyRatesBillingCodeFocusNode,
+      initialValue: propertyDetails.data.propertyRatesBillingCode,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Rates Billing Code',
+          labelStyle: kFieldHeading,
+          hintText: 'rates id'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter any billing code' : null,
+      onChanged: (val) =>
+          setState(() => _currentPropertyRatesBillingCode = val),
+      onEditingComplete: _propertyRatesCodeEditingComplete,
+    );
+  }
+
+  void _propertyRatesCodeEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyInsurancePolicyFocusNode);
+  }
+
+  _displayPropertyInsurancePolicy(
+      AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      focusNode: _propertyInsurancePolicyFocusNode,
+      initialValue: propertyDetails.data.propertyInsurancePolicy,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Insurance Policy',
+          labelStyle: kFieldHeading,
+          hintText: 'insurance policy'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any insurance policy name, code etc'
+//                          : null,
+      onChanged: (val) => setState(() => _currentPropertyInsurancePolicy = val),
+      onEditingComplete: _propertyInsurancePolicyEditingComplete,
+    );
+  }
+
+  void _propertyInsurancePolicyEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyInsuranceCompanyFocusNode);
+  }
+
+  _displayPropertyInsuranceSource(
+      AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      focusNode: _propertyInsuranceCompanyFocusNode,
+      initialValue: propertyDetails.data.propertyInsuranceSource,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Insurance Source/Broker',
+          labelStyle: kFieldHeading,
+          hintText: 'insurance source/broker'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any insurance supplier'
+//                          : null,
+      onChanged: (val) => setState(() => _currentPropertyInsuranceSource = val),
+      onEditingComplete: _propertyInsuranceSourceEditingComplete,
+    );
+  }
+
+  void _propertyInsuranceSourceEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyLegalDescriptionFocusNode);
+  }
+
+  _displayPropertyLegalDescription(
+      AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      focusNode: _propertyLegalDescriptionFocusNode,
+      initialValue: propertyDetails.data.propertyLegalDescription,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Legal Description of Premises',
+          labelStyle: kFieldHeading,
+          hintText: 'legal description of premises'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter property legal description'
+//                        : null,
+      onChanged: (val) =>
+          setState(() => _currentPropertyLegalDescription = val),
+      onEditingComplete: _propertyLegalDescriptionEditingComplete,
+    );
+  }
+
+  void _propertyLegalDescriptionEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyMarketValuationFocusNode);
+  }
+
+  _displayPropertyMarketValuationAmount(
+      AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return Row(
+      children: <Widget>[
+        Text(
+          _currencySymbol,
+          style: kFieldHeading,
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: TextFormField(
+            inputFormatters: [
+              WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}")),
+            ],
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            textInputAction: TextInputAction.next,
+            focusNode: _propertyMarketValuationFocusNode,
+            initialValue: propertyDetails.data.propertyMarketValuationAmount
+                .toStringAsFixed(2),
+            decoration: kTextInputDecoration.copyWith(
+                labelText: 'Market Valuation',
+                labelStyle: kFieldHeading,
+                hintText: 'market valuation'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter valuation amount' : null,
+            onChanged: (val) => setState(
+              () => _currentPropertyMarketValuationAmount = double.parse(val),
+            ),
+            onEditingComplete: _propertyMarketValuationEditingComplete,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _propertyMarketValuationEditingComplete() {
+    FocusScope.of(context).requestFocus(_propertyMarketValuationAgentFocusNode);
+  }
+
+  _displayPropertyMarketValuationSource(
+      AsyncSnapshot<PropertyDetails> propertyDetails) {
+    return TextFormField(
+      textInputAction: TextInputAction.done,
+      focusNode: _propertyMarketValuationAgentFocusNode,
+      initialValue: propertyDetails.data.propertyMarketValuationSource,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Market Valuation Source',
+          labelStyle: kFieldHeading,
+          hintText: 'market valuation source'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any valuation source'
+//                          : null,
+      onChanged: (val) =>
+          setState(() => _currentPropertyMarketValuationSource = val),
+    );
+  }
+
+  _displayPropertyArchive(BuildContext context) {
     return CheckboxListTile(
       title: Text(
         'Archive property?',
@@ -496,210 +784,6 @@ class _EditPropertyState extends State<EditProperty> {
           color: kColorOrange,
         ),
       ),
-    );
-  }
-
-  _displayPropertyMarketValuationSourceField(
-      AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      initialValue: propertyDetails.data.propertyMarketValuationSource,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Market Valuation Source',
-          labelStyle: kFieldHeading,
-          hintText: 'market valuation source'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any valuation source'
-//                          : null,
-      onChanged: (val) =>
-          setState(() => _currentPropertyMarketValuationSource = val),
-    );
-  }
-
-  _displayPropertyMarketValuationAmountField(
-      AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return Row(
-      children: <Widget>[
-        Text(
-          _currencySymbol,
-          style: kFieldHeading,
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: TextFormField(
-            inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-            initialValue: propertyDetails.data.propertyMarketValuationAmount
-                .toStringAsFixed(2),
-            decoration: kTextInputDecoration.copyWith(
-                labelText: 'Market Valuation',
-                labelStyle: kFieldHeading,
-                hintText: 'market valuation'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter valuation amount' : null,
-            onChanged: (val) => setState(
-              () => _currentPropertyMarketValuationAmount = double.parse(val),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  _displayPropertyLegalDescriptionField(
-      AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      initialValue: propertyDetails.data.propertyLegalDescription,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Legal Description of Premises',
-          labelStyle: kFieldHeading,
-          hintText: 'legal description of premises'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter property legal description'
-//                        : null,
-      onChanged: (val) =>
-          setState(() => _currentPropertyLegalDescription = val),
-    );
-  }
-
-  _displayPropertyInsuranceSourceField(
-      AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      initialValue: propertyDetails.data.propertyInsuranceSource,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Insurance Source/Broker',
-          labelStyle: kFieldHeading,
-          hintText: 'insurance source/broker'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any insurance supplier'
-//                          : null,
-      onChanged: (val) => setState(() => _currentPropertyInsuranceSource = val),
-    );
-  }
-
-  _displayPropertyInsurancePolicyField(
-      AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      initialValue: propertyDetails.data.propertyInsurancePolicy,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Insurance Policy',
-          labelStyle: kFieldHeading,
-          hintText: 'insurance policy'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any insurance policy name, code etc'
-//                          : null,
-      onChanged: (val) => setState(() => _currentPropertyInsurancePolicy = val),
-    );
-  }
-
-  _displayPropertyRatesBillingCodeField(
-      AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      initialValue: propertyDetails.data.propertyRatesBillingCode,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Rates Billing Code',
-          labelStyle: kFieldHeading,
-          hintText: 'rates id'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter any billing code' : null,
-      onChanged: (val) =>
-          setState(() => _currentPropertyRatesBillingCode = val),
-    );
-  }
-
-  _displayPropertyAreaField(AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return Row(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            Text(
-              _areaMeasurementSymbol,
-              style: kFieldHeading,
-            ),
-          ],
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Expanded(
-          child: TextFormField(
-            inputFormatters: [
-              WhitelistingTextInputFormatter(
-                RegExp("[0-9.]"),
-              )
-            ],
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-            initialValue: propertyDetails.data.propertyLandArea.toString(),
-            decoration: kTextInputDecoration.copyWith(
-                labelText: 'Land Area',
-                labelStyle: kFieldHeading,
-                hintText: 'land area'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter land area' : null,
-//                  validator: (val) => val.isNotEmpty? ,
-            onChanged: (val) => setState(
-              () => _currentPropertyLandArea = double.parse(val),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  _displayPropertyZoneField(AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      initialValue: propertyDetails.data.propertyZone,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Property Zoning',
-          labelStyle: kFieldHeading,
-          hintText: 'property zoning'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter any property zone' : null,
-      onChanged: (val) => setState(() => _currentPropertyZone = val),
-    );
-  }
-
-  _displayPropertyAddressField(AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      initialValue: propertyDetails.data.propertyAddress,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Property Address',
-          labelStyle: kFieldHeading,
-          hintText: 'address'),
-      validator: (val) => val.isEmpty ? 'Please enter property address' : null,
-      onChanged: (val) => setState(() => _currentPropertyAddress = val),
-    );
-  }
-
-  _displayPropertyNotesField(AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      initialValue: propertyDetails.data.propertyNotes,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Notes',
-          labelStyle: kFieldHeading,
-          hintText: 'more details'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-      onChanged: (val) => setState(() => _currentPropertyNotes = val),
-    );
-  }
-
-  _displayPropertyNameField(AsyncSnapshot<PropertyDetails> propertyDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      initialValue: propertyDetails.data.propertyName,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Property Name',
-          labelStyle: kFieldHeading,
-          hintText: 'property name'),
-      validator: (val) =>
-          val.isEmpty ? 'Please enter what property is know as' : null,
-      onChanged: (val) => setState(() => _currentPropertyName = val),
     );
   }
 }

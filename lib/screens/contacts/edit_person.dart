@@ -21,8 +21,14 @@ class EditPerson extends StatefulWidget {
 }
 
 class _EditPersonState extends State<EditPerson> {
-  bool archivePerson = false;
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _personNameFocusNode = FocusNode();
+  final FocusNode _personPhoneFocusNode = FocusNode();
+  final FocusNode _personEmailFocusNode = FocusNode();
+  final FocusNode _personRoleFocusNode = FocusNode();
+  final FocusNode _personCommentFocusNode = FocusNode();
+
+  bool archivePerson = false;
 
 // form values
   String _currentPersonName = 'initialiseName';
@@ -133,6 +139,102 @@ class _EditPersonState extends State<EditPerson> {
     );
   }
 
+  _displayPersonName(AsyncSnapshot<PersonDetails> personDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _personNameFocusNode,
+      textCapitalization: TextCapitalization.words,
+      initialValue: personDetails.data.personName,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Name', labelStyle: kFieldHeading, hintText: 'name'),
+      validator: (val) => val.isEmpty ? 'Please enter person\'s name' : null,
+      onChanged: (val) => setState(() => _currentPersonName = val),
+      onEditingComplete: _personNameEditingComplete,
+    );
+  }
+
+  void _personNameEditingComplete() {
+    FocusScope.of(context).requestFocus(_personPhoneFocusNode);
+  }
+
+  _displayPersonPhone(AsyncSnapshot<PersonDetails> personDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.phone,
+      textInputAction: TextInputAction.next,
+      focusNode: _personPhoneFocusNode,
+      initialValue: personDetails.data.personPhone,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentPersonPhone = val),
+      onEditingComplete: _personPhoneEditingComplete,
+    );
+  }
+
+  void _personPhoneEditingComplete() {
+    FocusScope.of(context).requestFocus(_personEmailFocusNode);
+  }
+
+  _displayPersonEmail(AsyncSnapshot<PersonDetails> personDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      focusNode: _personEmailFocusNode,
+      initialValue: personDetails.data.personEmail,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Email', labelStyle: kFieldHeading, hintText: 'email'),
+      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
+          ? 'Please enter a valid email'
+          : null,
+      onChanged: (val) => setState(() => _currentPersonEmail = val),
+      onEditingComplete: _personEmailEditingComplete,
+    );
+  }
+
+  void _personEmailEditingComplete() {
+    FocusScope.of(context).requestFocus(_personRoleFocusNode);
+  }
+
+  _displayPersonRole(AsyncSnapshot<PersonDetails> personDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _personRoleFocusNode,
+      textCapitalization: TextCapitalization.words,
+      initialValue: personDetails.data.personRole,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Role', labelStyle: kFieldHeading, hintText: 'role'),
+//                              validator: (val) => val.isEmpty
+//                                  ? 'Please enter who supplied the rental valuation'
+//                                  : null,
+      onChanged: (val) => setState(() => _currentPersonRole = val),
+      onEditingComplete: _personRoleEditingComplete,
+    );
+  }
+
+  void _personRoleEditingComplete() {
+    FocusScope.of(context).requestFocus(_personCommentFocusNode);
+  }
+
+  _displayPersonComment(AsyncSnapshot<PersonDetails> personDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.done,
+      focusNode: _personCommentFocusNode,
+      textCapitalization: TextCapitalization.sentences,
+      initialValue: personDetails.data.personComment,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Comment', labelStyle: kFieldHeading, hintText: 'comment'),
+//                              validator: (val) => val.isEmpty
+//                                  ? 'Please enter who supplied the rental valuation'
+//                                  : null,
+      onChanged: (val) => setState(() => _currentPersonComment = val),
+    );
+  }
+
   _displayPersonArchive(BuildContext context) {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
@@ -155,72 +257,6 @@ class _EditPersonState extends State<EditPerson> {
           color: kColorOrange,
         ),
       ),
-    );
-  }
-
-  _displayPersonComment(AsyncSnapshot<PersonDetails> personDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences,
-      initialValue: personDetails.data.personComment,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Comment', labelStyle: kFieldHeading, hintText: 'comment'),
-//                              validator: (val) => val.isEmpty
-//                                  ? 'Please enter who supplied the rental valuation'
-//                                  : null,
-      onChanged: (val) => setState(() => _currentPersonComment = val),
-    );
-  }
-
-  _displayPersonRole(AsyncSnapshot<PersonDetails> personDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      initialValue: personDetails.data.personRole,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Role', labelStyle: kFieldHeading, hintText: 'role'),
-//                              validator: (val) => val.isEmpty
-//                                  ? 'Please enter who supplied the rental valuation'
-//                                  : null,
-      onChanged: (val) => setState(() => _currentPersonRole = val),
-    );
-  }
-
-  _displayPersonEmail(AsyncSnapshot<PersonDetails> personDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      initialValue: personDetails.data.personEmail,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Email', labelStyle: kFieldHeading, hintText: 'email'),
-      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
-          ? 'Please enter a valid email'
-          : null,
-      onChanged: (val) => setState(() => _currentPersonEmail = val),
-    );
-  }
-
-  _displayPersonPhone(AsyncSnapshot<PersonDetails> personDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.phone,
-      initialValue: personDetails.data.personPhone,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Phone', labelStyle: kFieldHeading, hintText: 'phone'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-      onChanged: (val) => setState(() => _currentPersonPhone = val),
-    );
-  }
-
-  _displayPersonName(AsyncSnapshot<PersonDetails> personDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      initialValue: personDetails.data.personName,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Name', labelStyle: kFieldHeading, hintText: 'name'),
-      validator: (val) => val.isEmpty ? 'Please enter person\'s name' : null,
-      onChanged: (val) => setState(() => _currentPersonName = val),
     );
   }
 }

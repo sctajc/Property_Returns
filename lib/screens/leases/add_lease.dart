@@ -20,6 +20,13 @@ class AddLease extends StatefulWidget {
 
 class _AddLeaseState extends State<AddLease> {
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _leaseCommentsFocusNode = FocusNode();
+  final FocusNode _leaseCarParksFocusNode = FocusNode();
+  final FocusNode _leaseBusinessUseFocusNode = FocusNode();
+  final FocusNode _leaseDefaultInterestRateFocusNode = FocusNode();
+  final FocusNode _leaseGuarantorFocusNode = FocusNode();
+  final FocusNode _leaseRentPaymentDayFocusNode = FocusNode();
+
   Map _propertyUnitNames = Map<String, String>();
   Map<String, String> _mapProperties = {'none': 'SELECT LEASE PROPERTY'};
   Map<String, String> _mapTenantCompanies = {'none': 'SELECT LEASE TENANT'};
@@ -282,111 +289,6 @@ class _AddLeaseState extends State<AddLease> {
     );
   }
 
-  _displayLeaseRentPaymentDay() {
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextFormField(
-              initialValue: '1st month',
-              keyboardType: TextInputType.text,
-              textCapitalization: TextCapitalization.words,
-              decoration: kTextInputDecoration.copyWith(
-                  labelText: 'Rent Payment Day',
-                  labelStyle: kFieldHeading,
-                  hintText: 'day of month'),
-//                      validator: (val) => val.isEmpty
-//                          ? 'Please enter any insurance policy name, code etc'
-//                          : null,
-              onChanged: (val) =>
-                  setState(() => _currentLeaseRentPaymentDay = val),
-            ),
-          ),
-          SizedBox(
-            width: 15,
-          ),
-          GestureDetector(
-            onTap: () => kShowHelpToast(
-                context, "The day(s) of the month the rent is due"),
-            child: Icon(
-              Icons.help_outline,
-              color: kColorOrange,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _displayLeaseCarParks() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Car Parks',
-          labelStyle: kFieldHeading,
-          hintText: 'car parks'),
-      onChanged: (val) => setState(() => _currentLeaseCarParks = val),
-    );
-  }
-
-  _displayLeaseDefaultInterestRate() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Default Interest Rate',
-          labelStyle: kFieldHeading,
-          hintText: 'default interest rate'),
-//      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
-//          ? 'Please enter a valid email'
-//          : null,
-      onChanged: (val) =>
-          setState(() => _currentLeaseDefaultInterestRate = val),
-    );
-  }
-
-  _displayLeaseBusinessUse() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Business Use',
-          labelStyle: kFieldHeading,
-          hintText: 'business use'),
-//                      validator: (val) =>
-//                          val.isEmpty ? 'Please enter a phone number' : null,
-      onChanged: (val) => setState(() => _currentLeaseBusinessUse = val),
-    );
-  }
-
-  _displayLeaseComment() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.sentences,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Comments',
-          labelStyle: kFieldHeading,
-          hintText: 'more details'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-      onChanged: (val) => setState(() => _currentLeaseComment = val),
-    );
-  }
-
-  _displayLeaseGuarantor() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Guarantor',
-          labelStyle: kFieldHeading,
-          hintText: 'guarantor'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-      onChanged: (val) => setState(() => _currentLeaseGuarantor = val),
-    );
-  }
-
   _displayLeaseProperty(User user) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -445,6 +347,148 @@ class _AddLeaseState extends State<AddLease> {
           ),
         )
       ],
+    );
+  }
+
+  _displayLeaseComment() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _leaseCommentsFocusNode,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Comments',
+          labelStyle: kFieldHeading,
+          hintText: 'more details'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentLeaseComment = val),
+      onEditingComplete: _leaseCommentEditingComplete,
+    );
+  }
+
+  void _leaseCommentEditingComplete() {
+    FocusScope.of(context).requestFocus(_leaseCarParksFocusNode);
+  }
+
+  _displayLeaseCarParks() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _leaseCarParksFocusNode,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Car Parks',
+          labelStyle: kFieldHeading,
+          hintText: 'car parks'),
+      onChanged: (val) => setState(() => _currentLeaseCarParks = val),
+      onEditingComplete: _leaseCarParksEditingComplete,
+    );
+  }
+
+  void _leaseCarParksEditingComplete() {
+    FocusScope.of(context).requestFocus(_leaseBusinessUseFocusNode);
+  }
+
+  _displayLeaseBusinessUse() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _leaseBusinessUseFocusNode,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Business Use',
+          labelStyle: kFieldHeading,
+          hintText: 'business use'),
+//                      validator: (val) =>
+//                          val.isEmpty ? 'Please enter a phone number' : null,
+      onChanged: (val) => setState(() => _currentLeaseBusinessUse = val),
+      onEditingComplete: _leaseBusinessUseEditingComplete,
+    );
+  }
+
+  void _leaseBusinessUseEditingComplete() {
+    FocusScope.of(context).requestFocus(_leaseDefaultInterestRateFocusNode);
+  }
+
+  _displayLeaseDefaultInterestRate() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _leaseDefaultInterestRateFocusNode,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Default Interest Rate',
+          labelStyle: kFieldHeading,
+          hintText: 'default interest rate'),
+//      validator: (val) => val.isNotEmpty && !EmailValidator.validate(val)
+//          ? 'Please enter a valid email'
+//          : null,
+      onChanged: (val) =>
+          setState(() => _currentLeaseDefaultInterestRate = val),
+      onEditingComplete: _leaseDefaultInterestRateEditingComplete,
+    );
+  }
+
+  void _leaseDefaultInterestRateEditingComplete() {
+    FocusScope.of(context).requestFocus(_leaseGuarantorFocusNode);
+  }
+
+  _displayLeaseGuarantor() {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _leaseGuarantorFocusNode,
+      textCapitalization: TextCapitalization.words,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Guarantor',
+          labelStyle: kFieldHeading,
+          hintText: 'guarantor'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentLeaseGuarantor = val),
+      onEditingComplete: _leaseGuarantorEditingComplete,
+    );
+  }
+
+  void _leaseGuarantorEditingComplete() {
+    FocusScope.of(context).requestFocus(_leaseRentPaymentDayFocusNode);
+  }
+
+  _displayLeaseRentPaymentDay() {
+    return Container(
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextFormField(
+              initialValue: '1st month',
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.done,
+              focusNode: _leaseRentPaymentDayFocusNode,
+              textCapitalization: TextCapitalization.words,
+              decoration: kTextInputDecoration.copyWith(
+                  labelText: 'Rent Payment Day',
+                  labelStyle: kFieldHeading,
+                  hintText: 'day of month'),
+//                      validator: (val) => val.isEmpty
+//                          ? 'Please enter any insurance policy name, code etc'
+//                          : null,
+              onChanged: (val) =>
+                  setState(() => _currentLeaseRentPaymentDay = val),
+            ),
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          GestureDetector(
+            onTap: () => kShowHelpToast(
+                context, "The day(s) of the month the rent is due"),
+            child: Icon(
+              Icons.help_outline,
+              color: kColorOrange,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

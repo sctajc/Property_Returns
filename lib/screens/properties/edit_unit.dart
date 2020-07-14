@@ -22,10 +22,19 @@ class EditUnit extends StatefulWidget {
 }
 
 class _EditUnitState extends State<EditUnit> {
+  final _formKey = GlobalKey<FormState>();
+  final FocusNode _unitNameFocusNode = FocusNode();
+  final FocusNode _unitDetailsFocusNode = FocusNode();
+  final FocusNode _unitAddressFocusNode = FocusNode();
+  final FocusNode _unitFloorAreaFocusNode = FocusNode();
+  final FocusNode _unitPercentageOfPropertyFocusNode = FocusNode();
+  final FocusNode _unitRentalValuationAmountFocusNode = FocusNode();
+  final FocusNode _unitRentalValuationSourceFocusNode = FocusNode();
+
   bool residentialUnit = false;
   bool _currentUnitRentalValuationDateCancelled = false;
   bool archiveUnit = false;
-  final _formKey = GlobalKey<FormState>();
+
   String areaMeasurementSymbol;
   String _currencySymbol = '\$';
 
@@ -43,6 +52,7 @@ class _EditUnitState extends State<EditUnit> {
 
   DateTime _initialUnitRentalValuationDate;
 
+  // TODO should this be a Streambuilder under build?
   @override
   void initState() {
     super.initState();
@@ -95,31 +105,31 @@ class _EditUnitState extends State<EditUnit> {
                             SizedBox(
                               height: 10,
                             ),
-                            _displayUnitNameField(unitDetails),
+                            _displayUnitName(unitDetails),
                             SizedBox(
                               height: 10,
                             ),
-                            _displayUnitDetailsField(unitDetails),
+                            _displayUnitDetails(unitDetails),
                             SizedBox(
                               height: 10,
                             ),
-                            _displayUnitLeaseDescriptionField(unitDetails),
+                            _displayUnitLeaseDescription(unitDetails),
                             SizedBox(
                               height: 10,
                             ),
-                            _displayUnitFloorAreaField(unitDetails),
+                            _displayUnitFloorArea(unitDetails),
                             SizedBox(
                               height: 10,
                             ),
-                            _displayUnitPercentageAreaField(unitDetails),
+                            _displayUnitPercentageOfProperty(unitDetails),
                             SizedBox(
                               height: 20,
                             ),
-                            _displayUnitResidentialField(context),
+                            _displayUnitResidential(context),
                             SizedBox(
                               height: 20,
                             ),
-                            _displayUnitRentalValuationField(unitDetails),
+                            _displayUnitRentalValuationAmount(unitDetails),
                             // display rental valuation date
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,11 +204,11 @@ class _EditUnitState extends State<EditUnit> {
                             SizedBox(
                               height: 10,
                             ),
-                            _displayUnitRentalValuationSourceField(unitDetails),
+                            _displayUnitRentalValuationSource(unitDetails),
                             SizedBox(
                               height: 20,
                             ),
-                            _displayUnitArchiveField(context),
+                            _displayUnitArchive(context),
                             SizedBox(
                               // so keyboard does not hide bottom textfield
                               height: MediaQuery.of(context).viewInsets.bottom,
@@ -270,79 +280,161 @@ class _EditUnitState extends State<EditUnit> {
     );
   }
 
-  _displayUnitArchiveField(BuildContext context) {
-    return CheckboxListTile(
-      controlAffinity: ListTileControlAffinity.leading,
-      title: Text(
-        'Archive unit?',
-        style: kFieldHeading,
-      ),
-      value: archiveUnit,
-      onChanged: (value) {
-        setState(() {
-          archiveUnit = value;
-          _currentUnitArchived = archiveUnit;
-        });
-      },
-      secondary: GestureDetector(
-        onTap: () => kShowHelpToast(context,
-            "If selected this unit will be removed from your displayed units for this property. These will normally be units that for some reason don't exist any more. These units can be accessed through 'Units Archived'"),
-        child: Icon(
-          Icons.help_outline,
-          color: kColorOrange,
-        ),
-      ),
-    );
-  }
-
-  _displayUnitRentalValuationSourceField(
-      AsyncSnapshot<UnitDetails> unitDetails) {
+  _displayUnitName(AsyncSnapshot<UnitDetails> unitDetails) {
     return TextFormField(
-      initialValue: unitDetails.data.unitRentalValuationSource,
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _unitNameFocusNode,
+      textCapitalization: TextCapitalization.words,
+      initialValue: unitDetails.data.unitName,
       decoration: kTextInputDecoration.copyWith(
-          labelText: 'Rental Valuation Source',
+          labelText: 'Unit Name',
           labelStyle: kFieldHeading,
-          hintText: 'rental valuation source'),
-//                              validator: (val) => val.isEmpty
-//                                  ? 'Please enter who supplied the rental valuation'
-//                                  : null,
-      onChanged: (val) =>
-          setState(() => _currentUnitRentalValuationSource = val),
+          hintText: 'unit name'),
+      validator: (val) =>
+          val.isEmpty ? 'Please enter what this unit is know by' : null,
+      onChanged: (val) => setState(() => _currentUnitName = val),
+      onEditingComplete: _unitNameEditingComplete,
     );
   }
 
-  _displayUnitRentalValuationField(AsyncSnapshot<UnitDetails> unitDetails) {
+  void _unitNameEditingComplete() {
+    FocusScope.of(context).requestFocus(_unitDetailsFocusNode);
+  }
+
+  _displayUnitDetails(AsyncSnapshot<UnitDetails> unitDetails) {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      focusNode: _unitDetailsFocusNode,
+      textCapitalization: TextCapitalization.sentences,
+      initialValue: unitDetails.data.unitNotes,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Details',
+          labelStyle: kFieldHeading,
+          hintText: 'more details'),
+//                    validator: (val) => val.isEmpty
+//                        ? 'Please enter any property details'
+//                        : null,
+      onChanged: (val) => setState(() => _currentUnitNotes = val),
+      onEditingComplete: _unitDetailsEditingComplete,
+    );
+  }
+
+  void _unitDetailsEditingComplete() {
+    FocusScope.of(context).requestFocus(_unitAddressFocusNode);
+  }
+
+  _displayUnitLeaseDescription(AsyncSnapshot<UnitDetails> unitDetails) {
+    return TextFormField(
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      focusNode: _unitAddressFocusNode,
+      textCapitalization: TextCapitalization.words,
+      initialValue: unitDetails.data.unitLeaseDescription,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'General Address of Premises',
+          labelStyle: kFieldHeading,
+          hintText: 'general address of premises as used on lease'),
+      validator: (val) =>
+          val.isEmpty ? 'Please enter a lease description' : null,
+      onChanged: (val) => setState(() => _currentUnitLeaseDescription = val),
+      onEditingComplete: _unitAddressEditingComplete,
+    );
+  }
+
+  void _unitAddressEditingComplete() {
+    FocusScope.of(context).requestFocus(_unitFloorAreaFocusNode);
+  }
+
+  _displayUnitFloorArea(AsyncSnapshot<UnitDetails> unitDetails) {
     return Row(
       children: <Widget>[
-        Text(
-          _currencySymbol,
-          style: kFieldHeading,
+        Column(
+          children: <Widget>[
+            Text(
+              areaMeasurementSymbol,
+              style: kFieldHeading,
+            ),
+          ],
         ),
         SizedBox(
-          width: 10,
+          width: 20,
         ),
         Expanded(
           child: TextFormField(
-            inputFormatters: [WhitelistingTextInputFormatter(RegExp("[0-9.]"))],
+            textInputAction: TextInputAction.next,
+            focusNode: _unitFloorAreaFocusNode,
+            inputFormatters: [
+              WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}")),
+            ],
             keyboardType: TextInputType.numberWithOptions(decimal: true),
-            initialValue:
-                unitDetails.data.unitRentalValuationAmount.toStringAsFixed(2),
+            initialValue: unitDetails.data.unitArea.toString(),
             decoration: kTextInputDecoration.copyWith(
-                labelText: 'Rental Valuation',
+                labelText: 'Unit Area',
                 labelStyle: kFieldHeading,
-                hintText: 'rental valuation'),
+                hintText: 'unit area'),
 //                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter valuation amount' : null,
+//                        val.isEmpty ? 'Please enter land area' : null,
+//                  validator: (val) => val.isNotEmpty? ,
             onChanged: (val) => setState(
-              () => _currentUnitRentalValuationAmount = double.parse(val),
+              () => _currentUnitArea = double.parse(val),
             ),
+            onEditingComplete: _unitFloorAreaEditingComplete,
           ),
         ),
       ],
     );
   }
 
-  _displayUnitResidentialField(BuildContext context) {
+  void _unitFloorAreaEditingComplete() {
+    FocusScope.of(context).requestFocus(_unitPercentageOfPropertyFocusNode);
+  }
+
+  _displayUnitPercentageOfProperty(AsyncSnapshot<UnitDetails> unitDetails) {
+    return Row(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            Text(
+              '%  ',
+              style: kFieldHeading,
+            ),
+          ],
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Expanded(
+          child: TextFormField(
+            textInputAction: TextInputAction.next,
+            focusNode: _unitPercentageOfPropertyFocusNode,
+            inputFormatters: [
+              WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}")),
+            ],
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            initialValue: unitDetails.data.unitPercentageSplit.toString(),
+            decoration: kTextInputDecoration.copyWith(
+                labelText: 'of Property Area',
+                labelStyle: kFieldHeading,
+                hintText: 'of property area'),
+//                    validator: (val) =>
+//                        val.isEmpty ? 'Please enter land area' : null,
+//                  validator: (val) => val.isNotEmpty? ,
+            onChanged: (val) => setState(
+              () => _currentUnitPercentageSplit = double.parse(val),
+            ),
+            onEditingComplete: _unitPercentageOfPropertyEditingComplete,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _unitPercentageOfPropertyEditingComplete() {
+    FocusScope.of(context).requestFocus(_unitRentalValuationAmountFocusNode);
+  }
+
+  _displayUnitResidential(BuildContext context) {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(
@@ -367,125 +459,85 @@ class _EditUnitState extends State<EditUnit> {
     );
   }
 
-  _displayUnitPercentageAreaField(AsyncSnapshot<UnitDetails> unitDetails) {
+  _displayUnitRentalValuationAmount(AsyncSnapshot<UnitDetails> unitDetails) {
     return Row(
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            Text(
-              '%  ',
-              style: kFieldHeading,
-            ),
-          ],
+        Text(
+          _currencySymbol,
+          style: kFieldHeading,
         ),
         SizedBox(
-          width: 20,
+          width: 10,
         ),
         Expanded(
           child: TextFormField(
+            textInputAction: TextInputAction.next,
+            focusNode: _unitRentalValuationAmountFocusNode,
             inputFormatters: [
-              WhitelistingTextInputFormatter(
-                RegExp("[0-9.]"),
-              )
+              WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}")),
             ],
             keyboardType: TextInputType.numberWithOptions(decimal: true),
-            initialValue: unitDetails.data.unitPercentageSplit.toString(),
+            initialValue:
+                unitDetails.data.unitRentalValuationAmount.toStringAsFixed(2),
             decoration: kTextInputDecoration.copyWith(
-                labelText: 'of Property Area',
+                labelText: 'Rental Valuation',
                 labelStyle: kFieldHeading,
-                hintText: 'of property area'),
+                hintText: 'rental valuation'),
 //                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter land area' : null,
-//                  validator: (val) => val.isNotEmpty? ,
+//                        val.isEmpty ? 'Please enter valuation amount' : null,
             onChanged: (val) => setState(
-              () => _currentUnitPercentageSplit = double.parse(val),
+              () => _currentUnitRentalValuationAmount = double.parse(val),
             ),
+            onEditingComplete: _unitRentalValuationAmountEditingComplete,
           ),
         ),
       ],
     );
   }
 
-  _displayUnitFloorAreaField(AsyncSnapshot<UnitDetails> unitDetails) {
-    return Row(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            Text(
-              areaMeasurementSymbol,
-              style: kFieldHeading,
-            ),
-          ],
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Expanded(
-          child: TextFormField(
-            inputFormatters: [
-              WhitelistingTextInputFormatter(
-                RegExp("[0-9.]"),
-              )
-            ],
-            keyboardType: TextInputType.numberWithOptions(decimal: true),
-            initialValue: unitDetails.data.unitArea.toString(),
-            decoration: kTextInputDecoration.copyWith(
-                labelText: 'Unit Area',
-                labelStyle: kFieldHeading,
-                hintText: 'unit area'),
-//                    validator: (val) =>
-//                        val.isEmpty ? 'Please enter land area' : null,
-//                  validator: (val) => val.isNotEmpty? ,
-            onChanged: (val) => setState(
-              () => _currentUnitArea = double.parse(val),
-            ),
-          ),
-        ),
-      ],
+  void _unitRentalValuationAmountEditingComplete() {
+    FocusScope.of(context).requestFocus(_unitRentalValuationSourceFocusNode);
+  }
+
+  _displayUnitRentalValuationSource(AsyncSnapshot<UnitDetails> unitDetails) {
+    return TextFormField(
+      textInputAction: TextInputAction.done,
+      focusNode: _unitRentalValuationSourceFocusNode,
+      initialValue: unitDetails.data.unitRentalValuationSource,
+      decoration: kTextInputDecoration.copyWith(
+          labelText: 'Rental Valuation Source',
+          labelStyle: kFieldHeading,
+          hintText: 'rental valuation source'),
+//                              validator: (val) => val.isEmpty
+//                                  ? 'Please enter who supplied the rental valuation'
+//                                  : null,
+      onChanged: (val) =>
+          setState(() => _currentUnitRentalValuationSource = val),
     );
   }
 
-  _displayUnitLeaseDescriptionField(AsyncSnapshot<UnitDetails> unitDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      initialValue: unitDetails.data.unitLeaseDescription,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'General Address of Premises',
-          labelStyle: kFieldHeading,
-          hintText: 'general address of premises as used on lease'),
-      validator: (val) =>
-          val.isEmpty ? 'Please enter a lease description' : null,
-      onChanged: (val) => setState(() => _currentUnitLeaseDescription = val),
-    );
-  }
-
-  _displayUnitDetailsField(AsyncSnapshot<UnitDetails> unitDetails) {
-    return TextFormField(
-      initialValue: unitDetails.data.unitNotes,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Notes',
-          labelStyle: kFieldHeading,
-          hintText: 'more details'),
-//                    validator: (val) => val.isEmpty
-//                        ? 'Please enter any property details'
-//                        : null,
-      onChanged: (val) => setState(() => _currentUnitNotes = val),
-    );
-  }
-
-  _displayUnitNameField(AsyncSnapshot<UnitDetails> unitDetails) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      textCapitalization: TextCapitalization.words,
-      initialValue: unitDetails.data.unitName,
-      decoration: kTextInputDecoration.copyWith(
-          labelText: 'Unit Name',
-          labelStyle: kFieldHeading,
-          hintText: 'unit name'),
-      validator: (val) =>
-          val.isEmpty ? 'Please enter what this unit is know by' : null,
-      onChanged: (val) => setState(() => _currentUnitName = val),
+  _displayUnitArchive(BuildContext context) {
+    return CheckboxListTile(
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(
+        'Archive unit?',
+        style: kFieldHeading,
+      ),
+      value: archiveUnit,
+      onChanged: (value) {
+        setState(() {
+          archiveUnit = value;
+          _currentUnitArchived = archiveUnit;
+        });
+      },
+      secondary: GestureDetector(
+        onTap: () => kShowHelpToast(context,
+            "If selected this unit will be removed from your displayed units for this property. These will normally be units that for some reason don't exist any more. These units can be accessed through 'Units Archived'"),
+        child: Icon(
+          Icons.help_outline,
+          color: kColorOrange,
+        ),
+      ),
     );
   }
 }
