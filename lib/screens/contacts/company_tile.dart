@@ -148,15 +148,7 @@ class _CompanyTileState extends State<CompanyTile> {
                               _displayName = _displayName +
                                   ' - ' +
                                   allCompanyPersons.data[index].personRole;
-                            //TODO should be able to use TextOverflow.ellipse ??
-                            int _displayNameLength;
-                            MediaQuery.of(context).size.width < 360
-                                ? _displayNameLength = 20
-                                : _displayNameLength = 30;
-                            if (_displayName.length > 30)
-                              _displayName = _displayName.substring(
-                                      0, _displayNameLength) +
-                                  '...';
+
                             TextEditingController _numberPersonPhone =
                                 TextEditingController();
                             TextEditingController _emailPersonEmail =
@@ -180,64 +172,76 @@ class _CompanyTileState extends State<CompanyTile> {
                             _emailPersonEmail.text.length > 0
                                 ? _tooltipPersonEmail = _emailPersonEmail.text
                                 : _tooltipPersonEmail = 'No email';
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                IconButton(
-                                  icon: Icon(Icons.phone),
-                                  tooltip: _tooltipPersonPhone,
-                                  color: Colors.lightBlue,
-                                  onPressed: _numberPersonPhone.text.length > 0
-                                      ? () async {
-                                          FlutterPhoneDirectCaller.callNumber(
-                                              _tooltipPersonPhone);
-                                        }
-                                      : null,
-                                  padding: EdgeInsets.all(0),
-                                ),
-                                IconButton(
-                                  icon: Icon(Icons.email),
-                                  tooltip: _tooltipPersonEmail,
-                                  color: Colors.lightBlue,
-                                  onPressed: _emailPersonEmail.text.length > 0
-                                      ? () async {
-                                          if (await canLaunch(
-                                              'mailto:$_tooltipPersonEmail')) {
-                                            print(
-                                                '$_displayName email: $_tooltipPersonEmail');
-                                            await launch(
-                                                'mailto:$_tooltipPersonEmail');
-                                          } else {
-                                            throw 'Could not launch emailer app for mailto:$_tooltipPersonEmail';
-                                          }
-                                        }
-                                      : null,
-                                  padding: EdgeInsets.all(0),
-                                ),
-                                GestureDetector(
-                                    child: Container(
-                                      child: Text(
-                                        _displayName,
-//                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
+                            return Container(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 10,
+                                    child: IconButton(
+                                      icon: Icon(Icons.phone),
+                                      tooltip: _tooltipPersonPhone,
+                                      color: Colors.lightBlue,
+                                      onPressed:
+                                          _numberPersonPhone.text.length > 0
+                                              ? () async {
+                                                  FlutterPhoneDirectCaller
+                                                      .callNumber(
+                                                          _tooltipPersonPhone);
+                                                }
+                                              : null,
+                                      padding: EdgeInsets.all(0),
                                     ),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => EditPerson(
-                                            companyName: widget
-                                                .companyDetails.companyName,
-                                            personUid: allCompanyPersons
-                                                .data[index].personUid,
-                                            personName: allCompanyPersons
-                                                .data[index].personName,
-                                          ),
+                                  ),
+                                  Expanded(
+                                    flex: 10,
+                                    child: IconButton(
+                                      icon: Icon(Icons.email),
+                                      tooltip: _tooltipPersonEmail,
+                                      color: Colors.lightBlue,
+                                      onPressed:
+                                          _emailPersonEmail.text.length > 0
+                                              ? () async {
+                                                  if (await canLaunch(
+                                                      'mailto:$_tooltipPersonEmail')) {
+                                                    print(
+                                                        '$_displayName email: $_tooltipPersonEmail');
+                                                    await launch(
+                                                        'mailto:$_tooltipPersonEmail');
+                                                  } else {
+                                                    throw 'Could not launch emailer app for mailto:$_tooltipPersonEmail';
+                                                  }
+                                                }
+                                              : null,
+                                      padding: EdgeInsets.all(0),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 80,
+                                    child: GestureDetector(
+                                        child: Text(
+                                          _displayName,
+//                                        maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      );
-                                    }),
-                              ],
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => EditPerson(
+                                                companyName: widget
+                                                    .companyDetails.companyName,
+                                                personUid: allCompanyPersons
+                                                    .data[index].personUid,
+                                                personName: allCompanyPersons
+                                                    .data[index].personName,
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
