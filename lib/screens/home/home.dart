@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:property_returns/models/user.dart';
+import 'package:property_returns/reports/property_summary.dart';
 import 'package:property_returns/screens/contacts/company_list.dart';
 import 'package:property_returns/screens/leases/lease_list.dart';
 import 'package:property_returns/screens/properties/property_list.dart';
@@ -148,7 +149,8 @@ class Home extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
-//              Navigator.pushNamed(context, 'task_list');
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => PropertySummary()));
               },
               child: Text('Property Summary'),
             ),

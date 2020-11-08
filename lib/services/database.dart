@@ -277,6 +277,17 @@ class DatabaseServices {
         .map(_userTasksFromSnapshot);
   }
 
+  //
+  // get Tasks archived stream for a given user ordered dueDateTime descending
+  Stream<List<TaskDetails>> get userTasksArchivedByDueDateTimeDescending {
+    return userTaskCollection
+        .where('userUid', isEqualTo: uid)
+        .where('archived', isEqualTo: true)
+        .orderBy('dueDateTime', descending: false)
+        .snapshots()
+        .map(_userTasksFromSnapshot);
+  }
+
   List<TaskDetails> _userTasksFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map(
       (doc) {

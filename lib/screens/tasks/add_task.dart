@@ -168,6 +168,8 @@ class _AddTaskState extends State<AddTask> {
                                                     _currentTaskDueDateTime =
                                                         DateTimeField.combine(
                                                             date, time);
+                                                    print(
+                                                        "_currentTaskDueDateTime: $_currentTaskDueDateTime");
                                                     return DateTimeField
                                                         .combine(date, time);
                                                   } else {
@@ -208,23 +210,33 @@ class _AddTaskState extends State<AddTask> {
                               ),
                             ),
                             bottomNavigationBar: BottomAppBar(
-                              child: AddButtonAndSave(
-                                  formKey: _formKey,
-                                  user: user,
-                                  currentTaskTitle: _currentTaskTitle,
-                                  currentTaskDetail: _currentTaskDetail,
-                                  currentTaskArchived: _currentTaskArchived,
-                                  currentTaskImportance: _currentTaskImportance,
-                                  currentTaskPropertySelected:
-                                      _currentTaskPropertySelected,
-                                  currentTaskTenantSelected:
-                                      _currentTaskTenantSelected,
-                                  currentTaskTradeSelected:
-                                      _currentTaskTradeSelected,
-                                  currentTaskAgentSelected:
-                                      _currentTaskAgentSelected,
-                                  currentTaskDueDateTime:
-                                      _currentTaskDueDateTime),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  RaisedButton(
+                                    child: Text('Add'),
+                                    onPressed: () async {
+                                      if (_formKey.currentState.validate()) {
+                                        await DatabaseServices().addUserTask(
+                                          user.userUid,
+                                          _currentTaskTitle,
+                                          _currentTaskDetail,
+                                          _currentTaskArchived,
+                                          _currentTaskImportance,
+                                          _currentTaskPropertySelected,
+                                          _currentTaskTenantSelected,
+                                          _currentTaskTradeSelected,
+                                          _currentTaskAgentSelected,
+                                          _currentTaskDueDateTime,
+                                          Timestamp
+                                              .now(), //_currentEditedDateTime,
+                                        );
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         });
@@ -477,8 +489,8 @@ class _AddTaskState extends State<AddTask> {
               Map _sortedAgentCompanyPersonNames = Map.fromEntries(
                   _agentCompanyPersonNames.entries.toList()
                     ..sort((e1, e2) => e1.value.compareTo(e2.value)));
-              print(
-                  '_tradeCompanyPersonNames: $_sortedAgentCompanyPersonNames');
+//              print(
+//                  '_tradeCompanyPersonNames: $_sortedAgentCompanyPersonNames');
               return DropdownButtonFormField<String>(
                 isExpanded: true,
                 value: _currentTaskAgentSelected,
@@ -545,8 +557,8 @@ class _AddTaskState extends State<AddTask> {
               Map _sortedTradeCompanyPersonNames = Map.fromEntries(
                   _tradeCompanyPersonNames.entries.toList()
                     ..sort((e1, e2) => e1.value.compareTo(e2.value)));
-              print(
-                  '_tradeCompanyPersonNames: $_sortedTradeCompanyPersonNames');
+//              print(
+//                  '_tradeCompanyPersonNames: $_sortedTradeCompanyPersonNames');
               return DropdownButtonFormField<String>(
                 isExpanded: true,
                 value: _currentTaskTradeSelected,
@@ -572,75 +584,6 @@ class _AddTaskState extends State<AddTask> {
               );
             },
           ),
-        )
-      ],
-    );
-  }
-}
-
-class AddButtonAndSave extends StatelessWidget {
-  const AddButtonAndSave({
-    Key key,
-    @required GlobalKey<FormState> formKey,
-    @required this.user,
-    @required String currentTaskTitle,
-    @required String currentTaskDetail,
-    @required bool currentTaskArchived,
-    @required int currentTaskImportance,
-    @required String currentTaskPropertySelected,
-    @required String currentTaskTenantSelected,
-    @required String currentTaskTradeSelected,
-    @required String currentTaskAgentSelected,
-    @required DateTime currentTaskDueDateTime,
-  })  : _formKey = formKey,
-        _currentTaskTitle = currentTaskTitle,
-        _currentTaskDetail = currentTaskDetail,
-        _currentTaskArchived = currentTaskArchived,
-        _currentTaskImportance = currentTaskImportance,
-        _currentTaskPropertySelected = currentTaskPropertySelected,
-        _currentTaskTenantSelected = currentTaskTenantSelected,
-        _currentTaskTradeSelected = currentTaskTradeSelected,
-        _currentTaskAgentSelected = currentTaskAgentSelected,
-        _currentTaskDueDateTime = currentTaskDueDateTime,
-        super(key: key);
-
-  final GlobalKey<FormState> _formKey;
-  final User user;
-  final String _currentTaskTitle;
-  final String _currentTaskDetail;
-  final bool _currentTaskArchived;
-  final int _currentTaskImportance;
-  final String _currentTaskPropertySelected;
-  final String _currentTaskTenantSelected;
-  final String _currentTaskTradeSelected;
-  final String _currentTaskAgentSelected;
-  final DateTime _currentTaskDueDateTime;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        RaisedButton(
-          child: Text('Add'),
-          onPressed: () async {
-            if (_formKey.currentState.validate()) {
-              await DatabaseServices().addUserTask(
-                user.userUid,
-                _currentTaskTitle,
-                _currentTaskDetail,
-                _currentTaskArchived,
-                _currentTaskImportance,
-                _currentTaskPropertySelected,
-                _currentTaskTenantSelected,
-                _currentTaskTradeSelected,
-                _currentTaskAgentSelected,
-                _currentTaskDueDateTime,
-                Timestamp.now(), //_currentEditedDateTime,
-              );
-              Navigator.pop(context);
-            }
-          },
         )
       ],
     );

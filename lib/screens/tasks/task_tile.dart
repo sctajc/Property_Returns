@@ -11,10 +11,9 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color _color = colorTaskImportance(taskDetails.taskImportance);
-    Text _textLine = Text(
+    Text _taskDate = Text(
       DateFormat('E, LLL d, y').format(taskDetails.taskDueDateTime.toDate()),
       style: TextStyle(
-          fontSize: 15,
           backgroundColor: _color,
           color: taskDetails.taskImportance > 5 ? Colors.white : Colors.black),
     );
@@ -48,9 +47,9 @@ class TaskTile extends StatelessWidget {
                   Radius.circular(3),
                 ),
               ),
-              width: 140,
+              width: 165,
               height: 20,
-              child: Center(child: _textLine),
+              child: Center(child: _taskDate),
             ),
             SizedBox(
               width: 10,
